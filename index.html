@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Kompas dorosłego życia</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #111110;
+    --white: #fafaf8;
+    --accent: #1a6b47;
+    --accent-light: #e8f5ee;
+    --accent-mid: #2d9a68;
+    --gray-1: #f5f4f1;
+    --gray-2: #e8e7e2;
+    --gray-3: #a8a79f;
+    --gray-4: #6b6a63;
+    --serif: 'DM Serif Display', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --radius: 12px;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: var(--sans);
+    background: var(--white);
+    color: var(--black);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 20px 48px;
+    background: rgba(250,250,248,0.88);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--gray-2);
+  }
+  .logo {
+    font-family: var(--serif);
+    font-size: 22px;
+    color: var(--black);
+    letter-spacing: -0.3px;
+  }
+  .logo span { color: var(--accent); }
+  .nav-links { display: flex; gap: 32px; align-items: center; }
+  .nav-links a {
+    font-size: 14px; color: var(--gray-4); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-cta {
+    background: var(--black); color: var(--white);
+    font-size: 14px; font-weight: 500;
+    padding: 10px 22px; border-radius: 99px;
+    text-decoration: none; transition: background 0.2s, transform 0.15s;
+  }
+  .nav-cta:hover { background: var(--accent); transform: translateY(-1px); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 120px 24px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse 80% 60% at 50% 0%, rgba(26,107,71,0.07) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .hero-badge {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 13px; font-weight: 500;
+    padding: 6px 14px; border-radius: 99px;
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 6px; height: 6px;
+    background: var(--accent-mid);
+    border-radius: 50%;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(44px, 7vw, 80px);
+    line-height: 1.08;
+    letter-spacing: -1.5px;
+    color: var(--black);
+    max-width: 780px;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease 0.1s both;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--accent);
+  }
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 19px);
+    color: var(--gray-4);
+    max-width: 520px;
+    line-height: 1.6;
+    margin-bottom: 44px;
+    font-weight: 300;
+    animation: fadeUp 0.6s ease 0.2s both;
+  }
+  .hero-actions {
+    display: flex; gap: 12px; flex-wrap: wrap; justify-content: center;
+    animation: fadeUp 0.6s ease 0.3s both;
+  }
+  .btn-primary {
+    background: var(--black); color: var(--white);
+    font-family: var(--sans); font-size: 15px; font-weight: 500;
+    padding: 14px 32px; border-radius: 99px; border: none;
+    cursor: pointer; text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+  .btn-secondary {
+    background: transparent; color: var(--black);
+    font-family: var(--sans); font-size: 15px; font-weight: 400;
+    padding: 14px 28px; border-radius: 99px;
+    border: 1px solid var(--gray-2);
+    cursor: pointer; text-decoration: none;
+    transition: border-color 0.2s, transform 0.15s;
+  }
+  .btn-secondary:hover { border-color: var(--gray-3); transform: translateY(-2px); }
+
+  /* STATS STRIP */
+  .stats {
+    display: flex; justify-content: center; gap: 0;
+    border-top: 1px solid var(--gray-2);
+    border-bottom: 1px solid var(--gray-2);
+    margin: 0;
+    animation: fadeUp 0.6s ease 0.4s both;
+  }
+  .stat {
+    flex: 1; max-width: 220px;
+    text-align: center;
+    padding: 28px 20px;
+    border-right: 1px solid var(--gray-2);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-number {
+    font-family: var(--serif);
+    font-size: 36px;
+    color: var(--black);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .stat-label { font-size: 13px; color: var(--gray-3); font-weight: 400; }
+
+  /* MODULES */
+  .section { padding: 100px 48px; max-width: 1100px; margin: 0 auto; }
+  .section-label {
+    font-size: 12px; font-weight: 500; letter-spacing: 0.1em;
+    color: var(--accent); text-transform: uppercase;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: var(--serif);
+    font-size: clamp(32px, 4vw, 48px);
+    line-height: 1.15;
+    letter-spacing: -0.8px;
+    color: var(--black);
+    max-width: 600px;
+    margin-bottom: 60px;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .module-card {
+    background: var(--white);
+    border: 1px solid var(--gray-2);
+    border-radius: 20px;
+    padding: 36px;
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    cursor: default;
+    position: relative;
+    overflow: hidden;
+  }
+  .module-card::before {
+    content: '';
+    position: absolute; top: 0; left: 0; right: 0; height: 3px;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+  .module-card:hover {
+    border-color: var(--gray-3);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.06);
+  }
+  .module-card:hover::before { opacity: 1; }
+  .module-card.featured {
+    background: var(--black);
+    border-color: var(--black);
+    grid-column: span 2;
+  }
+  .module-card.featured::before { opacity: 1; }
+  .module-icon {
+    width: 44px; height: 44px;
+    background: var(--accent-light);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    margin-bottom: 20px;
+  }
+  .module-card.featured .module-icon {
+    background: rgba(255,255,255,0.1);
+  }
+  .module-tag {
+    display: inline-block;
+    font-size: 11px; font-weight: 500;
+    padding: 3px 10px; border-radius: 99px;
+    margin-bottom: 16px;
+  }
+  .tag-live { background: var(--accent-light); color: var(--accent); }
+  .tag-soon { background: var(--gray-1); color: var(--gray-4); }
+  .tag-featured { background: rgba(45,154,104,0.25); color: #7de0ad; }
+  .module-name {
+    font-size: 20px; font-weight: 500;
+    color: var(--black); margin-bottom: 10px;
+  }
+  .module-card.featured .module-name { color: var(--white); }
+  .module-desc { font-size: 14px; color: var(--gray-4); line-height: 1.6; }
+  .module-card.featured .module-desc { color: rgba(255,255,255,0.55); }
+  .module-features {
+    margin-top: 20px;
+    display: flex; flex-direction: column; gap: 6px;
+  }
+  .feat {
+    font-size: 13px; color: var(--gray-4);
+    display: flex; align-items: center; gap: 8px;
+  }
+  .feat::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--accent-mid);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .module-card.featured .feat { color: rgba(255,255,255,0.5); }
+  .module-card.featured .feat::before { background: var(--accent-mid); }
+
+  /* HOW IT WORKS */
+  .how-section {
+    padding: 100px 48px;
+    background: var(--gray-1);
+  }
+  .how-inner { max-width: 1100px; margin: 0 auto; }
+  .steps {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 2px;
+    margin-top: 60px;
+    background: var(--gray-2);
+    border-radius: 20px;
+    overflow: hidden;
+  }
+  .step {
+    background: var(--gray-1);
+    padding: 40px 36px;
+  }
+  .step-num {
+    font-family: var(--serif);
+    font-size: 48px;
+    color: var(--gray-2);
+    line-height: 1;
+    margin-bottom: 20px;
+  }
+  .step-title {
+    font-size: 18px; font-weight: 500;
+    color: var(--black);
+    margin-bottom: 10px;
+  }
+  .step-desc { font-size: 14px; color: var(--gray-4); line-height: 1.6; }
+
+  /* CTA */
+  .cta-section {
+    padding: 120px 48px;
+    text-align: center;
+  }
+  .cta-inner { max-width: 600px; margin: 0 auto; }
+  .cta-section h2 {
+    font-family: var(--serif);
+    font-size: clamp(36px, 5vw, 56px);
+    line-height: 1.1;
+    letter-spacing: -0.8px;
+    margin-bottom: 20px;
+  }
+  .cta-section h2 em { font-style: italic; color: var(--accent); }
+  .cta-section p { font-size: 16px; color: var(--gray-4); margin-bottom: 36px; }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--gray-2);
+    padding: 32px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-logo { font-family: var(--serif); font-size: 18px; }
+  .footer-logo span { color: var(--accent); }
+  footer p { font-size: 13px; color: var(--gray-3); }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    nav { padding: 16px 20px; }
+    .nav-links { display: none; }
+    .section { padding: 60px 20px; }
+    .modules-grid { grid-template-columns: 1fr; }
+    .module-card.featured { grid-column: span 1; }
+    .steps { grid-template-columns: 1fr; }
+    footer { flex-direction: column; gap: 12px; text-align: center; }
+    .stats { flex-wrap: wrap; }
+    .stat { border-right: none; border-bottom: 1px solid var(--gray-2); }
+    .stat:last-child { border-bottom: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Adult<span>ly</span></div>
+  <div class="nav-links">
+    <a href="#modules">Narzędzia</a>
+    <a href="#how">Jak to działa</a>
+    <a href="#">Blog</a>
+  </div>
+  <a href="#" class="nav-cta">Zacznij za darmo</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">Dla studentów i świeżych absolwentów</div>
+  <h1>Dorosłe życie,<br><em>bez zgadywania.</em></h1>
+  <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:44px;animation:fadeUp 0.6s ease 0.2s both;">
+    <p style="font-size:clamp(17px,2.2vw,21px);font-weight:500;color:var(--black);">Twój osobisty organizer dorosłego życia.</p>
+    <p style="font-size:clamp(15px,1.8vw,18px);color:var(--gray-4);font-weight:300;">Ogarniaj finanse, pracę i życie w jednym miejscu.</p>
+    <p style="font-size:clamp(13px,1.5vw,15px);color:var(--gray-3);">Wszystko czego potrzebujesz po studiach.</p>
+  </div>
+  <div class="hero-actions">
+    <a href="#modules" class="btn-primary">Sprawdź narzędzia</a>
+    <a href="#how" class="btn-secondary">Jak to działa?</a>
+  </div>
+</section>
+
+<!-- STATS -->
+<div class="stats">
+  <div class="stat">
+    <div class="stat-number">5</div>
+    <div class="stat-label">modułów w jednym miejscu</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">0 zł</div>
+    <div class="stat-label">żeby zacząć</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">5 min</div>
+    <div class="stat-label">żeby ogarnąć UoP vs B2B</div>
+  </div>
+  <div class="stat">
+    <div class="stat-number">PL</div>
+    <div class="stat-label">polska rzeczywistość, nie teoria</div>
+  </div>
+</div>
+
+<!-- MODULES -->
+<section class="section" id="modules">
+  <div class="section-label">Co znajdziesz w Adultly</div>
+  <div class="section-title">Wszystko czego potrzebujesz na start.</div>
+
+  <div class="modules-grid">
+
+    <div class="module-card featured">
+      <div class="module-icon">💰</div>
+      <div class="module-tag tag-featured">Dostępne teraz</div>
+      <div class="module-name">Finanse</div>
+      <div class="module-desc">Przelicz co się faktycznie opłaca. UoP czy B2B, ile musisz zarabiać, jak zaplanować budżet – bez arkuszy Excela.</div>
+      <div class="module-features">
+        <div class="feat">Kalkulator UoP vs B2B z pełną logiką ZUS i PIT</div>
+        <div class="feat">Ile zarobić żeby żyć w twoim mieście</div>
+        <div class="feat">Kalkulator budżetu domowego</div>
+        <div class="feat">Ulga dla młodych, podatek liniowy, skala – wszystko</div>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-icon">💼</div>
+      <div class="module-tag tag-soon">Wkrótce</div>
+      <div class="module-name">Praca</div>
+      <div class="module-desc">Znajdź oferty dopasowane do twojego kierunku, przygotuj się na rozmowę i wygeneruj CV które nie wyląduje w koszu.</div>
+      <div class="module-features">
+        <div class="feat">Oferty po kierunku studiów</div>
+        <div class="feat">Generator CV (AI)</div>
+        <div class="feat">Poradnik rozmowy kwalifikacyjnej</div>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-icon">🏠</div>
+      <div class="module-tag tag-soon">Wkrótce</div>
+      <div class="module-name">Mieszkanie</div>
+      <div class="module-desc">Mapa rynku najmu, kalkulator czy cię stać i lista rzeczy które musisz sprawdzić zanim podpiszesz umowę.</div>
+      <div class="module-features">
+        <div class="feat">Mapa cen najmu po miastach</div>
+        <div class="feat">Wynajem vs kupno – kalkulator</div>
+        <div class="feat">Checklist przed podpisaniem umowy</div>
+      </div>
+    </div>
+
+    <div class="module-card">
+      <div class="module-icon">📋</div>
+      <div class="module-tag tag-soon">Wkrótce</div>
+      <div class="module-name">Formalności</div>
+      <div class="module-desc">Co załatwić po studiach, jak złożyć PIT, jakie konto wybrać i jak nie zgubić się w ZUS i urzędach.</div>
+      <div class="module-features">
+        <div class="feat">Checklist absolwenta krok po kroku</div>
+        <div class="feat">Porównanie kont bankowych</div>
+        <div class="feat">Ubezpieczenie po studiach – opcje</div>
+      </div>
+    </div>
+
+    <div class="module-card" style="grid-column: span 2; background: var(--gray-1); border-color: var(--gray-2);">
+      <div style="display: flex; align-items: flex-start; justify-content: space-between; gap: 32px; flex-wrap: wrap;">
+        <div style="flex: 1; min-width: 260px;">
+          <div class="module-icon" style="background: #fff5e8;">🗂️</div>
+          <div class="module-tag tag-soon">Wkrótce</div>
+          <div class="module-name">Rzeczy których nikt nie tłumaczy</div>
+          <div class="module-desc">Ubezpieczenia, kredyt, umowy, abonamentowe pułapki – wszystko co ważne a o czym dowiadujesz się za późno.</div>
+        </div>
+        <div style="flex: 2; min-width: 260px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-content: start;">
+          <div style="background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 16px 18px;">
+            <div style="font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 6px;">Ubezpieczenia</div>
+            <div style="font-size: 12px; color: var(--gray-4); line-height: 1.6;">OC/AC, NNW, mieszkanie, zdrowie po odpadnięciu ze składki rodziców – co musisz mieć i co możesz pominąć.</div>
+          </div>
+          <div style="background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 16px 18px;">
+            <div style="font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 6px;">Historia kredytowa</div>
+            <div style="font-size: 12px; color: var(--gray-4); line-height: 1.6;">Czym jest BIK, dlaczego brak historii to problem i kiedy wziąć pierwszą kartę kredytową.</div>
+          </div>
+          <div style="background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 16px 18px;">
+            <div style="font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 6px;">Umowy i prawo</div>
+            <div style="font-size: 12px; color: var(--gray-4); line-height: 1.6;">Co sprawdzić w umowie najmu, co ci się należy od pracodawcy, jak poprawnie wypowiedzieć umowę.</div>
+          </div>
+          <div style="background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 16px 18px;">
+            <div style="font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 6px;">Abonamentowe pułapki</div>
+            <div style="font-size: 12px; color: var(--gray-4); line-height: 1.6;">Umowy telefoniczne, siłownia, streaming – jak nie dać się wciągnąć w niekorzystne warunki.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how-section" id="how">
+  <div class="how-inner">
+    <div class="section-label">Jak to działa</div>
+    <div class="section-title">Proste. Bez rejestracji żeby zacząć.</div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div class="step-title">Wybierz narzędzie</div>
+        <div class="step-desc">Finanse, praca, mieszkanie czy formalności – zacznij od tego co boli najbardziej.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div class="step-title">Wpisz swoje dane</div>
+        <div class="step-desc">Bez rejestracji, bez spamu. Twoje liczby, twoje wyniki – wszystko działa w przeglądarce.</div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div class="step-title">Dostaj konkretną odpowiedź</div>
+        <div class="step-desc">Nie artykuł z 15 akapitami. Liczba, decyzja, następny krok. To tyle.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+  <div class="cta-inner">
+    <h2>Gotowy na <em>pierwszy krok?</em></h2>
+    <p>Zacznij od kalkulatora UoP vs B2B – zajmie ci 2 minuty i dowiesz się ile naprawdę zarabiasz.</p>
+    <a href="#modules" class="btn-primary">Zacznij za darmo</a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">Adult<span>ly</span></div>
+  <p>© 2026 Adultly · adultly.app</p>
+  <p>Zrobione z głową, dla ludzi z głową.</p>
+</footer>
+
+</body>
+</html>

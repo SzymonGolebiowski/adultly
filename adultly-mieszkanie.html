@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Moduł Mieszkanie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --warn: #b45309;
+  --warn-light: #fef3c7;
+  --danger: #991b1b;
+  --danger-light: #fee2e2;
+}
+body { font-family: var(--sans); background: var(--gray-1); color: var(--black); -webkit-font-smoothing: antialiased; }
+
+/* TOPBAR */
+.topbar {
+  background: var(--white); border-bottom: 1px solid var(--gray-2);
+  padding: 14px 32px; display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-logo { font-family: var(--serif); font-size: 20px; }
+.topbar-logo span { color: var(--accent); }
+.topbar-title { font-size: 14px; color: var(--gray-4); }
+.topbar-back {
+  font-size: 13px; color: var(--gray-4); text-decoration: none;
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px; border: 1px solid var(--gray-2); border-radius: 99px;
+  transition: border-color 0.15s, color 0.15s;
+}
+.topbar-back:hover { border-color: var(--gray-3); color: var(--black); }
+
+/* PAGE */
+.page { max-width: 1000px; margin: 0 auto; padding: 48px 24px 80px; }
+.page-title { font-family: var(--serif); font-size: 38px; letter-spacing: -0.5px; margin-bottom: 8px; }
+.page-sub { font-size: 15px; color: var(--gray-4); margin-bottom: 40px; font-weight: 300; }
+
+/* CALC CARD */
+.calc-card {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 20px; padding: 36px; margin-bottom: 32px;
+}
+.calc-title { font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 24px; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 28px; }
+.field label { font-size: 12px; color: var(--gray-4); display: block; margin-bottom: 6px; }
+.field input, .field select {
+  width: 100%; font-family: var(--sans); font-size: 14px;
+  padding: 10px 14px; border: 1px solid var(--gray-2); border-radius: 10px;
+  background: var(--white); color: var(--black); transition: border-color 0.15s;
+}
+.field input:focus, .field select:focus { outline: none; border-color: var(--accent); }
+.field-note { font-size: 11px; color: var(--gray-3); margin-top: 4px; }
+
+.calc-btn {
+  width: 100%; background: var(--black); color: var(--white);
+  font-family: var(--sans); font-size: 15px; font-weight: 500;
+  padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s;
+}
+.calc-btn:hover { background: var(--accent); transform: translateY(-1px); }
+
+/* RESULTS */
+.results { display: none; margin-top: 28px; }
+.results.visible { display: block; }
+.results-strip {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px;
+}
+.metric {
+  background: var(--gray-1); border-radius: 12px; padding: 16px;
+}
+.metric-label { font-size: 11px; color: var(--gray-3); margin-bottom: 4px; }
+.metric-value { font-size: 22px; font-weight: 500; color: var(--black); }
+.metric-value.green { color: var(--accent); }
+.metric-value.warn { color: var(--warn); }
+.metric-value.danger { color: var(--danger); }
+.metric-sub { font-size: 11px; color: var(--gray-3); margin-top: 2px; }
+
+.verdict {
+  border-radius: 12px; padding: 16px 20px; margin-bottom: 24px;
+  font-size: 14px; font-weight: 500;
+  display: flex; align-items: center; gap: 12px;
+}
+.verdict.ok { background: var(--accent-light); color: var(--accent); }
+.verdict.warn { background: var(--warn-light); color: var(--warn); }
+.verdict.bad { background: var(--danger-light); color: var(--danger); }
+.verdict-icon { font-size: 20px; flex-shrink: 0; }
+
+/* AI ADVICE */
+.ai-advice {
+  background: var(--gray-1); border-radius: 12px; padding: 20px 24px;
+  margin-bottom: 28px; display: none;
+}
+.ai-advice.visible { display: block; }
+.ai-advice-header {
+  font-size: 12px; font-weight: 500; color: var(--accent);
+  letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 8px;
+}
+.ai-advice-content { font-size: 14px; color: var(--gray-4); line-height: 1.8; }
+.ai-loading { font-style: italic; color: var(--gray-3); }
+
+/* CITIES */
+.cities-title {
+  font-family: var(--serif); font-size: 28px; letter-spacing: -0.3px;
+  margin-bottom: 8px;
+}
+.cities-sub { font-size: 14px; color: var(--gray-4); margin-bottom: 24px; }
+.cities-filter {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px;
+}
+.filter-btn {
+  font-family: var(--sans); font-size: 13px;
+  padding: 7px 16px; border-radius: 99px;
+  border: 1px solid var(--gray-2); background: var(--white);
+  cursor: pointer; transition: all 0.15s; color: var(--gray-4);
+}
+.filter-btn.active { background: var(--black); color: var(--white); border-color: var(--black); }
+.filter-btn:hover:not(.active) { border-color: var(--gray-3); color: var(--black); }
+
+.cities-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+.city-card {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 16px; padding: 22px; cursor: pointer;
+  transition: all 0.2s; position: relative; overflow: hidden;
+}
+.city-card::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+  opacity: 0; transition: opacity 0.2s;
+}
+.city-card.affordable::before { background: var(--accent-mid); }
+.city-card.borderline::before { background: #d97706; }
+.city-card.expensive::before { background: #dc2626; }
+.city-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.07); border-color: var(--gray-3); }
+.city-card:hover::before { opacity: 1; }
+.city-card.highlighted { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+.city-card.highlighted::before { opacity: 1; }
+
+.city-name { font-size: 16px; font-weight: 500; margin-bottom: 4px; }
+.city-region { font-size: 12px; color: var(--gray-3); margin-bottom: 16px; }
+.city-price { font-size: 26px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+.city-price-label { font-size: 11px; color: var(--gray-3); margin-bottom: 14px; }
+.city-bar-wrap { background: var(--gray-1); border-radius: 99px; height: 4px; margin-bottom: 12px; }
+.city-bar { height: 4px; border-radius: 99px; transition: width 0.6s ease; }
+.city-bar.cheap { background: var(--accent-mid); }
+.city-bar.mid { background: #d97706; }
+.city-bar.expensive { background: #dc2626; }
+.city-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.city-tag {
+  font-size: 11px; padding: 3px 8px; border-radius: 99px;
+  background: var(--gray-1); color: var(--gray-4);
+}
+.city-status {
+  position: absolute; top: 16px; right: 16px;
+  font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px;
+}
+.status-ok { background: var(--accent-light); color: var(--accent); }
+.status-warn { background: var(--warn-light); color: var(--warn); }
+.status-no { background: var(--danger-light); color: var(--danger); }
+
+/* MAP PLACEHOLDER */
+.map-placeholder {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 16px; padding: 40px; text-align: center;
+  margin-bottom: 32px; color: var(--gray-3);
+}
+.map-placeholder svg { margin-bottom: 12px; opacity: 0.4; }
+.map-placeholder p { font-size: 13px; }
+.map-placeholder span { color: var(--accent); font-weight: 500; }
+
+@media (max-width: 768px) {
+  .calc-grid { grid-template-columns: 1fr; }
+  .results-strip { grid-template-columns: 1fr 1fr; }
+  .cities-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 480px) {
+  .cities-grid { grid-template-columns: 1fr; }
+  .results-strip { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Adult<span>ly</span></div>
+  <div class="topbar-title">Moduł Mieszkanie</div>
+  <a href="#" class="topbar-back">← Wszystkie narzędzia</a>
+</div>
+
+<div class="page">
+
+  <div class="page-title">Gdzie stać cię na wynajem?</div>
+  <div class="page-sub">Wpisz swoje dane – dostaniesz konkretną odpowiedź które miasta są w twoim zasięgu.</div>
+
+  <!-- KALKULATOR -->
+  <div class="calc-card">
+    <div class="calc-title">Twoje dane</div>
+    <div class="calc-grid">
+      <div class="field">
+        <label>Dochód netto / miesiąc</label>
+        <input type="number" id="income" placeholder="5000" min="0">
+        <div class="field-note">to co wpływa na konto</div>
+      </div>
+      <div class="field">
+        <label>Stałe wydatki / miesiąc</label>
+        <input type="number" id="expenses" placeholder="1500" min="0">
+        <div class="field-note">jedzenie, transport, subskrypcje...</div>
+      </div>
+      <div class="field">
+        <label>Preferowany typ mieszkania</label>
+        <select id="apt-type">
+          <option value="pokój">Pokój w mieszkaniu dzielonym</option>
+          <option value="kawalerka" selected>Kawalerka (1 pokój)</option>
+          <option value="2pokoje">2 pokoje</option>
+        </select>
+      </div>
+    </div>
+    <div class="calc-grid" style="margin-bottom:0">
+      <div class="field">
+        <label>Maksymalny % dochodu na wynajem</label>
+        <select id="rent-pct">
+          <option value="0.25">25% (bardzo ostrożnie)</option>
+          <option value="0.30" selected>30% (zalecane)</option>
+          <option value="0.35">35% (akceptowalne)</option>
+          <option value="0.40">40% (mocno naciągnięte)</option>
+        </select>
+      </div>
+      <div class="field">
+        <label>Czy masz osobę do współdzielenia?</label>
+        <select id="sharing">
+          <option value="0">Nie, szukam sam/a</option>
+          <option value="1">Tak, dzielę koszty na 2</option>
+        </select>
+      </div>
+      <div class="field" style="display:flex;align-items:flex-end">
+        <button class="calc-btn" onclick="calculate()">Oblicz i pokaż miasta →</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results" id="results">
+      <div class="results-strip">
+        <div class="metric">
+          <div class="metric-label">Budżet na wynajem</div>
+          <div class="metric-value green" id="r-budget">—</div>
+          <div class="metric-sub">maks. miesięcznie</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Po opłaceniu czynszu</div>
+          <div class="metric-value" id="r-left">—</div>
+          <div class="metric-sub">zostaje w kieszeni</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Dostępnych miast</div>
+          <div class="metric-value green" id="r-cities">—</div>
+          <div class="metric-sub">w twoim zasięgu</div>
+        </div>
+        <div class="metric">
+          <div class="metric-label">Poduszka finansowa</div>
+          <div class="metric-value" id="r-cushion">—</div>
+          <div class="metric-sub">po wydatkach</div>
+        </div>
+      </div>
+      <div class="verdict" id="verdict">
+        <span class="verdict-icon" id="verdict-icon">—</span>
+        <span id="verdict-text">—</span>
+      </div>
+      <div class="ai-advice" id="ai-advice">
+        <div class="ai-advice-header">✦ Analiza AI</div>
+        <div class="ai-advice-content" id="ai-content"><span class="ai-loading">Analizuję twoją sytuację...</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAP PLACEHOLDER -->
+  <div class="map-placeholder">
+    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+    <p>Interaktywna mapa Polski z cenami najmu · <span>Wkrótce po podpięciu adultly.app</span></p>
+    <p style="margin-top:4px;font-size:12px">Na razie karty miast poniżej zastępują mapę i działają tak samo.</p>
+  </div>
+
+  <!-- CITIES -->
+  <div class="cities-title">Porównanie miast</div>
+  <div class="cities-sub" id="cities-sub">Średnie ceny najmu w 2026 · kliknij miasto po obliczeniu żeby zobaczyć szczegóły</div>
+
+  <div class="cities-filter">
+    <button class="filter-btn active" onclick="filterCities('all', this)">Wszystkie</button>
+    <button class="filter-btn" onclick="filterCities('cheap', this)">Najtańsze</button>
+    <button class="filter-btn" onclick="filterCities('mid', this)">Średnie</button>
+    <button class="filter-btn" onclick="filterCities('expensive', this)">Najdroższe</button>
+    <button class="filter-btn" id="filter-affordable" onclick="filterCities('affordable', this)" style="display:none">W moim zasięgu</button>
+  </div>
+
+  <div class="cities-grid" id="cities-grid"></div>
+
+</div>
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+
+const CITIES = [
+  { name: "Warszawa",    region: "Mazowieckie",     pokój: 1800, kawalerka: 3800, "2pokoje": 5200, tier: "expensive", tags: ["największy rynek pracy", "wysokie zarobki", "drogi transport"] },
+  { name: "Kraków",      region: "Małopolskie",     pokój: 1500, kawalerka: 3200, "2pokoje": 4400, tier: "expensive", tags: ["turystyczny", "dużo IT", "dobra komunikacja"] },
+  { name: "Wrocław",     region: "Dolnośląskie",    pokój: 1400, kawalerka: 3000, "2pokoje": 4100, tier: "mid",       tags: ["rozwijający się", "dużo korporacji", "student-friendly"] },
+  { name: "Trójmiasto",  region: "Pomorskie",       pokój: 1400, kawalerka: 2900, "2pokoje": 4000, tier: "mid",       tags: ["morze", "dobra jakość życia", "rosnący rynek"] },
+  { name: "Poznań",      region: "Wielkopolskie",   pokój: 1300, kawalerka: 2700, "2pokoje": 3700, tier: "mid",       tags: ["stabilny rynek", "dużo MŚP", "blisko Berlina"] },
+  { name: "Łódź",        region: "Łódzkie",         pokój: 900,  kawalerka: 1900, "2pokoje": 2600, tier: "cheap",     tags: ["najtańsze duże miasto", "rozwijający się", "centra logistyczne"] },
+  { name: "Katowice",    region: "Śląskie",         pokój: 1000, kawalerka: 2100, "2pokoje": 2900, tier: "cheap",     tags: ["aglomeracja śląska", "IT i BPO", "dobre połączenia"] },
+  { name: "Lublin",      region: "Lubelskie",       pokój: 900,  kawalerka: 1800, "2pokoje": 2500, tier: "cheap",     tags: ["duże miasto studenckie", "niskie koszty życia", "wschodnia Polska"] },
+  { name: "Rzeszów",     region: "Podkarpackie",    pokój: 850,  kawalerka: 1700, "2pokoje": 2400, tier: "cheap",     tags: ["dolina lotnicza", "szybko rosnące", "niskie koszty"] },
+  { name: "Białystok",   region: "Podlaskie",       pokój: 800,  kawalerka: 1600, "2pokoje": 2200, tier: "cheap",     tags: ["spokojne", "niskie koszty życia", "blisko natury"] },
+  { name: "Szczecin",    region: "Zachodniopomorskie", pokój: 1100, kawalerka: 2200, "2pokoje": 3000, tier: "mid",    tags: ["blisko Niemiec", "port", "niedoceniony"] },
+  { name: "Bydgoszcz",   region: "Kujawsko-Pomorskie", pokój: 950, kawalerka: 1900, "2pokoje": 2600, tier: "cheap",  tags: ["spokojne", "dobre uczelnie", "niskie koszty"] },
+];
+
+const MAX_RENT_MAP = { "expensive": 5200, "mid": 4100, "cheap": 1900 };
+let userBudget = null;
+let aptType = 'kawalerka';
+let sharingFactor = 1;
+
+function calculate() {
+  const income = parseFloat(document.getElementById('income').value) || 0;
+  const expenses = parseFloat(document.getElementById('expenses').value) || 0;
+  aptType = document.getElementById('apt-type').value;
+  const rentPct = parseFloat(document.getElementById('rent-pct').value);
+  sharingFactor = document.getElementById('sharing').value === '1' ? 2 : 1;
+
+  if (income <= 0) { alert('Wpisz swój dochód netto.'); return; }
+
+  const budget = Math.round(income * rentPct) * sharingFactor;
+  const avgRent = Math.round(budget * 0.85);
+  const leftAfterRent = income - Math.round(budget / sharingFactor);
+  const cushion = leftAfterRent - expenses;
+  userBudget = budget;
+
+  document.getElementById('r-budget').textContent = budget.toLocaleString('pl-PL') + ' zł';
+  document.getElementById('r-left').textContent = leftAfterRent.toLocaleString('pl-PL') + ' zł';
+
+  const affordable = CITIES.filter(c => c[aptType] <= budget);
+  document.getElementById('r-cities').textContent = affordable.length;
+
+  const cushionEl = document.getElementById('r-cushion');
+  cushionEl.textContent = cushion.toLocaleString('pl-PL') + ' zł';
+  cushionEl.className = 'metric-value ' + (cushion >= 500 ? 'green' : cushion >= 0 ? 'warn' : 'danger');
+
+  const verdict = document.getElementById('verdict');
+  const icon = document.getElementById('verdict-icon');
+  const text = document.getElementById('verdict-text');
+
+  if (affordable.length >= 6) {
+    verdict.className = 'verdict ok';
+    icon.textContent = '✓';
+    text.textContent = `Masz komfortowy budżet – ${affordable.length} miast jest w twoim zasięgu. Możesz przebierać w ofertach.`;
+  } else if (affordable.length >= 3) {
+    verdict.className = 'verdict warn';
+    icon.textContent = '!';
+    text.textContent = `${affordable.length} miast jest w twoim zasięgu. Wybór jest, ale trzeba szukać aktywnie. Rozważ współdzielenie mieszkania.`;
+  } else if (affordable.length >= 1) {
+    verdict.className = 'verdict warn';
+    icon.textContent = '!';
+    text.textContent = `Tylko ${affordable.length} miasto jest w twoim zasięgu. Zastanów się nad pokojem zamiast kawalerki lub współdzieleniem kosztów.`;
+  } else {
+    verdict.className = 'verdict bad';
+    icon.textContent = '✕';
+    text.textContent = `Przy obecnym budżecie żadne z głównych miast nie jest w zasięgu. Rozważ pokój w mieszkaniu dzielonym lub zwiększenie dochodu.`;
+  }
+
+  document.getElementById('results').classList.add('visible');
+  document.getElementById('filter-affordable').style.display = 'inline-block';
+
+  renderCities();
+  getAIAdvice(income, expenses, budget, cushion, affordable, aptType, sharingFactor);
+}
+
+async function getAIAdvice(income, expenses, budget, cushion, affordable, aptType, sharing) {
+  const box = document.getElementById('ai-advice');
+  const content = document.getElementById('ai-content');
+  box.classList.add('visible');
+  content.innerHTML = '<span class="ai-loading">Analizuję twoją sytuację...</span>';
+
+  const top3 = affordable.slice(0, 3).map(c => c.name).join(', ');
+
+  const prompt = `Jesteś ekspertem od rynku nieruchomości i finansów osobistych w Polsce.
+
+Dane użytkownika:
+- Dochód netto: ${income} zł/mc
+- Stałe wydatki: ${expenses} zł/mc  
+- Budżet na wynajem (${Math.round(budget/income*100)}% dochodu): ${budget} zł
+- Szuka: ${aptType}${sharing > 1 ? ' (dzieli koszty na 2)' : ''}
+- Zostaje po wynajmie i wydatkach: ${cushion} zł
+- Dostępne miasta: ${affordable.map(c=>c.name).join(', ') || 'brak w zasięgu'}
+
+Napisz krótką, konkretną analizę (3-4 zdania) po polsku:
+1. Czy sytuacja jest dobra/akceptowalna/trudna
+2. Które 1-2 miasta polecasz i dlaczego
+3. Jeden konkretny tip co może poprawić sytuację
+
+Pisz bezpośrednio do użytkownika, bez owijania w bawełnę. Nie zaczynaj od "Na podstawie...".`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+    content.innerHTML = text.replace(/\n/g, '<br>');
+  } catch(e) {
+    content.innerHTML = '<span style="color:#c0392b">Błąd połączenia z AI.</span>';
+  }
+}
+
+function renderCities(filter = 'all') {
+  const grid = document.getElementById('cities-grid');
+  grid.innerHTML = '';
+
+  let filtered = CITIES;
+  if (filter === 'cheap') filtered = CITIES.filter(c => c.tier === 'cheap');
+  else if (filter === 'mid') filtered = CITIES.filter(c => c.tier === 'mid');
+  else if (filter === 'expensive') filtered = CITIES.filter(c => c.tier === 'expensive');
+  else if (filter === 'affordable' && userBudget) filtered = CITIES.filter(c => c[aptType] <= userBudget);
+
+  const maxPrice = Math.max(...CITIES.map(c => c[aptType]));
+
+  filtered.forEach(city => {
+    const price = city[aptType];
+    const barPct = Math.round((price / maxPrice) * 100);
+    const barClass = city.tier === 'cheap' ? 'cheap' : city.tier === 'mid' ? 'mid' : 'expensive';
+    const isAffordable = userBudget ? price <= userBudget : null;
+
+    let statusHtml = '';
+    if (userBudget !== null) {
+      if (isAffordable) statusHtml = `<div class="city-status status-ok">W zasięgu</div>`;
+      else statusHtml = `<div class="city-status status-no">Za drogie</div>`;
+    }
+
+    const card = document.createElement('div');
+    card.className = `city-card ${city.tier} ${isAffordable ? 'highlighted' : ''}`;
+    card.innerHTML = `
+      ${statusHtml}
+      <div class="city-name">${city.name}</div>
+      <div class="city-region">${city.region}</div>
+      <div class="city-price">${price.toLocaleString('pl-PL')} zł</div>
+      <div class="city-price-label">śr. cena ${aptType} / mc</div>
+      <div class="city-bar-wrap"><div class="city-bar ${barClass}" style="width:${barPct}%"></div></div>
+      <div class="city-tags">${city.tags.map(t => `<span class="city-tag">${t}</span>`).join('')}</div>
+    `;
+    grid.appendChild(card);
+  });
+}
+
+function filterCities(filter, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderCities(filter);
+}
+
+renderCities();
+</script>
+</body>
+</html>

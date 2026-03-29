@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Generator CV</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+html { height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--gray-1);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+}
+
+/* TOP BAR */
+.topbar {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray-2);
+  padding: 14px 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 100;
+}
+.topbar-logo { font-family: var(--serif); font-size: 20px; }
+.topbar-logo span { color: var(--accent); }
+.topbar-title { font-size: 14px; color: var(--gray-4); }
+.btn-pdf {
+  background: var(--black); color: var(--white);
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 10px 22px; border-radius: 99px; border: none;
+  cursor: pointer; transition: background 0.2s, transform 0.15s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-pdf:hover { background: var(--accent); transform: translateY(-1px); }
+
+/* LAYOUT */
+.layout {
+  display: grid;
+  grid-template-columns: 420px 1fr;
+  min-height: calc(100vh - 57px);
+}
+
+/* LEFT PANEL – FORM */
+.form-panel {
+  background: var(--white);
+  border-right: 1px solid var(--gray-2);
+  overflow-y: auto;
+  padding: 28px 28px 60px;
+}
+.section-head {
+  font-size: 11px; font-weight: 500; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--accent);
+  margin: 28px 0 14px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid var(--gray-2);
+}
+.section-head:first-child { margin-top: 0; }
+.field { margin-bottom: 14px; }
+label {
+  display: flex; align-items: center; justify-content: space-between;
+  font-size: 12px; color: var(--gray-4); margin-bottom: 5px;
+}
+.ai-hint-btn {
+  font-size: 11px; color: var(--accent); background: none; border: none;
+  cursor: pointer; padding: 2px 6px; border-radius: 4px;
+  background: var(--accent-light); font-family: var(--sans);
+  transition: opacity 0.15s;
+}
+.ai-hint-btn:hover { opacity: 0.75; }
+input[type=text], input[type=email], input[type=tel], input[type=url], textarea, select {
+  width: 100%; font-family: var(--sans); font-size: 13px;
+  padding: 9px 12px; border: 1px solid var(--gray-2);
+  border-radius: 8px; background: var(--white); color: var(--black);
+  transition: border-color 0.15s;
+  resize: vertical;
+}
+input:focus, textarea:focus, select:focus {
+  outline: none; border-color: var(--accent);
+}
+textarea { min-height: 80px; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+/* AI SUGGESTION BOX */
+.ai-box {
+  background: var(--accent-light);
+  border: 1px solid rgba(26,107,71,0.2);
+  border-radius: 10px; padding: 12px 14px;
+  margin-top: 8px; display: none;
+}
+.ai-box.visible { display: block; }
+.ai-box-header {
+  font-size: 11px; font-weight: 500; color: var(--accent);
+  margin-bottom: 8px; display: flex; align-items: center; gap: 6px;
+}
+.ai-box-content { font-size: 12px; color: var(--gray-4); line-height: 1.6; }
+.ai-loading { font-size: 12px; color: var(--accent); font-style: italic; }
+.ai-suggestions { display: flex; flex-direction: column; gap: 6px; }
+.ai-suggestion-item {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 6px; padding: 8px 10px;
+  font-size: 12px; color: var(--black); cursor: pointer;
+  transition: border-color 0.15s, background 0.15s;
+  line-height: 1.5;
+}
+.ai-suggestion-item:hover { border-color: var(--accent); background: var(--accent-light); }
+
+/* ADD BUTTONS */
+.add-btn {
+  width: 100%; background: none; border: 1px dashed var(--gray-2);
+  border-radius: 8px; padding: 10px; font-family: var(--sans);
+  font-size: 13px; color: var(--gray-3); cursor: pointer;
+  transition: border-color 0.15s, color 0.15s; margin-top: 8px;
+}
+.add-btn:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ENTRY CARDS */
+.entry-card {
+  border: 1px solid var(--gray-2); border-radius: 10px;
+  padding: 14px; margin-bottom: 10px; position: relative;
+}
+.entry-card-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 10px;
+}
+.entry-card-title { font-size: 13px; font-weight: 500; color: var(--black); }
+.remove-btn {
+  background: none; border: none; cursor: pointer;
+  font-size: 16px; color: var(--gray-3); line-height: 1;
+  padding: 2px 6px; border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+.remove-btn:hover { color: #c0392b; background: #fdf0f0; }
+
+/* RIGHT PANEL – PREVIEW */
+.preview-panel {
+  padding: 40px;
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--gray-1);
+  overflow-y: auto;
+}
+.preview-wrap {
+  width: 100%; max-width: 680px;
+  background: #fff;
+  box-shadow: 0 4px 32px rgba(0,0,0,0.10);
+  border-radius: 4px;
+  min-height: 960px;
+}
+
+/* CV TEMPLATE */
+#cv-output {
+  font-family: 'Georgia', serif;
+  font-size: 11pt;
+  line-height: 1.5;
+  color: #1a1a1a;
+  padding: 52px 56px;
+}
+.cv-name {
+  font-size: 26pt; font-weight: 700;
+  letter-spacing: -0.5px;
+  color: #111;
+  margin-bottom: 2px;
+}
+.cv-title {
+  font-size: 11pt; color: #555;
+  margin-bottom: 12px; font-family: 'DM Sans', sans-serif;
+  font-weight: 400;
+}
+.cv-contact {
+  display: flex; flex-wrap: wrap; gap: 4px 20px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt; color: #555;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #111;
+  margin-bottom: 20px;
+}
+.cv-contact span { display: flex; align-items: center; gap: 4px; }
+.cv-section { margin-bottom: 20px; }
+.cv-section-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 8.5pt; font-weight: 600;
+  letter-spacing: 0.12em; text-transform: uppercase;
+  color: #1a6b47;
+  border-bottom: 1px solid #e0e0e0;
+  padding-bottom: 4px; margin-bottom: 12px;
+}
+.cv-entry { margin-bottom: 14px; }
+.cv-entry-header {
+  display: flex; justify-content: space-between;
+  align-items: baseline;
+}
+.cv-entry-title { font-size: 11pt; font-weight: 700; color: #111; }
+.cv-entry-date {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt; color: #777; white-space: nowrap;
+}
+.cv-entry-sub {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9.5pt; color: #444; margin-bottom: 4px;
+  font-style: italic;
+}
+.cv-entry-desc {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9.5pt; color: #333; line-height: 1.6;
+}
+.cv-skills-grid {
+  display: flex; flex-wrap: wrap; gap: 6px;
+}
+.cv-skill {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9pt; background: #f4f4f2;
+  padding: 3px 10px; border-radius: 3px; color: #333;
+}
+.cv-summary {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 9.5pt; color: #333; line-height: 1.7;
+}
+.cv-placeholder { color: #ccc; font-style: italic; }
+
+@media print {
+  .topbar, .form-panel { display: none; }
+  .layout { grid-template-columns: 1fr; }
+  .preview-panel { padding: 0; background: white; }
+  .preview-wrap { box-shadow: none; border-radius: 0; }
+}
+@media (max-width: 900px) {
+  .layout { grid-template-columns: 1fr; }
+  .preview-panel { display: none; }
+}
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-logo">Adult<span>ly</span></div>
+  <div class="topbar-title">Generator CV</div>
+  <button class="btn-pdf" onclick="printCV()">
+    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+    Pobierz PDF
+  </button>
+</div>
+
+<div class="layout">
+
+<!-- FORM PANEL -->
+<div class="form-panel">
+
+  <div class="section-head">Dane osobowe</div>
+  <div class="field">
+    <label>Imię i nazwisko</label>
+    <input type="text" id="f-name" placeholder="Jan Kowalski" oninput="updateCV()">
+  </div>
+  <div class="field">
+    <label>Stanowisko / tytuł zawodowy</label>
+    <input type="text" id="f-title" placeholder="np. Młodszy analityk finansowy" oninput="updateCV()">
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label>E-mail</label>
+      <input type="email" id="f-email" placeholder="jan@gmail.com" oninput="updateCV()">
+    </div>
+    <div class="field">
+      <label>Telefon</label>
+      <input type="tel" id="f-phone" placeholder="+48 600 000 000" oninput="updateCV()">
+    </div>
+  </div>
+  <div class="row2">
+    <div class="field">
+      <label>Miasto</label>
+      <input type="text" id="f-city" placeholder="Warszawa" oninput="updateCV()">
+    </div>
+    <div class="field">
+      <label>LinkedIn / portfolio</label>
+      <input type="url" id="f-linkedin" placeholder="linkedin.com/in/jan" oninput="updateCV()">
+    </div>
+  </div>
+
+  <div class="section-head">Podsumowanie zawodowe</div>
+  <div class="field">
+    <label>
+      Kilka zdań o sobie
+      <button class="ai-hint-btn" onclick="aiSuggest('summary')">✦ Sugestia AI</button>
+    </label>
+    <textarea id="f-summary" rows="3" placeholder="Krótko o tym kim jesteś i czego szukasz..." oninput="updateCV()"></textarea>
+    <div class="ai-box" id="ai-summary">
+      <div class="ai-box-header">✦ Propozycje AI — kliknij żeby wstawić</div>
+      <div class="ai-box-content"><span class="ai-loading">Generuję sugestie...</span></div>
+    </div>
+  </div>
+
+  <div class="section-head">Doświadczenie zawodowe</div>
+  <div id="exp-list"></div>
+  <button class="add-btn" onclick="addEntry('exp')">+ Dodaj doświadczenie</button>
+
+  <div class="section-head">Wykształcenie</div>
+  <div id="edu-list"></div>
+  <button class="add-btn" onclick="addEntry('edu')">+ Dodaj wykształcenie</button>
+
+  <div class="section-head">Umiejętności</div>
+  <div class="field">
+    <label>
+      Umiejętności (oddziel przecinkami)
+      <button class="ai-hint-btn" onclick="aiSuggest('skills')">✦ Sugestia AI</button>
+    </label>
+    <input type="text" id="f-skills" placeholder="Excel, Python, analiza danych, komunikatywność..." oninput="updateCV()">
+    <div class="ai-box" id="ai-skills">
+      <div class="ai-box-header">✦ Propozycje AI — kliknij żeby dodać</div>
+      <div class="ai-box-content"><span class="ai-loading">Generuję sugestie...</span></div>
+    </div>
+  </div>
+
+  <div class="section-head">Języki</div>
+  <div class="field">
+    <label>Języki i poziomy</label>
+    <input type="text" id="f-langs" placeholder="Polski (ojczysty), Angielski (B2), Niemiecki (A2)" oninput="updateCV()">
+  </div>
+
+</div>
+
+<!-- PREVIEW PANEL -->
+<div class="preview-panel">
+  <div class="preview-wrap">
+    <div id="cv-output"></div>
+  </div>
+</div>
+
+</div>
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+
+let expEntries = [];
+let eduEntries = [];
+let expCounter = 0;
+let eduCounter = 0;
+
+function addEntry(type) {
+  const id = type + '_' + (type === 'exp' ? expCounter++ : eduCounter++);
+  const isExp = type === 'exp';
+  const arr = isExp ? expEntries : eduEntries;
+  const listId = isExp ? 'exp-list' : 'edu-list';
+
+  arr.push({ id, company: '', role: '', date: '', desc: '' });
+
+  const container = document.getElementById(listId);
+  const card = document.createElement('div');
+  card.className = 'entry-card';
+  card.id = 'card_' + id;
+  card.innerHTML = `
+    <div class="entry-card-header">
+      <span class="entry-card-title">${isExp ? 'Doświadczenie' : 'Wykształcenie'}</span>
+      <button class="remove-btn" onclick="removeEntry('${type}','${id}')">×</button>
+    </div>
+    <div class="field">
+      <label>${isExp ? 'Firma / organizacja' : 'Uczelnia / szkoła'}</label>
+      <input type="text" placeholder="${isExp ? 'np. PKO Bank Polski' : 'np. Uniwersytet Warszawski'}" oninput="updateEntry('${type}','${id}','company',this.value)">
+    </div>
+    <div class="field">
+      <label>${isExp ? 'Stanowisko' : 'Kierunek / tytuł'}</label>
+      <input type="text" placeholder="${isExp ? 'np. Stażysta analityk' : 'np. Finanse i Rachunkowość (lic.)'}" oninput="updateEntry('${type}','${id}','role',this.value)">
+    </div>
+    <div class="field">
+      <label>Okres</label>
+      <input type="text" placeholder="np. 2023 – 2024" oninput="updateEntry('${type}','${id}','date',this.value)">
+    </div>
+    <div class="field">
+      <label>
+        ${isExp ? 'Opis obowiązków' : 'Dodatkowe info'}
+        ${isExp ? `<button class="ai-hint-btn" onclick="aiSuggestExp('${id}')">✦ Sugestia AI</button>` : ''}
+      </label>
+      <textarea rows="2" placeholder="${isExp ? 'Co robiłeś, co osiągnąłeś...' : 'Specjalizacja, osiągnięcia, projekty...'}" oninput="updateEntry('${type}','${id}','desc',this.value)" id="desc_${id}"></textarea>
+      ${isExp ? `<div class="ai-box" id="ai-exp-${id}">
+        <div class="ai-box-header">✦ Propozycje AI — kliknij żeby wstawić</div>
+        <div class="ai-box-content"><span class="ai-loading">Generuję sugestie...</span></div>
+      </div>` : ''}
+    </div>
+  `;
+  container.appendChild(card);
+  updateCV();
+}
+
+function removeEntry(type, id) {
+  const arr = type === 'exp' ? expEntries : eduEntries;
+  const idx = arr.findIndex(e => e.id === id);
+  if (idx > -1) arr.splice(idx, 1);
+  document.getElementById('card_' + id)?.remove();
+  updateCV();
+}
+
+function updateEntry(type, id, field, value) {
+  const arr = type === 'exp' ? expEntries : eduEntries;
+  const entry = arr.find(e => e.id === id);
+  if (entry) { entry[field] = value; updateCV(); }
+}
+
+function v(id) { return (document.getElementById(id)?.value || '').trim(); }
+
+function updateCV() {
+  const name = v('f-name');
+  const title = v('f-title');
+  const email = v('f-email');
+  const phone = v('f-phone');
+  const city = v('f-city');
+  const linkedin = v('f-linkedin');
+  const summary = v('f-summary');
+  const skills = v('f-skills');
+  const langs = v('f-langs');
+
+  const ph = (text, placeholder) => text
+    ? `<span>${text}</span>`
+    : `<span class="cv-placeholder">${placeholder}</span>`;
+
+  let html = `
+    <div class="cv-name">${name || '<span class="cv-placeholder">Twoje imię i nazwisko</span>'}</div>
+    ${title ? `<div class="cv-title">${title}</div>` : ''}
+    <div class="cv-contact">
+      ${email ? `<span>✉ ${email}</span>` : ''}
+      ${phone ? `<span>✆ ${phone}</span>` : ''}
+      ${city ? `<span>⌖ ${city}</span>` : ''}
+      ${linkedin ? `<span>⇗ ${linkedin}</span>` : ''}
+      ${!email && !phone && !city ? `<span class="cv-placeholder">e-mail · telefon · miasto</span>` : ''}
+    </div>
+  `;
+
+  if (summary) {
+    html += `<div class="cv-section">
+      <div class="cv-section-title">Podsumowanie</div>
+      <div class="cv-summary">${summary}</div>
+    </div>`;
+  }
+
+  if (expEntries.length > 0) {
+    html += `<div class="cv-section"><div class="cv-section-title">Doświadczenie zawodowe</div>`;
+    expEntries.forEach(e => {
+      html += `<div class="cv-entry">
+        <div class="cv-entry-header">
+          <div class="cv-entry-title">${e.role || '<span class="cv-placeholder">Stanowisko</span>'}</div>
+          <div class="cv-entry-date">${e.date || ''}</div>
+        </div>
+        <div class="cv-entry-sub">${e.company || '<span class="cv-placeholder">Firma</span>'}</div>
+        ${e.desc ? `<div class="cv-entry-desc">${e.desc}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (eduEntries.length > 0) {
+    html += `<div class="cv-section"><div class="cv-section-title">Wykształcenie</div>`;
+    eduEntries.forEach(e => {
+      html += `<div class="cv-entry">
+        <div class="cv-entry-header">
+          <div class="cv-entry-title">${e.role || '<span class="cv-placeholder">Kierunek / tytuł</span>'}</div>
+          <div class="cv-entry-date">${e.date || ''}</div>
+        </div>
+        <div class="cv-entry-sub">${e.company || '<span class="cv-placeholder">Uczelnia</span>'}</div>
+        ${e.desc ? `<div class="cv-entry-desc">${e.desc}</div>` : ''}
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  if (skills) {
+    const skillList = skills.split(',').map(s => s.trim()).filter(Boolean);
+    html += `<div class="cv-section">
+      <div class="cv-section-title">Umiejętności</div>
+      <div class="cv-skills-grid">
+        ${skillList.map(s => `<div class="cv-skill">${s}</div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  if (langs) {
+    html += `<div class="cv-section">
+      <div class="cv-section-title">Języki</div>
+      <div class="cv-summary">${langs}</div>
+    </div>`;
+  }
+
+  document.getElementById('cv-output').innerHTML = html;
+}
+
+async function aiSuggest(type) {
+  const boxId = type === 'summary' ? 'ai-summary' : 'ai-skills';
+  const box = document.getElementById(boxId);
+  box.classList.add('visible');
+  box.querySelector('.ai-box-content').innerHTML = '<span class="ai-loading">Generuję sugestie...</span>';
+
+  const name = v('f-name');
+  const title = v('f-title');
+  const current = type === 'summary' ? v('f-summary') : v('f-skills');
+
+  let prompt = '';
+  if (type === 'summary') {
+    prompt = `Jesteś ekspertem od CV. Zaproponuj 3 krótkie podsumowania zawodowe (2-3 zdania każde) dla osoby:
+Imię: ${name || 'brak'}
+Stanowisko: ${title || 'świeży absolwent'}
+Aktualne podsumowanie: ${current || 'brak'}
+
+Odpowiedz TYLKO w formacie JSON: {"suggestions": ["tekst1", "tekst2", "tekst3"]}
+Styl: profesjonalny, konkretny, po polsku. Bez ogólników.`;
+  } else {
+    prompt = `Zaproponuj 8-10 umiejętności do CV dla osoby na stanowisku: ${title || 'absolwent finansów'}.
+Obecne umiejętności: ${current || 'brak'}
+Odpowiedz TYLKO w formacie JSON: {"suggestions": ["skill1", "skill2", ...]}
+Mix: twarde (narzędzia, programy) i miękkie. Po polsku.`;
+  }
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    if (type === 'summary') {
+      box.querySelector('.ai-box-content').innerHTML = `<div class="ai-suggestions">
+        ${parsed.suggestions.map(s => `<div class="ai-suggestion-item" onclick="insertSuggestion('f-summary', '${s.replace(/'/g,"&#39;")}')">${s}</div>`).join('')}
+      </div>`;
+    } else {
+      box.querySelector('.ai-box-content').innerHTML = `<div class="ai-suggestions">
+        ${parsed.suggestions.map(s => `<div class="ai-suggestion-item" onclick="addSkill('${s.replace(/'/g,"&#39;")}')">${s}</div>`).join('')}
+      </div>`;
+    }
+  } catch(e) {
+    box.querySelector('.ai-box-content').innerHTML = '<span style="color:#c0392b;font-size:12px">Błąd połączenia z AI. Spróbuj ponownie.</span>';
+  }
+}
+
+async function aiSuggestExp(id) {
+  const box = document.getElementById('ai-exp-' + id);
+  if (!box) return;
+  box.classList.add('visible');
+  box.querySelector('.ai-box-content').innerHTML = '<span class="ai-loading">Generuję sugestie...</span>';
+
+  const entry = expEntries.find(e => e.id === id);
+  if (!entry) return;
+
+  const prompt = `Zaproponuj 3 opisy obowiązków / osiągnięć do CV dla:
+Stanowisko: ${entry.role || 'stażysta'}
+Firma: ${entry.company || 'firma'}
+Aktualny opis: ${entry.desc || 'brak'}
+
+Odpowiedz TYLKO w formacie JSON: {"suggestions": ["opis1", "opis2", "opis3"]}
+Styl: konkretne, z liczbami jeśli możliwe, po polsku, 1-3 zdania każdy.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+    const clean = text.replace(/```json|```/g, '').trim();
+    const parsed = JSON.parse(clean);
+
+    box.querySelector('.ai-box-content').innerHTML = `<div class="ai-suggestions">
+      ${parsed.suggestions.map(s => `<div class="ai-suggestion-item" onclick="insertSuggestion('desc_${id}','${s.replace(/'/g,"&#39;")}')">${s}</div>`).join('')}
+    </div>`;
+  } catch(e) {
+    box.querySelector('.ai-box-content').innerHTML = '<span style="color:#c0392b;font-size:12px">Błąd połączenia z AI. Spróbuj ponownie.</span>';
+  }
+}
+
+function insertSuggestion(fieldId, text) {
+  const el = document.getElementById(fieldId);
+  if (!el) return;
+  el.value = text;
+  el.dispatchEvent(new Event('input'));
+  const id = fieldId.replace('desc_', '');
+  const entry = expEntries.find(e => e.id === id);
+  if (entry) { entry.desc = text; updateCV(); }
+}
+
+function addSkill(skill) {
+  const el = document.getElementById('f-skills');
+  const current = el.value.trim();
+  el.value = current ? current + ', ' + skill : skill;
+  el.dispatchEvent(new Event('input'));
+}
+
+function printCV() {
+  window.print();
+}
+
+updateCV();
+</script>
+</body>
+</html>
