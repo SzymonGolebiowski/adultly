@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Witaj</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+html, body { height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--white);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 24px;
+}
+
+.container {
+  width: 100%;
+  max-width: 480px;
+}
+
+/* LOGO */
+.logo {
+  font-family: var(--serif);
+  font-size: 22px;
+  text-align: center;
+  margin-bottom: 40px;
+}
+.logo span { color: var(--accent); }
+
+/* PROGRESS */
+.progress {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 40px;
+}
+.progress-step {
+  flex: 1; height: 3px;
+  background: var(--gray-2);
+  border-radius: 99px;
+  transition: background 0.4s ease;
+}
+.progress-step.done { background: var(--accent-mid); }
+.progress-step.active { background: var(--accent); }
+
+/* STEP */
+.step { display: none; animation: fadeUp 0.4s ease both; }
+.step.active { display: block; }
+
+.step-label {
+  font-size: 12px; font-weight: 500; color: var(--accent);
+  letter-spacing: 0.06em; text-transform: uppercase;
+  margin-bottom: 10px;
+}
+.step-title {
+  font-family: var(--serif);
+  font-size: clamp(28px, 5vw, 36px);
+  line-height: 1.15;
+  letter-spacing: -0.5px;
+  margin-bottom: 10px;
+}
+.step-title em { font-style: italic; color: var(--accent); }
+.step-desc {
+  font-size: 15px; color: var(--gray-4);
+  line-height: 1.7; margin-bottom: 32px;
+  font-weight: 300;
+}
+
+/* FIELDS */
+.field { margin-bottom: 16px; }
+.field label {
+  display: block; font-size: 13px;
+  color: var(--gray-4); margin-bottom: 6px;
+}
+.field input, .field select, .field textarea {
+  width: 100%; font-family: var(--sans); font-size: 15px;
+  padding: 13px 16px; border: 1px solid var(--gray-2);
+  border-radius: 12px; background: var(--gray-1); color: var(--black);
+  transition: border-color 0.15s, background 0.15s;
+  appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus {
+  outline: none; border-color: var(--accent); background: var(--white);
+}
+.field textarea { min-height: 80px; resize: none; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+/* OPTION CARDS */
+.options-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 16px;
+}
+.option-card {
+  border: 1px solid var(--gray-2); border-radius: 14px;
+  padding: 16px; cursor: pointer; transition: all 0.15s;
+  text-align: center;
+}
+.option-card:hover { border-color: var(--gray-3); background: var(--gray-1); }
+.option-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.option-card.selected .option-label { color: var(--accent); font-weight: 500; }
+.option-icon { font-size: 28px; margin-bottom: 8px; }
+.option-label { font-size: 13px; color: var(--gray-4); line-height: 1.4; }
+
+/* MULTI SELECT PILLS */
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.pill {
+  font-family: var(--sans); font-size: 13px;
+  padding: 8px 16px; border-radius: 99px;
+  border: 1px solid var(--gray-2); background: var(--white);
+  cursor: pointer; transition: all 0.15s; color: var(--gray-4);
+}
+.pill:hover { border-color: var(--gray-3); color: var(--black); }
+.pill.selected { background: var(--accent); border-color: var(--accent); color: var(--white); }
+
+/* RANGE */
+.range-field { margin-bottom: 20px; }
+.range-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
+.range-label { font-size: 13px; color: var(--gray-4); }
+.range-value { font-size: 14px; font-weight: 500; color: var(--black); }
+input[type=range] { width: 100%; }
+
+/* SKIP */
+.skip-link {
+  display: block; text-align: center;
+  font-size: 13px; color: var(--gray-3);
+  cursor: pointer; margin-top: 14px;
+  transition: color 0.15s;
+}
+.skip-link:hover { color: var(--gray-4); }
+
+/* BTN */
+.btn-next {
+  width: 100%; background: var(--black); color: var(--white);
+  font-family: var(--sans); font-size: 16px; font-weight: 500;
+  padding: 16px; border-radius: 14px; border: none; cursor: pointer;
+  transition: background 0.2s, transform 0.15s; margin-top: 8px;
+}
+.btn-next:hover { background: var(--accent); transform: translateY(-1px); }
+.btn-next:disabled { background: var(--gray-2); color: var(--gray-3); cursor: not-allowed; transform: none; }
+
+/* AHA MOMENT */
+.aha-screen { display: none; animation: fadeUp 0.5s ease both; }
+.aha-screen.active { display: block; }
+
+.aha-header {
+  background: var(--black); border-radius: 20px;
+  padding: 28px; margin-bottom: 16px; position: relative; overflow: hidden;
+}
+.aha-header::after {
+  content: ''; position: absolute;
+  bottom: -60px; right: -60px;
+  width: 180px; height: 180px;
+  background: rgba(45,154,104,0.15); border-radius: 50%;
+}
+.aha-greeting { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.aha-title {
+  font-family: var(--serif); font-size: 28px;
+  color: var(--white); line-height: 1.2; margin-bottom: 16px;
+}
+.aha-title em { font-style: italic; color: #7de0ad; }
+.aha-loading {
+  font-size: 13px; color: rgba(255,255,255,0.5);
+  font-style: italic; display: flex; align-items: center; gap: 8px;
+}
+.aha-loading-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent-mid);
+  animation: pulse 1s ease-in-out infinite;
+}
+.aha-loading-dot:nth-child(2) { animation-delay: 0.2s; }
+.aha-loading-dot:nth-child(3) { animation-delay: 0.4s; }
+
+.aha-insights { display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+.aha-insight {
+  background: var(--gray-1); border-radius: 14px;
+  padding: 16px; display: flex; align-items: flex-start; gap: 12px;
+  animation: fadeUp 0.4s ease both;
+}
+.aha-insight:nth-child(2) { animation-delay: 0.1s; }
+.aha-insight:nth-child(3) { animation-delay: 0.2s; }
+.aha-insight-icon {
+  width: 40px; height: 40px; border-radius: 12px;
+  background: var(--white); display: flex; align-items: center;
+  justify-content: center; font-size: 18px; flex-shrink: 0;
+}
+.aha-insight-title { font-size: 14px; font-weight: 500; color: var(--black); margin-bottom: 3px; }
+.aha-insight-desc { font-size: 13px; color: var(--gray-4); line-height: 1.5; }
+
+.aha-ai-text {
+  font-size: 14px; color: var(--white);
+  line-height: 1.8; opacity: 0;
+  transition: opacity 0.5s ease;
+}
+.aha-ai-text.visible { opacity: 1; }
+
+/* ANIMATIONS */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; transform: scale(0.8); }
+  50% { opacity: 1; transform: scale(1); }
+}
+
+@media (max-width: 480px) {
+  .options-grid { grid-template-columns: 1fr 1fr; }
+  .row2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+  <div class="logo">Adult<span>ly</span></div>
+
+  <div class="progress">
+    <div class="progress-step active" id="ps-1"></div>
+    <div class="progress-step" id="ps-2"></div>
+    <div class="progress-step" id="ps-3"></div>
+    <div class="progress-step" id="ps-4"></div>
+    <div class="progress-step" id="ps-5"></div>
+  </div>
+
+  <!-- KROK 1: Kim jesteś -->
+  <div class="step active" id="step-1">
+    <div class="step-label">Krok 1 z 5</div>
+    <div class="step-title">Cześć, kim <em>jesteś?</em></div>
+    <div class="step-desc">Adultly dopasuje się do twojej sytuacji. Zacznijmy od podstaw.</div>
+
+    <div class="field">
+      <label>Imię</label>
+      <input type="text" id="f-name" placeholder="np. Szymon">
+    </div>
+    <div class="row2">
+      <div class="field">
+        <label>Wiek</label>
+        <input type="number" id="f-age" placeholder="np. 23" min="18" max="35">
+      </div>
+      <div class="field">
+        <label>Miasto</label>
+        <input type="text" id="f-city" placeholder="np. Warszawa">
+      </div>
+    </div>
+    <div class="field">
+      <label>Twój status</label>
+      <select id="f-status">
+        <option value="">Wybierz...</option>
+        <option value="student">Student (uczę się)</option>
+        <option value="absolwent">Świeży absolwent (do 1 roku)</option>
+        <option value="pracuje">Pracuję już od jakiegoś czasu</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Kierunek studiów</label>
+      <input type="text" id="f-major" placeholder="np. Finanse i Rachunkowość">
+    </div>
+
+    <button class="btn-next" onclick="nextStep(1)">Dalej →</button>
+  </div>
+
+  <!-- KROK 2: Sytuacja finansowa -->
+  <div class="step" id="step-2">
+    <div class="step-label">Krok 2 z 5</div>
+    <div class="step-title">Twoje <em>finanse</em></div>
+    <div class="step-desc">Im więcej podasz, tym lepiej Adultly może ci pomóc. Wszystko zostaje u ciebie.</div>
+
+    <div class="field">
+      <label>Dochód netto miesięcznie</label>
+      <input type="number" id="f-income" placeholder="np. 5000">
+    </div>
+    <div class="field">
+      <label>Forma zatrudnienia</label>
+      <select id="f-employment">
+        <option value="">Wybierz...</option>
+        <option value="uop">Umowa o pracę (UoP)</option>
+        <option value="b2b">B2B / własna działalność</option>
+        <option value="uod">Umowa o dzieło / zlecenie</option>
+        <option value="szukam">Szukam pracy</option>
+        <option value="staz">Staż / praktyki</option>
+      </select>
+    </div>
+    <div class="field">
+      <label>Miesięczne stałe wydatki (wynajem, jedzenie, transport...)</label>
+      <input type="number" id="f-expenses" placeholder="np. 2500">
+    </div>
+    <div class="field">
+      <label>Czy masz oszczędności?</label>
+      <select id="f-savings">
+        <option value="">Wybierz...</option>
+        <option value="nie">Nie mam / prawie nie mam</option>
+        <option value="malo">Trochę (do 5 000 zł)</option>
+        <option value="srednie">Średnio (5 000 – 20 000 zł)</option>
+        <option value="duzo">Sporo (powyżej 20 000 zł)</option>
+      </select>
+    </div>
+
+    <button class="btn-next" onclick="nextStep(2)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(2)">Pomiń ten krok</span>
+  </div>
+
+  <!-- KROK 3: Mieszkanie -->
+  <div class="step" id="step-3">
+    <div class="step-label">Krok 3 z 5</div>
+    <div class="step-title">Twoje <em>mieszkanie</em></div>
+    <div class="step-desc">Gdzie i jak mieszkasz – to jeden z największych wydatków.</div>
+
+    <div class="options-grid" style="margin-bottom:20px">
+      <div class="option-card" onclick="selectOption(this, 'housing')" data-val="wynajem-sam">
+        <div class="option-icon">🏠</div>
+        <div class="option-label">Wynajmuję sam/a</div>
+      </div>
+      <div class="option-card" onclick="selectOption(this, 'housing')" data-val="wynajem-wspolnie">
+        <div class="option-icon">👥</div>
+        <div class="option-label">Wynajmuję ze współlokatorami</div>
+      </div>
+      <div class="option-card" onclick="selectOption(this, 'housing')" data-val="rodzice">
+        <div class="option-icon">🏡</div>
+        <div class="option-label">Mieszkam z rodzicami</div>
+      </div>
+      <div class="option-card" onclick="selectOption(this, 'housing')" data-val="wlasne">
+        <div class="option-icon">🔑</div>
+        <div class="option-label">Własne mieszkanie</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Ile płacisz za wynajem? (zostaw puste jeśli nie dotyczy)</label>
+      <input type="number" id="f-rent" placeholder="np. 1800">
+    </div>
+
+    <button class="btn-next" onclick="nextStep(3)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(3)">Pomiń ten krok</span>
+  </div>
+
+  <!-- KROK 4: Auto i dokumenty -->
+  <div class="step" id="step-4">
+    <div class="step-label">Krok 4 z 5</div>
+    <div class="step-title">Auto i <em>dokumenty</em></div>
+    <div class="step-desc">Adultly będzie pilnować ważnych terminów za ciebie.</div>
+
+    <div class="field">
+      <label>Masz samochód?</label>
+      <div class="options-grid" style="grid-template-columns:1fr 1fr;margin-bottom:0">
+        <div class="option-card" onclick="selectOption(this, 'car')" data-val="tak">
+          <div class="option-icon">🚗</div>
+          <div class="option-label">Tak</div>
+        </div>
+        <div class="option-card" onclick="selectOption(this, 'car')" data-val="nie">
+          <div class="option-icon">🚌</div>
+          <div class="option-label">Nie, komunikacja</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="field" id="car-fields" style="display:none">
+      <label>Kiedy kończy się OC? (przybliżona data)</label>
+      <input type="month" id="f-oc">
+    </div>
+
+    <div class="field" style="margin-top:16px">
+      <label>Kiedy kończy się twoja umowa najmu? (zostaw puste jeśli nie dotyczy)</label>
+      <input type="month" id="f-lease">
+    </div>
+
+    <div class="field">
+      <label>Kiedy kończy się ważność dowodu osobistego?</label>
+      <input type="month" id="f-id">
+    </div>
+
+    <button class="btn-next" onclick="nextStep(4)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(4)">Pomiń ten krok</span>
+  </div>
+
+  <!-- KROK 5: Cele -->
+  <div class="step" id="step-5">
+    <div class="step-label">Krok 5 z 5</div>
+    <div class="step-title">Co chcesz <em>ogarnąć?</em></div>
+    <div class="step-desc">Wybierz co jest dla ciebie teraz najważniejsze. Możesz zaznaczyć kilka.</div>
+
+    <div class="pills">
+      <div class="pill" onclick="togglePill(this)">Znaleźć pracę</div>
+      <div class="pill" onclick="togglePill(this)">Zrozumieć UoP vs B2B</div>
+      <div class="pill" onclick="togglePill(this)">Oszczędzać więcej</div>
+      <div class="pill" onclick="togglePill(this)">Zbudować CV</div>
+      <div class="pill" onclick="togglePill(this)">Znaleźć mieszkanie</div>
+      <div class="pill" onclick="togglePill(this)">Ogarnąć formalności</div>
+      <div class="pill" onclick="togglePill(this)">Ubezpieczenia</div>
+      <div class="pill" onclick="togglePill(this)">Zrozumieć podatki</div>
+      <div class="pill" onclick="togglePill(this)">Zbudować historię kredytową</div>
+      <div class="pill" onclick="togglePill(this)">Wszystko naraz</div>
+    </div>
+
+    <button class="btn-next" onclick="finishOnboarding()">Pokaż moje wyniki →</button>
+  </div>
+
+  <!-- AHA MOMENT -->
+  <div class="aha-screen" id="aha">
+    <div class="aha-header">
+      <div class="aha-greeting" id="aha-greeting">Analizuję twój profil...</div>
+      <div class="aha-title" id="aha-title">Zaraz zobaczysz <em>co możesz zyskać</em></div>
+      <div class="aha-loading" id="aha-loading">
+        <div class="aha-loading-dot"></div>
+        <div class="aha-loading-dot"></div>
+        <div class="aha-loading-dot"></div>
+      </div>
+      <div class="aha-ai-text" id="aha-ai-text"></div>
+    </div>
+
+    <div class="aha-insights" id="aha-insights" style="display:none"></div>
+
+    <button class="btn-next" id="aha-btn" style="display:none" onclick="goToDashboard()">
+      Przejdź do swojego dashboardu →
+    </button>
+  </div>
+
+</div>
+
+<script>
+const API_URL = "https://api.anthropic.com/v1/messages";
+let currentStep = 1;
+const profile = {};
+
+function nextStep(from) {
+  collectData(from);
+  const next = from + 1;
+  if (next > 5) { finishOnboarding(); return; }
+
+  document.getElementById('step-' + from).classList.remove('active');
+  document.getElementById('step-' + next).classList.add('active');
+
+  document.getElementById('ps-' + from).className = 'progress-step done';
+  document.getElementById('ps-' + next).className = 'progress-step active';
+
+  currentStep = next;
+  window.scrollTo(0, 0);
+}
+
+function collectData(step) {
+  if (step === 1) {
+    profile.name = document.getElementById('f-name').value || 'Ty';
+    profile.age = document.getElementById('f-age').value;
+    profile.city = document.getElementById('f-city').value;
+    profile.status = document.getElementById('f-status').value;
+    profile.major = document.getElementById('f-major').value;
+  }
+  if (step === 2) {
+    profile.income = document.getElementById('f-income').value;
+    profile.employment = document.getElementById('f-employment').value;
+    profile.expenses = document.getElementById('f-expenses').value;
+    profile.savings = document.getElementById('f-savings').value;
+  }
+  if (step === 3) {
+    profile.rent = document.getElementById('f-rent').value;
+  }
+  if (step === 4) {
+    profile.oc = document.getElementById('f-oc').value;
+    profile.lease = document.getElementById('f-lease').value;
+    profile.id_doc = document.getElementById('f-id').value;
+  }
+  if (step === 5) {
+    profile.goals = Array.from(document.querySelectorAll('.pill.selected')).map(p => p.textContent);
+  }
+}
+
+function selectOption(el, group) {
+  document.querySelectorAll(`[data-val]`).forEach(c => {
+    if (c.closest('.options-grid') === el.closest('.options-grid')) {
+      c.classList.remove('selected');
+    }
+  });
+  el.classList.add('selected');
+  profile[group] = el.dataset.val;
+
+  if (group === 'car') {
+    document.getElementById('car-fields').style.display = el.dataset.val === 'tak' ? 'block' : 'none';
+  }
+}
+
+function togglePill(el) {
+  el.classList.toggle('selected');
+}
+
+function finishOnboarding() {
+  collectData(5);
+
+  for (let i = 1; i <= 5; i++) {
+    document.getElementById('step-' + i).classList.remove('active');
+    document.getElementById('ps-' + i).className = 'progress-step done';
+  }
+
+  document.getElementById('aha').classList.add('active');
+  window.scrollTo(0, 0);
+
+  generateAhaInsights();
+}
+
+async function generateAhaInsights() {
+  const name = profile.name || 'Ty';
+  const income = parseInt(profile.income) || 0;
+  const expenses = parseInt(profile.expenses) || 0;
+  const rent = parseInt(profile.rent) || 0;
+  const employment = profile.employment || 'szukam';
+  const city = profile.city || 'swoim mieście';
+  const goals = profile.goals || [];
+
+  document.getElementById('aha-greeting').textContent = `Hej ${name}, analizuję twój profil...`;
+
+  const prompt = `Jesteś doradcą finansowym i życiowym dla młodych Polaków po studiach. 
+Przeanalizuj profil użytkownika i napisz 2-3 zdania spersonalizowanej analizy po polsku.
+
+Profil:
+- Imię: ${name}
+- Miasto: ${city}
+- Status: ${profile.status || 'absolwent'}
+- Kierunek: ${profile.major || 'nieznany'}
+- Dochód netto: ${income ? income + ' zł/mc' : 'nieznany'}
+- Forma zatrudnienia: ${employment}
+- Stałe wydatki: ${expenses ? expenses + ' zł/mc' : 'nieznane'}
+- Wynajem: ${rent ? rent + ' zł/mc' : 'nieznany'}
+- Oszczędności: ${profile.savings || 'nieznane'}
+- Cele: ${goals.join(', ') || 'nieznane'}
+
+Napisz bezpośrednio do ${name}, po polsku. Zacznij od konkretnej obserwacji (np. "Przy twoich dochodach..." albo "Jako ${profile.status === 'student' ? 'student' : 'absolwent'}..."). Wspomnij jedną konkretną rzecz którą możesz poprawić. Bądź szczery i konkretny, nie ogólnikowy. Max 3 zdania.`;
+
+  try {
+    const res = await fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        messages: [{ role: 'user', content: prompt }]
+      })
+    });
+    const data = await res.json();
+    const text = data.content?.map(c => c.text || '').join('') || '';
+
+    document.getElementById('aha-loading').style.display = 'none';
+    document.getElementById('aha-title').innerHTML = `Oto co widzę <em>w twoim profilu</em>`;
+    const aiText = document.getElementById('aha-ai-text');
+    aiText.textContent = text;
+    aiText.classList.add('visible');
+
+  } catch(e) {
+    document.getElementById('aha-loading').style.display = 'none';
+    document.getElementById('aha-title').innerHTML = `Profil <em>gotowy</em>`;
+    const aiText = document.getElementById('aha-ai-text');
+    aiText.textContent = `Witaj ${name}! Twój profil jest gotowy. Przejdź do dashboardu żeby zobaczyć spersonalizowane podpowiedzi.`;
+    aiText.classList.add('visible');
+  }
+
+  setTimeout(() => {
+    showInsights(income, expenses, rent, employment, name);
+  }, 800);
+}
+
+function showInsights(income, expenses, rent, employment, name) {
+  const container = document.getElementById('aha-insights');
+  container.style.display = 'flex';
+
+  const insights = [];
+
+  if (income > 0 && employment === 'uop') {
+    const b2bGain = Math.round(income * 0.12);
+    insights.push({
+      icon: '💡',
+      title: `B2B mogłoby dać ci +${b2bGain.toLocaleString('pl-PL')} zł/mc`,
+      desc: `Przy twoim dochodzie przejście na B2B z liniowym 19% zazwyczaj się opłaca. Sprawdź kalkulator.`
+    });
+  }
+
+  if (income > 0 && expenses > 0) {
+    const free = income - expenses;
+    const savingPct = Math.round((free / income) * 100);
+    if (free > 0) {
+      insights.push({
+        icon: '📈',
+        title: `Możesz odkładać ${free.toLocaleString('pl-PL')} zł miesięcznie`,
+        desc: `To ${savingPct}% twojego dochodu. ${savingPct >= 20 ? 'Dobry wynik – rozważ ETF lub konto oszczędnościowe.' : 'Sprawdź czy możesz obciąć stałe wydatki.'}`
+      });
+    }
+  }
+
+  if (rent > 0 && income > 0) {
+    const rentPct = Math.round((rent / income) * 100);
+    if (rentPct > 35) {
+      insights.push({
+        icon: '🏠',
+        title: `Wynajem pochłania ${rentPct}% dochodu`,
+        desc: `To powyżej zalecanego 30%. Rozważ współlokatora lub tańsze miasto – możesz zaoszczędzić ${Math.round(rent * 0.3).toLocaleString('pl-PL')} zł/mc.`
+      });
+    } else {
+      insights.push({
+        icon: '🏠',
+        title: `Wynajem to ${rentPct}% dochodu`,
+        desc: `Mieścisz się w zdrowym przedziale. To daje ci przestrzeń na oszczędności i nieprzewidziane wydatki.`
+      });
+    }
+  }
+
+  if (insights.length === 0) {
+    insights.push({
+      icon: '🎯',
+      title: 'Profil gotowy',
+      desc: 'Uzupełnij dane finansowe żeby Adultly mógł pokazać ci spersonalizowane podpowiedzi.'
+    });
+  }
+
+  container.innerHTML = insights.map(i => `
+    <div class="aha-insight">
+      <div class="aha-insight-icon">${i.icon}</div>
+      <div>
+        <div class="aha-insight-title">${i.title}</div>
+        <div class="aha-insight-desc">${i.desc}</div>
+      </div>
+    </div>
+  `).join('');
+
+  setTimeout(() => {
+    document.getElementById('aha-btn').style.display = 'block';
+  }, 400);
+}
+
+function goToDashboard() {
+  window.location.href = 'adultly-dashboard.html';
+}
+</script>
+</body>
+</html>
