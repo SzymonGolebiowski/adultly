@@ -1,0 +1,933 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Ogarnij dorosłe życie</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+  --amber: #92400e;
+  --amber-bg: #fef3c7;
+  --red: #991b1b;
+  --red-bg: #fee2e2;
+  --sidebar-w: 240px;
+}
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--white); color: var(--black); -webkit-font-smoothing: antialiased; }
+
+/* ============ SCREENS ============ */
+.screen { display: none; }
+.screen.active { display: block; }
+
+/* ============ ONBOARDING ============ */
+#screen-onboarding {
+  min-height: 100vh;
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: var(--white);
+}
+.ob-container { width: 100%; max-width: 480px; }
+.ob-logo { font-family: var(--serif); font-size: 22px; text-align: center; margin-bottom: 40px; }
+.ob-logo span { color: var(--accent); }
+.ob-progress { display: flex; gap: 6px; margin-bottom: 40px; }
+.ob-bar { flex: 1; height: 3px; background: var(--gray-2); border-radius: 99px; transition: background 0.4s; }
+.ob-bar.done { background: var(--accent-mid); }
+.ob-bar.active { background: var(--accent); }
+.ob-step { display: none; animation: fadeUp 0.4s ease both; }
+.ob-step.active { display: block; }
+.ob-label { font-size: 12px; font-weight: 500; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 10px; }
+.ob-title { font-family: var(--serif); font-size: clamp(28px,5vw,36px); line-height: 1.15; letter-spacing: -0.5px; margin-bottom: 10px; }
+.ob-title em { font-style: italic; color: var(--accent); }
+.ob-desc { font-size: 15px; color: var(--gray-4); line-height: 1.7; margin-bottom: 28px; font-weight: 300; }
+.f { margin-bottom: 14px; }
+.f label { display: block; font-size: 13px; color: var(--gray-4); margin-bottom: 5px; }
+.f input, .f select {
+  width: 100%; font-family: var(--sans); font-size: 15px;
+  padding: 12px 14px; border: 1px solid var(--gray-2);
+  border-radius: 12px; background: var(--gray-1); color: var(--black);
+  transition: border-color 0.15s, background 0.15s; appearance: none;
+}
+.f input:focus, .f select:focus { outline: none; border-color: var(--accent); background: var(--white); }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.opt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+.opt-card { border: 1px solid var(--gray-2); border-radius: 14px; padding: 14px; cursor: pointer; transition: all 0.15s; text-align: center; }
+.opt-card:hover { border-color: var(--gray-3); background: var(--gray-1); }
+.opt-card.sel { border-color: var(--accent); background: var(--accent-light); }
+.opt-card.sel .opt-lbl { color: var(--accent); font-weight: 500; }
+.opt-icon { font-size: 26px; margin-bottom: 6px; }
+.opt-lbl { font-size: 13px; color: var(--gray-4); line-height: 1.4; }
+.pills { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
+.pill { font-family: var(--sans); font-size: 13px; padding: 8px 16px; border-radius: 99px; border: 1px solid var(--gray-2); background: var(--white); cursor: pointer; transition: all 0.15s; color: var(--gray-4); }
+.pill:hover { border-color: var(--gray-3); color: var(--black); }
+.pill.sel { background: var(--accent); border-color: var(--accent); color: var(--white); }
+.btn-main { width: 100%; background: var(--black); color: var(--white); font-family: var(--sans); font-size: 15px; font-weight: 500; padding: 15px; border-radius: 14px; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 8px; }
+.btn-main:hover { background: var(--accent); transform: translateY(-1px); }
+.skip { display: block; text-align: center; font-size: 13px; color: var(--gray-3); cursor: pointer; margin-top: 12px; transition: color 0.15s; }
+.skip:hover { color: var(--gray-4); }
+
+/* AHA */
+.aha-wrap { animation: fadeUp 0.5s ease both; }
+.aha-card { background: var(--black); border-radius: 20px; padding: 28px; margin-bottom: 14px; position: relative; overflow: hidden; }
+.aha-card::after { content: ''; position: absolute; bottom: -60px; right: -60px; width: 180px; height: 180px; background: rgba(45,154,104,0.15); border-radius: 50%; }
+.aha-card-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.aha-card-title { font-family: var(--serif); font-size: 26px; color: var(--white); line-height: 1.2; margin-bottom: 14px; }
+.aha-card-title em { font-style: italic; color: #7de0ad; }
+.aha-dots { display: flex; gap: 5px; }
+.aha-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent-mid); animation: pulse 1s ease-in-out infinite; }
+.aha-dot:nth-child(2) { animation-delay: 0.2s; }
+.aha-dot:nth-child(3) { animation-delay: 0.4s; }
+.aha-ai-text { font-size: 14px; color: var(--white); line-height: 1.8; opacity: 0; transition: opacity 0.5s; }
+.aha-ai-text.vis { opacity: 1; }
+.aha-insights { display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px; }
+.aha-insight { background: var(--gray-1); border-radius: 14px; padding: 14px; display: flex; align-items: flex-start; gap: 12px; animation: fadeUp 0.4s ease both; }
+.aha-insight:nth-child(2) { animation-delay: 0.1s; }
+.aha-insight:nth-child(3) { animation-delay: 0.2s; }
+.aha-ins-icon { width: 38px; height: 38px; border-radius: 10px; background: var(--white); display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.aha-ins-title { font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+.aha-ins-desc { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
+
+/* ============ APP ============ */
+#screen-app { display: none; min-height: 100vh; }
+#screen-app.active { display: flex; }
+.sidebar { width: var(--sidebar-w); background: var(--white); border-right: 1px solid var(--gray-2); display: flex; flex-direction: column; position: fixed; top: 0; left: 0; bottom: 0; z-index: 100; padding: 28px 0; }
+.sb-logo { font-family: var(--serif); font-size: 22px; padding: 0 24px 24px; border-bottom: 1px solid var(--gray-2); margin-bottom: 16px; }
+.sb-logo span { color: var(--accent); }
+.sb-nav { flex: 1; padding: 0 12px; }
+.sb-section { font-size: 10px; font-weight: 500; color: var(--gray-3); letter-spacing: 0.08em; text-transform: uppercase; padding: 14px 12px 6px; }
+.sb-item { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; margin-bottom: 2px; transition: background 0.15s; }
+.sb-item:hover { background: var(--gray-1); }
+.sb-item.active { background: var(--accent-light); }
+.sb-item.active .sb-lbl { color: var(--accent); font-weight: 500; }
+.sb-icon { font-size: 17px; width: 22px; text-align: center; }
+.sb-lbl { font-size: 14px; color: var(--gray-4); }
+.sb-item.active .sb-lbl { color: var(--accent); }
+.sb-item.disabled { opacity: 0.4; pointer-events: none; }
+.sb-bottom { padding: 14px 12px 0; border-top: 1px solid var(--gray-2); }
+.sb-profile { display: flex; align-items: center; gap: 10px; padding: 10px 12px; border-radius: 10px; cursor: pointer; transition: background 0.15s; }
+.sb-profile:hover { background: var(--gray-1); }
+.sb-avatar { width: 32px; height: 32px; border-radius: 10px; background: var(--black); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14px; color: var(--white); flex-shrink: 0; }
+.sb-pname { font-size: 13px; font-weight: 500; color: var(--black); }
+.sb-psub { font-size: 11px; color: var(--gray-3); }
+
+.app-main { margin-left: var(--sidebar-w); flex: 1; min-height: 100vh; display: flex; flex-direction: column; }
+.topbar { background: var(--white); border-bottom: 1px solid var(--gray-2); padding: 14px 28px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 50; }
+.tb-left .tb-greet { font-size: 12px; color: var(--gray-4); }
+.tb-left .tb-name { font-size: 15px; font-weight: 500; color: var(--black); }
+.tb-actions { display: flex; gap: 8px; }
+.tb-btn { font-family: var(--sans); font-size: 13px; padding: 7px 14px; border-radius: 99px; border: 1px solid var(--gray-2); background: var(--white); cursor: pointer; color: var(--gray-4); transition: all 0.15s; display: flex; align-items: center; gap: 5px; }
+.tb-btn:hover { border-color: var(--gray-3); color: var(--black); }
+.tb-btn.primary { background: var(--black); color: var(--white); border-color: var(--black); }
+.tb-btn.primary:hover { background: var(--accent); border-color: var(--accent); }
+.notif { width: 7px; height: 7px; border-radius: 50%; background: #ef4444; }
+
+.app-page { padding: 28px; flex: 1; }
+.app-tab { display: none; }
+.app-tab.active { display: block; animation: fadeUp 0.3s ease both; }
+
+/* ============ DASHBOARD ============ */
+.score-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+.score-main { background: var(--black); border-radius: 20px; padding: 26px; position: relative; overflow: hidden; }
+.score-main::after { content: ''; position: absolute; bottom: -60px; right: -60px; width: 180px; height: 180px; background: rgba(45,154,104,0.15); border-radius: 50%; }
+.score-lbl { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 6px; }
+.score-num { font-family: var(--serif); font-size: 64px; color: var(--white); line-height: 1; margin-bottom: 4px; }
+.score-num span { font-size: 24px; opacity: 0.4; }
+.score-desc { font-size: 12px; color: rgba(255,255,255,0.6); margin-bottom: 18px; }
+.score-bars { display: flex; flex-direction: column; gap: 7px; }
+.score-bar-row { display: flex; align-items: center; gap: 10px; }
+.score-bar-lbl { font-size: 12px; color: rgba(255,255,255,0.5); width: 70px; }
+.score-bar-track { flex: 1; background: rgba(255,255,255,0.1); border-radius: 99px; height: 4px; }
+.score-bar-fill { height: 4px; border-radius: 99px; }
+.fill-g { background: var(--accent-mid); }
+.fill-w { background: #f59e0b; }
+.stat-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 20px; padding: 22px; display: flex; flex-direction: column; justify-content: space-between; }
+.stat-lbl { font-size: 12px; color: var(--gray-3); margin-bottom: 6px; }
+.stat-val { font-family: var(--serif); font-size: 32px; color: var(--black); line-height: 1; margin-bottom: 6px; }
+.stat-val.g { color: var(--accent); }
+.stat-val.a { color: #d97706; }
+.stat-sub { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
+.stat-bar { margin-top: 14px; background: var(--gray-1); border-radius: 99px; height: 5px; }
+.stat-bar-fill { height: 5px; border-radius: 99px; background: var(--accent-mid); }
+.g2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 22px; }
+.sec-hd { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.sec-ttl { font-size: 15px; font-weight: 500; color: var(--black); }
+.sec-lnk { font-size: 13px; color: var(--accent); cursor: pointer; }
+.sec-lnk:hover { text-decoration: underline; }
+.insight-list { display: flex; flex-direction: column; gap: 8px; }
+.insight-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 14px; padding: 14px; display: flex; align-items: flex-start; gap: 12px; cursor: pointer; transition: border-color 0.15s, transform 0.15s; }
+.insight-card:hover { border-color: var(--gray-3); transform: translateX(2px); }
+.ins-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 17px; flex-shrink: 0; }
+.ig { background: var(--accent-light); }
+.ia { background: var(--amber-bg); }
+.ib { background: #eff6ff; }
+.ins-title { font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+.ins-desc { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
+.ins-cta { font-size: 12px; color: var(--accent); font-weight: 500; margin-top: 6px; display: inline-block; }
+.dl-list { display: flex; flex-direction: column; gap: 8px; }
+.dl-item { background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 12px 14px; display: flex; align-items: center; gap: 12px; cursor: pointer; transition: border-color 0.15s; }
+.dl-item:hover { border-color: var(--gray-3); }
+.dl-dot { width: 9px; height: 9px; border-radius: 50%; flex-shrink: 0; }
+.dd-r { background: #ef4444; box-shadow: 0 0 0 3px #fee2e2; }
+.dd-a { background: #f59e0b; box-shadow: 0 0 0 3px var(--amber-bg); }
+.dd-g { background: var(--accent-mid); box-shadow: 0 0 0 3px var(--accent-light); }
+.dl-info { flex: 1; }
+.dl-name { font-size: 13px; font-weight: 500; color: var(--black); }
+.dl-date { font-size: 11px; color: var(--gray-3); }
+.dl-badge { font-size: 11px; font-weight: 500; padding: 3px 8px; border-radius: 99px; }
+.db-r { background: var(--red-bg); color: var(--red); }
+.db-a { background: var(--amber-bg); color: var(--amber); }
+.db-g { background: var(--accent-light); color: var(--accent); }
+.mod-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 22px; }
+.mod-tile { background: var(--white); border: 1px solid var(--gray-2); border-radius: 16px; padding: 18px; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+.mod-tile::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; background: var(--accent-mid); opacity: 0; transition: opacity 0.2s; }
+.mod-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.07); border-color: var(--gray-3); }
+.mod-tile:hover::before { opacity: 1; }
+.mod-tile.dim { opacity: 0.55; pointer-events: none; }
+.mod-icon { font-size: 26px; margin-bottom: 10px; }
+.mod-name { font-size: 14px; font-weight: 500; color: var(--black); margin-bottom: 4px; }
+.mod-desc { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
+.mod-tag { display: inline-block; margin-top: 8px; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; }
+.mt-live { background: var(--accent-light); color: var(--accent); }
+.mt-soon { background: var(--gray-1); color: var(--gray-3); }
+
+/* ============ FINANSE ============ */
+.budget-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 20px; padding: 24px; }
+.budget-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 18px; }
+.budget-amt { font-family: var(--serif); font-size: 38px; color: var(--black); line-height: 1; }
+.budget-lbl { font-size: 12px; color: var(--gray-3); margin-bottom: 3px; }
+.budget-edit { font-size: 13px; color: var(--accent); cursor: pointer; }
+.brow { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.brow-lbl { font-size: 13px; color: var(--gray-4); width: 110px; }
+.brow-track { flex: 1; background: var(--gray-1); border-radius: 99px; height: 7px; }
+.brow-fill { height: 7px; border-radius: 99px; }
+.bf-g { background: var(--accent-mid); }
+.bf-a { background: #f59e0b; }
+.brow-val { font-size: 13px; font-weight: 500; color: var(--black); width: 68px; text-align: right; }
+.fin-tools { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 14px; }
+
+/* KALKULATOR UOP vs B2B */
+.calc-wrap { background: var(--white); border: 1px solid var(--gray-2); border-radius: 20px; padding: 28px; margin-bottom: 16px; }
+.calc-hd { font-size: 13px; font-weight: 500; color: var(--accent); letter-spacing: 0.06em; text-transform: uppercase; margin-bottom: 20px; }
+.calc-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 20px; }
+.calc-field label { font-size: 12px; color: var(--gray-4); display: block; margin-bottom: 5px; }
+.calc-field input, .calc-field select { width: 100%; font-family: var(--sans); font-size: 14px; padding: 10px 12px; border: 1px solid var(--gray-2); border-radius: 10px; background: var(--white); color: var(--black); transition: border-color 0.15s; }
+.calc-field input:focus, .calc-field select:focus { outline: none; border-color: var(--accent); }
+.toggle-row { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
+.toggle-lbl { font-size: 13px; color: var(--gray-4); }
+.results-strip { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px; }
+.res-card { background: var(--gray-1); border-radius: 12px; padding: 14px; }
+.res-lbl { font-size: 11px; color: var(--gray-3); margin-bottom: 3px; }
+.res-val { font-size: 20px; font-weight: 500; color: var(--black); }
+.res-sub { font-size: 11px; color: var(--gray-3); margin-top: 2px; }
+.verdict-bar { border-radius: 12px; padding: 14px 18px; margin-bottom: 16px; font-size: 14px; font-weight: 500; display: flex; align-items: center; gap: 10px; }
+.vb-ok { background: var(--accent-light); color: var(--accent); }
+.vb-warn { background: var(--amber-bg); color: var(--amber); }
+.vb-bad { background: var(--red-bg); color: var(--red); }
+.breakdown-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.breakdown-col { background: var(--white); border: 1px solid var(--gray-2); border-radius: 14px; padding: 16px; }
+.bc-title { font-size: 14px; font-weight: 500; color: var(--black); margin-bottom: 12px; padding-bottom: 8px; border-bottom: 1px solid var(--gray-2); }
+.bc-row { display: flex; justify-content: space-between; font-size: 13px; padding: 4px 0; }
+.bc-row .bcn { color: var(--gray-4); }
+.bc-row .bcv { font-weight: 500; color: var(--black); }
+.bc-row.total { border-top: 1px solid var(--gray-2); margin-top: 6px; padding-top: 8px; }
+
+/* ============ PRACA ============ */
+.cv-banner { background: var(--accent-light); border-radius: 16px; padding: 18px; display: flex; align-items: center; gap: 14px; margin-bottom: 18px; }
+.cv-banner-icon { font-size: 28px; }
+.cv-banner-title { font-size: 14px; font-weight: 500; color: var(--accent); }
+.cv-banner-desc { font-size: 12px; color: var(--accent); opacity: 0.8; }
+.cv-prog { margin-top: 7px; background: rgba(26,107,71,0.2); border-radius: 99px; height: 4px; }
+.cv-prog-fill { height: 4px; border-radius: 99px; background: var(--accent); width: 60%; }
+.job-list { display: flex; flex-direction: column; gap: 10px; }
+.job-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 14px; padding: 14px; cursor: pointer; transition: border-color 0.15s; }
+.job-card:hover { border-color: var(--gray-3); }
+.job-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 3px; }
+.job-title { font-size: 14px; font-weight: 500; color: var(--black); }
+.job-sal { font-size: 13px; color: var(--accent); font-weight: 500; }
+.job-co { font-size: 12px; color: var(--gray-4); margin-bottom: 8px; }
+.job-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+.job-tag { font-size: 11px; background: var(--gray-1); color: var(--gray-4); padding: 2px 8px; border-radius: 99px; }
+
+/* ============ MIESZKANIE ============ */
+.miasto-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-top: 14px; }
+.miasto-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 16px; padding: 18px; cursor: pointer; transition: all 0.2s; }
+.miasto-card:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.07); border-color: var(--gray-3); }
+.miasto-card.ok { border-color: var(--accent); box-shadow: 0 0 0 2px var(--accent-light); }
+.miasto-name { font-size: 15px; font-weight: 500; margin-bottom: 3px; }
+.miasto-reg { font-size: 11px; color: var(--gray-3); margin-bottom: 12px; }
+.miasto-price { font-size: 24px; font-weight: 500; margin-bottom: 2px; }
+.miasto-plbl { font-size: 11px; color: var(--gray-3); margin-bottom: 10px; }
+.miasto-bar { background: var(--gray-1); border-radius: 99px; height: 4px; margin-bottom: 10px; }
+.miasto-bar-fill { height: 4px; border-radius: 99px; }
+.mbc { background: var(--accent-mid); }
+.mbm { background: #f59e0b; }
+.mbe { background: #ef4444; }
+.miasto-tags { display: flex; flex-wrap: wrap; gap: 4px; }
+.miasto-tag { font-size: 11px; background: var(--gray-1); color: var(--gray-4); padding: 2px 7px; border-radius: 99px; }
+.miasto-status { display: inline-block; font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; margin-bottom: 8px; }
+.ms-ok { background: var(--accent-light); color: var(--accent); }
+.ms-no { background: var(--red-bg); color: var(--red); }
+
+/* ============ PROFIL ============ */
+.profile-hero { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+.p-avatar { width: 64px; height: 64px; border-radius: 18px; background: var(--black); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 26px; color: var(--white); }
+.p-name { font-family: var(--serif); font-size: 26px; color: var(--black); }
+.p-sub { font-size: 13px; color: var(--gray-4); }
+.p-edit { margin-left: auto; font-family: var(--sans); font-size: 13px; padding: 7px 14px; border-radius: 99px; border: 1px solid var(--gray-2); background: var(--white); cursor: pointer; color: var(--gray-4); transition: all 0.15s; }
+.p-edit:hover { border-color: var(--gray-3); color: var(--black); }
+.p-section { margin-bottom: 22px; }
+.p-sec-title { font-size: 11px; font-weight: 500; color: var(--gray-3); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 8px; }
+.p-card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 14px; overflow: hidden; }
+.p-row { display: flex; align-items: center; padding: 13px 16px; border-bottom: 1px solid var(--gray-2); cursor: pointer; transition: background 0.15s; }
+.p-row:last-child { border-bottom: none; }
+.p-row:hover { background: var(--gray-1); }
+.p-row-icon { font-size: 16px; width: 26px; }
+.p-row-body { flex: 1; }
+.p-row-lbl { font-size: 13px; color: var(--black); }
+.p-row-val { font-size: 12px; color: var(--gray-3); margin-top: 1px; }
+.p-row-badge { font-size: 11px; font-weight: 500; padding: 2px 8px; border-radius: 99px; margin-right: 6px; }
+.p-row-arr { font-size: 16px; color: var(--gray-3); }
+.add-row { display: flex; align-items: center; padding: 11px 16px; cursor: pointer; transition: all 0.15s; border-radius: 14px; border: 1px dashed var(--gray-2); margin-top: 7px; color: var(--gray-3); font-size: 13px; gap: 8px; }
+.add-row:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
+
+/* ============ BOTTOM NAV ============ */
+.bottom-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: rgba(250,250,248,0.95); backdrop-filter: blur(12px); border-top: 1px solid var(--gray-2); padding: 8px 0 18px; z-index: 100; }
+.bn-item { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; padding: 5px 0; }
+.bn-icon { font-size: 21px; }
+.bn-lbl { font-size: 10px; color: var(--gray-3); }
+.bn-item.active .bn-lbl { color: var(--accent); font-weight: 500; }
+
+/* ============ SHARED ============ */
+.page-title { font-family: var(--serif); font-size: 28px; letter-spacing: -0.3px; margin-bottom: 4px; }
+.page-sub { font-size: 13px; color: var(--gray-4); margin-bottom: 22px; }
+
+@keyframes fadeUp { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes pulse { 0%,100%{opacity:.4;transform:scale(.8)} 50%{opacity:1;transform:scale(1)} }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .app-main { margin-left: 0; }
+  .topbar { padding: 12px 16px; }
+  .app-page { padding: 16px 16px 80px; }
+  .score-grid { grid-template-columns: 1fr; }
+  .g2 { grid-template-columns: 1fr; }
+  .mod-grid { grid-template-columns: 1fr 1fr; }
+  .fin-tools { grid-template-columns: 1fr 1fr; }
+  .calc-grid { grid-template-columns: 1fr; }
+  .breakdown-cols { grid-template-columns: 1fr; }
+  .miasto-grid { grid-template-columns: 1fr 1fr; }
+  .bottom-nav { display: flex; }
+}
+@media (max-width: 480px) {
+  .mod-grid { grid-template-columns: 1fr; }
+  .miasto-grid { grid-template-columns: 1fr; }
+  .row2 { grid-template-columns: 1fr; }
+  .results-strip { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- ============ ONBOARDING ============ -->
+<div id="screen-onboarding" class="screen active">
+  <div class="ob-container">
+    <div class="ob-logo">Adult<span>ly</span></div>
+    <div class="ob-progress">
+      <div class="ob-bar active" id="ob-bar-1"></div>
+      <div class="ob-bar" id="ob-bar-2"></div>
+      <div class="ob-bar" id="ob-bar-3"></div>
+      <div class="ob-bar" id="ob-bar-4"></div>
+      <div class="ob-bar" id="ob-bar-5"></div>
+    </div>
+
+    <!-- Krok 1 -->
+    <div class="ob-step active" id="ob-step-1">
+      <div class="ob-label">Krok 1 z 5</div>
+      <div class="ob-title">Cześć, kim <em>jesteś?</em></div>
+      <div class="ob-desc">Adultly dopasuje się do twojej sytuacji. Zacznijmy od podstaw.</div>
+      <div class="f"><label>Imię</label><input type="text" id="ob-name" placeholder="np. Szymon"></div>
+      <div class="row2">
+        <div class="f"><label>Wiek</label><input type="number" id="ob-age" placeholder="23" min="18" max="35"></div>
+        <div class="f"><label>Miasto</label><input type="text" id="ob-city" placeholder="Warszawa"></div>
+      </div>
+      <div class="f">
+        <label>Twój status</label>
+        <select id="ob-status">
+          <option value="">Wybierz...</option>
+          <option value="student">Student (uczę się)</option>
+          <option value="absolwent">Świeży absolwent (do 1 roku)</option>
+          <option value="pracuje">Pracuję już od jakiegoś czasu</option>
+        </select>
+      </div>
+      <div class="f"><label>Kierunek studiów</label><input type="text" id="ob-major" placeholder="np. Finanse i Rachunkowość"></div>
+      <button class="btn-main" onclick="obNext(1)">Dalej →</button>
+    </div>
+
+    <!-- Krok 2 -->
+    <div class="ob-step" id="ob-step-2">
+      <div class="ob-label">Krok 2 z 5</div>
+      <div class="ob-title">Twoje <em>finanse</em></div>
+      <div class="ob-desc">Im więcej podasz, tym lepiej Adultly może ci pomóc.</div>
+      <div class="f"><label>Dochód netto miesięcznie (zł)</label><input type="number" id="ob-income" placeholder="np. 5000"></div>
+      <div class="f">
+        <label>Forma zatrudnienia</label>
+        <select id="ob-emp">
+          <option value="">Wybierz...</option>
+          <option value="uop">Umowa o pracę (UoP)</option>
+          <option value="b2b">B2B / własna działalność</option>
+          <option value="uod">Umowa o dzieło / zlecenie</option>
+          <option value="szukam">Szukam pracy</option>
+          <option value="staz">Staż / praktyki</option>
+        </select>
+      </div>
+      <div class="f"><label>Stałe miesięczne wydatki (zł)</label><input type="number" id="ob-expenses" placeholder="np. 2500"></div>
+      <div class="f">
+        <label>Czy masz oszczędności?</label>
+        <select id="ob-savings">
+          <option value="">Wybierz...</option>
+          <option value="nie">Nie mam</option>
+          <option value="malo">Trochę (do 5 000 zł)</option>
+          <option value="srednie">Średnio (5–20 tys. zł)</option>
+          <option value="duzo">Sporo (powyżej 20 tys. zł)</option>
+        </select>
+      </div>
+      <button class="btn-main" onclick="obNext(2)">Dalej →</button>
+      <span class="skip" onclick="obNext(2)">Pomiń</span>
+    </div>
+
+    <!-- Krok 3 -->
+    <div class="ob-step" id="ob-step-3">
+      <div class="ob-label">Krok 3 z 5</div>
+      <div class="ob-title">Twoje <em>mieszkanie</em></div>
+      <div class="ob-desc">Gdzie i jak mieszkasz.</div>
+      <div class="opt-grid">
+        <div class="opt-card" onclick="obSelectOpt(this,'housing','wynajem-sam')"><div class="opt-icon">🏠</div><div class="opt-lbl">Wynajmuję sam/a</div></div>
+        <div class="opt-card" onclick="obSelectOpt(this,'housing','wynajem-wspolnie')"><div class="opt-icon">👥</div><div class="opt-lbl">Ze współlokatorami</div></div>
+        <div class="opt-card" onclick="obSelectOpt(this,'housing','rodzice')"><div class="opt-icon">🏡</div><div class="opt-lbl">Z rodzicami</div></div>
+        <div class="opt-card" onclick="obSelectOpt(this,'housing','wlasne')"><div class="opt-icon">🔑</div><div class="opt-lbl">Własne mieszkanie</div></div>
+      </div>
+      <div class="f"><label>Ile płacisz za wynajem? (zł, zostaw puste jeśli nie dotyczy)</label><input type="number" id="ob-rent" placeholder="np. 1800"></div>
+      <button class="btn-main" onclick="obNext(3)">Dalej →</button>
+      <span class="skip" onclick="obNext(3)">Pomiń</span>
+    </div>
+
+    <!-- Krok 4 -->
+    <div class="ob-step" id="ob-step-4">
+      <div class="ob-label">Krok 4 z 5</div>
+      <div class="ob-title">Auto i <em>dokumenty</em></div>
+      <div class="ob-desc">Adultly będzie pilnować ważnych terminów za ciebie.</div>
+      <div class="opt-grid" style="margin-bottom:16px">
+        <div class="opt-card" onclick="obSelectOpt(this,'car','tak');document.getElementById('car-f').style.display='block'"><div class="opt-icon">🚗</div><div class="opt-lbl">Mam samochód</div></div>
+        <div class="opt-card" onclick="obSelectOpt(this,'car','nie');document.getElementById('car-f').style.display='none'"><div class="opt-icon">🚌</div><div class="opt-lbl">Komunikacja</div></div>
+      </div>
+      <div id="car-f" style="display:none">
+        <div class="f"><label>Kiedy kończy się OC?</label><input type="month" id="ob-oc"></div>
+      </div>
+      <div class="f"><label>Koniec umowy najmu (zostaw puste jeśli nie dotyczy)</label><input type="month" id="ob-lease"></div>
+      <div class="f"><label>Ważność dowodu osobistego</label><input type="month" id="ob-id"></div>
+      <button class="btn-main" onclick="obNext(4)">Dalej →</button>
+      <span class="skip" onclick="obNext(4)">Pomiń</span>
+    </div>
+
+    <!-- Krok 5 -->
+    <div class="ob-step" id="ob-step-5">
+      <div class="ob-label">Krok 5 z 5</div>
+      <div class="ob-title">Co chcesz <em>ogarnąć?</em></div>
+      <div class="ob-desc">Wybierz co jest dla ciebie teraz najważniejsze.</div>
+      <div class="pills">
+        <div class="pill" onclick="this.classList.toggle('sel')">Znaleźć pracę</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Zrozumieć UoP vs B2B</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Oszczędzać więcej</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Zbudować CV</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Znaleźć mieszkanie</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Ogarnąć formalności</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Ubezpieczenia</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Zrozumieć podatki</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Zbudować historię kredytową</div>
+        <div class="pill" onclick="this.classList.toggle('sel')">Wszystko naraz</div>
+      </div>
+      <button class="btn-main" onclick="obFinish()">Pokaż moje wyniki →</button>
+    </div>
+
+    <!-- AHA -->
+    <div class="ob-step" id="ob-aha">
+      <div class="aha-wrap">
+        <div class="aha-card">
+          <div class="aha-card-label" id="aha-lbl">Analizuję twój profil...</div>
+          <div class="aha-card-title" id="aha-ttl">Zaraz zobaczysz <em>co możesz zyskać</em></div>
+          <div class="aha-dots" id="aha-dots"><div class="aha-dot"></div><div class="aha-dot"></div><div class="aha-dot"></div></div>
+          <div class="aha-ai-text" id="aha-txt"></div>
+        </div>
+        <div class="aha-insights" id="aha-ins"></div>
+        <button class="btn-main" id="aha-btn" style="display:none" onclick="goToApp()">Przejdź do dashboardu →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="screen-app" class="screen">
+  <aside class="sidebar">
+    <div class="sb-logo">Adult<span>ly</span></div>
+    <nav class="sb-nav">
+      <div class="sb-section">Główne</div>
+      <div class="sb-item active" id="sb-dashboard" onclick="switchTab('dashboard',this)"><span class="sb-icon">⊞</span><span class="sb-lbl">Dashboard</span></div>
+      <div class="sb-item" id="sb-profile" onclick="switchTab('profile',this)"><span class="sb-icon">👤</span><span class="sb-lbl">Mój profil</span></div>
+      <div class="sb-section">Narzędzia</div>
+      <div class="sb-item" id="sb-finanse" onclick="switchTab('finanse',this)"><span class="sb-icon">💰</span><span class="sb-lbl">Finanse</span></div>
+      <div class="sb-item" id="sb-praca" onclick="switchTab('praca',this)"><span class="sb-icon">💼</span><span class="sb-lbl">Praca i CV</span></div>
+      <div class="sb-item" id="sb-mieszkanie" onclick="switchTab('mieszkanie',this)"><span class="sb-icon">🏠</span><span class="sb-lbl">Mieszkanie</span></div>
+      <div class="sb-item disabled"><span class="sb-icon">📋</span><span class="sb-lbl">Formalności</span></div>
+      <div class="sb-item disabled"><span class="sb-icon">🗂️</span><span class="sb-lbl">Życie codzienne</span></div>
+    </nav>
+    <div class="sb-bottom">
+      <div class="sb-profile" onclick="switchTab('profile',document.getElementById('sb-profile'))">
+        <div class="sb-avatar" id="sb-av">S</div>
+        <div><div class="sb-pname" id="sb-pname">Użytkownik</div><div class="sb-psub" id="sb-psub">Adultly</div></div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="app-main">
+    <div class="topbar">
+      <div class="tb-left">
+        <div class="tb-greet">Dzień dobry,</div>
+        <div class="tb-name" id="tb-name">Witaj w Adultly 👋</div>
+      </div>
+      <div class="tb-actions">
+        <button class="tb-btn"><span class="notif"></span>3 alerty</button>
+        <button class="tb-btn primary" onclick="switchTab('praca',document.getElementById('sb-praca'))">Uzupełnij CV →</button>
+      </div>
+    </div>
+
+    <div class="app-page">
+
+      <!-- DASHBOARD -->
+      <div class="app-tab active" id="tab-dashboard">
+        <div class="score-grid">
+          <div class="score-main">
+            <div class="score-lbl">Adulting score</div>
+            <div class="score-num">72<span>/100</span></div>
+            <div class="score-desc">Niezłe początki — 3 rzeczy do ogarnięcia</div>
+            <div class="score-bars">
+              <div class="score-bar-row"><div class="score-bar-lbl">Finanse</div><div class="score-bar-track"><div class="score-bar-fill fill-g" style="width:65%"></div></div></div>
+              <div class="score-bar-row"><div class="score-bar-lbl">Praca</div><div class="score-bar-track"><div class="score-bar-fill fill-w" style="width:40%"></div></div></div>
+              <div class="score-bar-row"><div class="score-bar-lbl">Mieszkanie</div><div class="score-bar-track"><div class="score-bar-fill fill-g" style="width:80%"></div></div></div>
+              <div class="score-bar-row"><div class="score-bar-lbl">Dokumenty</div><div class="score-bar-track"><div class="score-bar-fill fill-w" style="width:50%"></div></div></div>
+            </div>
+          </div>
+          <div class="stat-card">
+            <div><div class="stat-lbl">Możesz zaoszczędzić</div><div class="stat-val g">340 zł</div><div class="stat-sub">miesięcznie na subskrypcjach i lepszych ofertach</div></div>
+            <div class="stat-bar"><div class="stat-bar-fill" style="width:68%"></div></div>
+          </div>
+          <div class="stat-card">
+            <div><div class="stat-lbl">Najbliższy termin</div><div class="stat-val a">12 dni</div><div class="stat-sub">OC samochodu kończy się 15 kwietnia</div></div>
+            <div style="margin-top:12px"><span style="font-size:12px;background:var(--red-bg);color:var(--red);padding:3px 10px;border-radius:99px;font-weight:500">Pilne</span></div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div>
+            <div class="sec-hd"><div class="sec-ttl">Adultly podpowiada</div><div class="sec-lnk">Wszystkie</div></div>
+            <div class="insight-list">
+              <div class="insight-card" onclick="switchTab('finanse',document.getElementById('sb-finanse'))">
+                <div class="ins-icon ig">💡</div>
+                <div class="ins-body"><div class="ins-title">B2B dałoby ci +680 zł więcej</div><div class="ins-desc">Przy twojej ofercie przejście na B2B opłaca się.</div><span class="ins-cta">Otwórz kalkulator →</span></div>
+              </div>
+              <div class="insight-card">
+                <div class="ins-icon ia">⚡</div>
+                <div class="ins-body"><div class="ins-title">4 subskrypcje których nie używasz</div><div class="ins-desc">Spotify, Siłownia, Adobe, Canal+ — razem 220 zł/mc.</div><span class="ins-cta">Przejrzyj →</span></div>
+              </div>
+              <div class="insight-card" onclick="switchTab('praca',document.getElementById('sb-praca'))">
+                <div class="ins-icon ib">🎯</div>
+                <div class="ins-body"><div class="ins-title">CV gotowe tylko w 60%</div><div class="ins-desc">Brakuje opisu doświadczenia. Uzupełnij teraz.</div><span class="ins-cta">Uzupełnij CV →</span></div>
+              </div>
+            </div>
+          </div>
+          <div>
+            <div class="sec-hd"><div class="sec-ttl">Nadchodzące terminy</div><div class="sec-lnk">+ Dodaj</div></div>
+            <div class="dl-list">
+              <div class="dl-item"><div class="dl-dot dd-r"></div><div class="dl-info"><div class="dl-name">OC samochodu</div><div class="dl-date">Kończy się 15 kwietnia 2026</div></div><div class="dl-badge db-r">12 dni</div></div>
+              <div class="dl-item"><div class="dl-dot dd-a"></div><div class="dl-info"><div class="dl-name">Umowa najmu</div><div class="dl-date">Kończy się 30 czerwca 2026</div></div><div class="dl-badge db-a">93 dni</div></div>
+              <div class="dl-item"><div class="dl-dot dd-a"></div><div class="dl-info"><div class="dl-name">Przegląd auta</div><div class="dl-date">Maj 2026</div></div><div class="dl-badge db-a">~60 dni</div></div>
+              <div class="dl-item"><div class="dl-dot dd-g"></div><div class="dl-info"><div class="dl-name">Dowód osobisty</div><div class="dl-date">Ważny do 2028</div></div><div class="dl-badge db-g">OK</div></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="sec-hd"><div class="sec-ttl">Twoje narzędzia</div></div>
+        <div class="mod-grid">
+          <div class="mod-tile" onclick="switchTab('finanse',document.getElementById('sb-finanse'))"><div class="mod-icon">💰</div><div class="mod-name">Finanse</div><div class="mod-desc">Kalkulator UoP vs B2B, budżet, oszczędności</div><div class="mod-tag mt-live">Dostępne</div></div>
+          <div class="mod-tile" onclick="switchTab('praca',document.getElementById('sb-praca'))"><div class="mod-icon">💼</div><div class="mod-name">Praca i CV</div><div class="mod-desc">Generator CV z AI, oferty po kierunku</div><div class="mod-tag mt-live">Dostępne</div></div>
+          <div class="mod-tile" onclick="switchTab('mieszkanie',document.getElementById('sb-mieszkanie'))"><div class="mod-icon">🏠</div><div class="mod-name">Mieszkanie</div><div class="mod-desc">Mapa najmu, kalkulator czy cię stać</div><div class="mod-tag mt-live">Dostępne</div></div>
+          <div class="mod-tile dim"><div class="mod-icon">📋</div><div class="mod-name">Formalności</div><div class="mod-desc">Checklist absolwenta, ZUS, PIT</div><div class="mod-tag mt-soon">Wkrótce</div></div>
+          <div class="mod-tile dim"><div class="mod-icon">🗂️</div><div class="mod-name">Życie codzienne</div><div class="mod-desc">Ubezpieczenia, BIK, umowy, pułapki</div><div class="mod-tag mt-soon">Wkrótce</div></div>
+          <div class="mod-tile dim" style="border:1px dashed var(--gray-2);background:transparent"><div class="mod-icon">＋</div><div class="mod-name" style="color:var(--gray-3)">Więcej wkrótce</div><div class="mod-desc" style="color:var(--gray-3)">Nowe moduły co miesiąc</div></div>
+        </div>
+      </div>
+
+      <!-- FINANSE -->
+      <div class="app-tab" id="tab-finanse">
+        <div class="page-title">Finanse</div>
+        <div class="page-sub">Kalkulator, budżet i oszczędności</div>
+
+        <div class="calc-wrap">
+          <div class="calc-hd">Kalkulator UoP vs B2B</div>
+          <div class="calc-grid">
+            <div class="calc-field">
+              <label>Wynagrodzenie brutto / stawka B2B</label>
+              <input type="range" id="c-salary" min="3000" max="30000" step="100" value="8000" oninput="document.getElementById('c-sal-out').textContent=parseInt(this.value).toLocaleString('pl-PL')+' zł';calcUoP()">
+              <div style="font-size:13px;font-weight:500;margin-top:4px" id="c-sal-out">8 000 zł</div>
+            </div>
+            <div class="calc-field">
+              <label>Koszty firmowe B2B</label>
+              <input type="range" id="c-costs" min="0" max="3000" step="100" value="500" oninput="document.getElementById('c-costs-out').textContent=parseInt(this.value).toLocaleString('pl-PL')+' zł';calcUoP()">
+              <div style="font-size:13px;font-weight:500;margin-top:4px" id="c-costs-out">500 zł</div>
+            </div>
+            <div class="calc-field">
+              <label>Podatek B2B</label>
+              <select id="c-tax" onchange="calcUoP()">
+                <option value="linear">Liniowy 19%</option>
+                <option value="scale">Skala 12% / 32%</option>
+              </select>
+            </div>
+            <div class="calc-field">
+              <label>ZUS na B2B</label>
+              <select id="c-zus" onchange="calcUoP()">
+                <option value="ulga">Ulga na start (0 zł)</option>
+                <option value="maly">Mały ZUS Plus (~330 zł)</option>
+                <option value="pelny" selected>Pełny ZUS (~1 773 zł)</option>
+              </select>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <input type="checkbox" id="c-young" onchange="calcUoP()">
+            <span class="toggle-lbl">Ulga dla młodych (do 26 lat) — zero PIT do 85 528 zł/rok</span>
+          </div>
+          <div class="verdict-bar vb-ok" id="c-verdict">—</div>
+          <div class="results-strip">
+            <div class="res-card"><div class="res-lbl">Netto UoP / miesiąc</div><div class="res-val" id="c-uop-net">—</div><div class="res-sub" id="c-uop-eff">—</div></div>
+            <div class="res-card"><div class="res-lbl">Netto B2B / miesiąc</div><div class="res-val" id="c-b2b-net">—</div><div class="res-sub" id="c-b2b-eff">—</div></div>
+          </div>
+          <div class="breakdown-cols">
+            <div class="breakdown-col"><div class="bc-title">Umowa o pracę</div><div id="c-uop-rows"></div></div>
+            <div class="breakdown-col"><div class="bc-title">B2B</div><div id="c-b2b-rows"></div></div>
+          </div>
+        </div>
+
+        <div class="g2">
+          <div class="budget-card">
+            <div class="budget-top"><div><div class="budget-lbl">Dochód netto / miesiąc</div><div class="budget-amt" id="budget-amt">—</div></div><div class="budget-edit">Edytuj</div></div>
+            <div class="brow"><div class="brow-lbl">Wynajem</div><div class="brow-track"><div class="brow-fill bf-a" style="width:30%"></div></div><div class="brow-val" id="brow-rent">—</div></div>
+            <div class="brow"><div class="brow-lbl">Jedzenie</div><div class="brow-track"><div class="brow-fill bf-g" style="width:17%"></div></div><div class="brow-val">~1 000 zł</div></div>
+            <div class="brow"><div class="brow-lbl">Transport</div><div class="brow-track"><div class="brow-fill bf-g" style="width:8%"></div></div><div class="brow-val">~500 zł</div></div>
+            <div class="brow"><div class="brow-lbl">Wolne</div><div class="brow-track"><div class="brow-fill bf-g" style="width:38%"></div></div><div class="brow-val" id="brow-free">—</div></div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px">
+            <div class="stat-card"><div class="stat-lbl">Oszczędności / miesiąc</div><div class="stat-val g" id="fin-savings">—</div><div class="stat-sub">przy obecnym budżecie</div></div>
+            <div class="stat-card"><div class="stat-lbl">Potencjalne dodatkowe</div><div class="stat-val a">340 zł</div><div class="stat-sub">po optymalizacji subskrypcji</div></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRACA -->
+      <div class="app-tab" id="tab-praca">
+        <div class="page-title">Praca i CV</div>
+        <div class="page-sub">Generator CV, oferty dopasowane do twojego profilu</div>
+        <div class="cv-banner">
+          <div class="cv-banner-icon">📄</div>
+          <div><div class="cv-banner-title">CV gotowe w 60% — uzupełnij żeby zwiększyć szanse</div><div class="cv-banner-desc">Brakuje opisu doświadczenia i umiejętności</div><div class="cv-prog"><div class="cv-prog-fill"></div></div></div>
+        </div>
+        <div class="sec-hd"><div class="sec-ttl">Oferty dla ciebie</div><div class="sec-lnk">Filtruj</div></div>
+        <div class="job-list">
+          <div class="job-card"><div class="job-top"><div class="job-title">Junior Financial Analyst</div><div class="job-sal">6–8k zł</div></div><div class="job-co">PKO Bank Polski · Warszawa · UoP</div><div class="job-tags"><span class="job-tag">Finanse</span><span class="job-tag">Excel</span><span class="job-tag">Raportowanie</span></div></div>
+          <div class="job-card"><div class="job-top"><div class="job-title">Analityk Rachunkowości</div><div class="job-sal">5–7k zł</div></div><div class="job-co">Deloitte · Warszawa · Big4</div><div class="job-tags"><span class="job-tag">Rachunkowość</span><span class="job-tag">Big4</span><span class="job-tag">Staż ok</span></div></div>
+          <div class="job-card"><div class="job-top"><div class="job-title">Specjalista ds. Finansów</div><div class="job-sal">7–9k zł</div></div><div class="job-co">mBank · Warszawa / Remote</div><div class="job-tags"><span class="job-tag">Remote</span><span class="job-tag">B2B ok</span><span class="job-tag">Fintech</span></div></div>
+          <div class="job-card"><div class="job-top"><div class="job-title">Controller Finansowy</div><div class="job-sal">8–11k zł</div></div><div class="job-co">Amazon · Warszawa · UoP lub B2B</div><div class="job-tags"><span class="job-tag">Controlling</span><span class="job-tag">SAP</span><span class="job-tag">Angielski</span></div></div>
+        </div>
+      </div>
+
+      <!-- MIESZKANIE -->
+      <div class="app-tab" id="tab-mieszkanie">
+        <div class="page-title">Mieszkanie</div>
+        <div class="page-sub">Sprawdź gdzie stać cię na wynajem</div>
+        <div class="calc-wrap">
+          <div class="calc-hd">Twój budżet na wynajem</div>
+          <div class="calc-grid">
+            <div class="calc-field"><label>Dochód netto (zł)</label><input type="number" id="m-income" placeholder="5000" oninput="calcMiasto()"></div>
+            <div class="calc-field"><label>Stałe wydatki bez wynajmu (zł)</label><input type="number" id="m-expenses" placeholder="1500" oninput="calcMiasto()"></div>
+            <div class="calc-field"><label>Typ mieszkania</label><select id="m-type" onchange="calcMiasto()"><option value="pokoj">Pokój w mieszkaniu</option><option value="kawalerka" selected>Kawalerka</option><option value="dwa">2 pokoje</option></select></div>
+            <div class="calc-field"><label>Maks. % dochodu na wynajem</label><select id="m-pct" onchange="calcMiasto()"><option value="0.25">25%</option><option value="0.30" selected>30%</option><option value="0.35">35%</option><option value="0.40">40%</option></select></div>
+          </div>
+          <div class="results-strip" id="m-results" style="display:none">
+            <div class="res-card"><div class="res-lbl">Budżet na wynajem</div><div class="res-val" id="m-budget">—</div></div>
+            <div class="res-card"><div class="res-lbl">Zostaje po opłatach</div><div class="res-val" id="m-left">—</div></div>
+          </div>
+          <div class="verdict-bar vb-ok" id="m-verdict" style="display:none">—</div>
+        </div>
+        <div class="sec-hd"><div class="sec-ttl">Porównanie miast</div></div>
+        <div class="miasto-grid" id="miasto-grid"></div>
+      </div>
+
+      <!-- PROFIL -->
+      <div class="app-tab" id="tab-profile">
+        <div style="max-width:600px">
+          <div class="profile-hero">
+            <div class="p-avatar" id="p-av">S</div>
+            <div><div class="p-name" id="p-name">Użytkownik</div><div class="p-sub" id="p-sub">Adultly</div></div>
+            <button class="p-edit">Edytuj profil</button>
+          </div>
+          <div class="p-section">
+            <div class="p-sec-title">Dane podstawowe</div>
+            <div class="p-card">
+              <div class="p-row"><div class="p-row-icon">💼</div><div class="p-row-body"><div class="p-row-lbl">Status</div><div class="p-row-val" id="pr-status">—</div></div><div class="p-row-arr">›</div></div>
+              <div class="p-row"><div class="p-row-icon">🎓</div><div class="p-row-body"><div class="p-row-lbl">Kierunek</div><div class="p-row-val" id="pr-major">—</div></div><div class="p-row-arr">›</div></div>
+              <div class="p-row"><div class="p-row-icon">📍</div><div class="p-row-body"><div class="p-row-lbl">Miasto</div><div class="p-row-val" id="pr-city">—</div></div><div class="p-row-arr">›</div></div>
+              <div class="p-row"><div class="p-row-icon">💰</div><div class="p-row-body"><div class="p-row-lbl">Dochód netto</div><div class="p-row-val" id="pr-income">—</div></div><div class="p-row-arr">›</div></div>
+            </div>
+          </div>
+          <div class="p-section">
+            <div class="p-sec-title">Dokumenty i terminy</div>
+            <div class="p-card">
+              <div class="p-row"><div class="p-row-icon">🚗</div><div class="p-row-body"><div class="p-row-lbl">OC samochodu</div><div class="p-row-val" id="pr-oc">—</div></div><div class="p-row-badge db-r" id="pr-oc-badge" style="display:none">Pilne</div><div class="p-row-arr">›</div></div>
+              <div class="p-row"><div class="p-row-icon">🏠</div><div class="p-row-body"><div class="p-row-lbl">Umowa najmu</div><div class="p-row-val" id="pr-lease">—</div></div><div class="p-row-arr">›</div></div>
+              <div class="p-row"><div class="p-row-icon">🪪</div><div class="p-row-body"><div class="p-row-lbl">Dowód osobisty</div><div class="p-row-val" id="pr-id">—</div></div><div class="p-row-arr">›</div></div>
+            </div>
+            <div class="add-row">＋ Dodaj dokument lub termin</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <div class="bottom-nav" id="bottom-nav">
+    <div class="bn-item active" id="bn-dashboard" onclick="switchTab('dashboard',null)"><div class="bn-icon">⊞</div><div class="bn-lbl">Główna</div></div>
+    <div class="bn-item" id="bn-finanse" onclick="switchTab('finanse',null)"><div class="bn-icon">💰</div><div class="bn-lbl">Finanse</div></div>
+    <div class="bn-item" id="bn-praca" onclick="switchTab('praca',null)"><div class="bn-icon">💼</div><div class="bn-lbl">Praca</div></div>
+    <div class="bn-item" id="bn-mieszkanie" onclick="switchTab('mieszkanie',null)"><div class="bn-icon">🏠</div><div class="bn-lbl">Mieszkanie</div></div>
+    <div class="bn-item" id="bn-profile" onclick="switchTab('profile',null)"><div class="bn-icon">👤</div><div class="bn-lbl">Profil</div></div>
+  </div>
+</div>
+
+<script>
+const API = "https://api.anthropic.com/v1/messages";
+const P = {};
+const fmt = v => Math.round(v).toLocaleString('pl-PL') + ' zł';
+const pct = v => (v*100).toFixed(1) + '%';
+
+// ============ ONBOARDING ============
+let obStep = 1;
+function obNext(from) {
+  obCollect(from);
+  const next = from + 1;
+  document.getElementById('ob-step-' + from).classList.remove('active');
+  document.getElementById('ob-bar-' + from).className = 'ob-bar done';
+  if (next <= 5) {
+    document.getElementById('ob-step-' + next).classList.add('active');
+    document.getElementById('ob-bar-' + next).className = 'ob-bar active';
+  }
+  obStep = next;
+  window.scrollTo(0,0);
+}
+function obCollect(step) {
+  if (step===1) { P.name=document.getElementById('ob-name').value||'Ty'; P.age=document.getElementById('ob-age').value; P.city=document.getElementById('ob-city').value; P.status=document.getElementById('ob-status').value; P.major=document.getElementById('ob-major').value; }
+  if (step===2) { P.income=document.getElementById('ob-income').value; P.emp=document.getElementById('ob-emp').value; P.expenses=document.getElementById('ob-expenses').value; P.savings=document.getElementById('ob-savings').value; }
+  if (step===3) { P.rent=document.getElementById('ob-rent').value; }
+  if (step===4) { P.oc=document.getElementById('ob-oc').value; P.lease=document.getElementById('ob-lease').value; P.id_doc=document.getElementById('ob-id').value; }
+  if (step===5) { P.goals=Array.from(document.querySelectorAll('.pill.sel')).map(p=>p.textContent); }
+}
+function obSelectOpt(el, group) {
+  el.closest('.opt-grid').querySelectorAll('.opt-card').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel'); P[group]=el.dataset?.val||'';
+}
+function obFinish() {
+  obCollect(5);
+  for(let i=1;i<=5;i++) { document.getElementById('ob-step-'+i).classList.remove('active'); document.getElementById('ob-bar-'+i).className='ob-bar done'; }
+  document.getElementById('ob-aha').classList.add('active');
+  window.scrollTo(0,0);
+  generateAha();
+}
+async function generateAha() {
+  const name=P.name||'Ty'; const income=parseInt(P.income)||0; const expenses=parseInt(P.expenses)||0; const rent=parseInt(P.rent)||0;
+  document.getElementById('aha-lbl').textContent = `Hej ${name}, analizuję twój profil...`;
+  const prompt = `Jesteś doradcą dla młodych Polaków po studiach. Przeanalizuj profil i napisz 2-3 zdania po polsku.
+Profil: imię ${name}, miasto ${P.city||'nieznane'}, status ${P.status||'absolwent'}, kierunek ${P.major||'nieznany'}, dochód ${income?income+' zł/mc':'nieznany'}, zatrudnienie ${P.emp||'nieznane'}, wydatki ${expenses?expenses+' zł/mc':'nieznane'}, wynajem ${rent?rent+' zł/mc':'nieznany'}, cele: ${P.goals?.join(', ')||'nieznane'}.
+Pisz bezpośrednio do ${name}. Zacznij od konkretnej obserwacji. Wspomnij jedną rzecz do poprawy. Bądź szczery, max 3 zdania.`;
+  try {
+    const res = await fetch(API, { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({ model:'claude-sonnet-4-20250514', max_tokens:600, messages:[{role:'user',content:prompt}] }) });
+    const data = await res.json();
+    const text = data.content?.map(c=>c.text||'').join('')||'';
+    document.getElementById('aha-dots').style.display='none';
+    document.getElementById('aha-ttl').innerHTML = `Oto co widzę <em>w twoim profilu</em>`;
+    const t = document.getElementById('aha-txt'); t.textContent=text; t.classList.add('vis');
+  } catch(e) {
+    document.getElementById('aha-dots').style.display='none';
+    const t = document.getElementById('aha-txt'); t.textContent=`Witaj ${name}! Twój profil jest gotowy.`; t.classList.add('vis');
+  }
+  setTimeout(()=>showAhaInsights(income,expenses,rent), 800);
+}
+function showAhaInsights(income, expenses, rent) {
+  const ins=[]; const name=P.name||'Ty';
+  if(income>0 && P.emp==='uop') { const gain=Math.round(income*0.12); ins.push({icon:'💡',title:`B2B mogłoby dać ci +${gain.toLocaleString('pl-PL')} zł/mc`,desc:'Przy twoim dochodzie przejście na B2B zazwyczaj się opłaca.'}); }
+  if(income>0 && expenses>0) { const free=income-expenses; if(free>0) ins.push({icon:'📈',title:`Możesz odkładać ${free.toLocaleString('pl-PL')} zł miesięcznie`,desc:`To ${Math.round(free/income*100)}% dochodu. ${free/income>=0.2?'Rozważ ETF lub konto oszczędnościowe.':'Sprawdź gdzie możesz obciąć wydatki.'}`}); }
+  if(rent>0 && income>0) { const rp=Math.round(rent/income*100); ins.push({icon:'🏠',title:`Wynajem pochłania ${rp}% dochodu`,desc:rp>35?`Powyżej zalecanego 30%. Współlokator mógłby zaoszczędzić ci ~${Math.round(rent*0.35).toLocaleString('pl-PL')} zł/mc.`:`Mieścisz się w zdrowym przedziale. Dobra baza do oszczędzania.`}); }
+  if(ins.length===0) ins.push({icon:'🎯',title:'Profil gotowy',desc:'Uzupełnij dane finansowe żeby zobaczyć spersonalizowane podpowiedzi.'});
+  const c=document.getElementById('aha-ins');
+  c.innerHTML=ins.map(i=>`<div class="aha-insight"><div class="aha-ins-icon">${i.icon}</div><div><div class="aha-ins-title">${i.title}</div><div class="aha-ins-desc">${i.desc}</div></div></div>`).join('');
+  setTimeout(()=>document.getElementById('aha-btn').style.display='block', 400);
+}
+function goToApp() {
+  document.getElementById('screen-onboarding').classList.remove('active');
+  document.getElementById('screen-app').classList.add('active');
+  updateAppProfile();
+  calcUoP();
+  renderMiasta();
+  updateBudget();
+}
+
+// ============ APP NAV ============
+function switchTab(tab, navEl) {
+  document.querySelectorAll('.app-tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('tab-'+tab).classList.add('active');
+  document.querySelectorAll('.sb-item').forEach(n=>n.classList.remove('active'));
+  document.querySelectorAll('.bn-item').forEach(n=>n.classList.remove('active'));
+  if(navEl) navEl.classList.add('active');
+  const bn=document.getElementById('bn-'+tab); if(bn) bn.classList.add('active');
+  window.scrollTo(0,0);
+}
+
+// ============ PROFIL UPDATE ============
+function updateAppProfile() {
+  const name=P.name||'Użytkownik'; const init=name[0]?.toUpperCase()||'U';
+  document.getElementById('tb-name').textContent=`Cześć, ${name} 👋`;
+  document.getElementById('sb-pname').textContent=name;
+  document.getElementById('sb-psub').textContent=P.city||'Adultly';
+  document.getElementById('sb-av').textContent=init;
+  document.getElementById('p-av').textContent=init;
+  document.getElementById('p-name').textContent=name+(P.age?' ('+P.age+' lat)':'');
+  document.getElementById('p-sub').textContent=[P.status,P.major,P.city].filter(Boolean).join(' · ')||'Adultly';
+  document.getElementById('pr-status').textContent=P.status||'—';
+  document.getElementById('pr-major').textContent=P.major||'—';
+  document.getElementById('pr-city').textContent=P.city||'—';
+  document.getElementById('pr-income').textContent=P.income?parseInt(P.income).toLocaleString('pl-PL')+' zł/mc':'—';
+  document.getElementById('pr-oc').textContent=P.oc||'nie podano';
+  document.getElementById('pr-lease').textContent=P.lease||'nie podano';
+  document.getElementById('pr-id').textContent=P.id_doc||'nie podano';
+}
+function updateBudget() {
+  const income=parseInt(P.income)||0; const rent=parseInt(P.rent)||0;
+  document.getElementById('budget-amt').textContent=income?income.toLocaleString('pl-PL')+' zł':'—';
+  document.getElementById('brow-rent').textContent=rent?rent.toLocaleString('pl-PL')+' zł':'—';
+  const free=income-rent-1500;
+  document.getElementById('brow-free').textContent=free>0?free.toLocaleString('pl-PL')+' zł':'—';
+  document.getElementById('fin-savings').textContent=free>0?free.toLocaleString('pl-PL')+' zł':'—';
+  if(P.income) document.getElementById('c-salary').value=Math.min(parseInt(P.income)*1.25,30000);
+}
+
+// ============ KALKULATOR UOP vs B2B ============
+function calcUoP() {
+  const sal=parseInt(document.getElementById('c-salary').value)||8000;
+  const young=document.getElementById('c-young').checked;
+  const taxType=document.getElementById('c-tax').value;
+  const zusType=document.getElementById('c-zus').value;
+  const costs=parseInt(document.getElementById('c-costs').value)||0;
+  const em=sal*0.0976, ren=sal*0.015, cho=sal*0.0245;
+  const zusU=em+ren+cho; const podstawaZdr=sal-zusU; const zdrU=podstawaZdr*0.09;
+  const kup=250; const podstawaPIT=Math.max(0,podstawaZdr-kup);
+  let pitU=0;
+  if(!young){ const ul=300; pitU=podstawaPIT*12<=120000?Math.max(0,podstawaPIT*0.12-ul):Math.max(0,10000*0.12-ul+(podstawaPIT-10000)*0.32); }
+  const nettoU=sal-zusU-zdrU-pitU;
+  const zusB=zusType==='pelny'?1773:zusType==='maly'?330:0;
+  const dochod=Math.max(0,sal-costs-zusB);
+  let zdrB,pitB;
+  if(taxType==='linear'){zdrB=dochod*0.049;pitB=Math.max(0,dochod-zdrB)*0.19;}
+  else{zdrB=dochod*0.09;const pb=Math.max(0,dochod-zdrB);pitB=pb*12<=120000?Math.max(0,pb*0.12-300):Math.max(0,10000*0.12-300+(pb-10000)*0.32);}
+  const nettoB=sal-zusB-costs-zdrB-pitB;
+  document.getElementById('c-uop-net').textContent=fmt(nettoU);
+  document.getElementById('c-b2b-net').textContent=fmt(nettoB);
+  document.getElementById('c-uop-eff').textContent='obciążenie: '+pct((sal-nettoU)/sal);
+  document.getElementById('c-b2b-eff').textContent='obciążenie: '+pct((sal-nettoB)/sal);
+  const diff=nettoB-nettoU; const v=document.getElementById('c-verdict');
+  if(Math.abs(diff)<50){v.textContent='Prawie identycznie — różnica poniżej 50 zł';v.className='verdict-bar vb-warn';}
+  else if(diff>0){v.textContent='B2B daje więcej o '+fmt(diff)+' miesięcznie ('+fmt(diff*12)+' rocznie)';v.className='verdict-bar vb-ok';}
+  else{v.textContent='UoP daje więcej o '+fmt(-diff)+' miesięcznie ('+fmt(-diff*12)+' rocznie)';v.className='verdict-bar vb-warn';}
+  const row=(n,v,tot)=>`<div class="bc-row${tot?' total':''}"><span class="bcn">${n}</span><span class="bcv">${v}</span></div>`;
+  document.getElementById('c-uop-rows').innerHTML=row('Brutto',fmt(sal))+row('ZUS (13,71%)','− '+fmt(zusU))+row('Zdrowotna (9%)','− '+fmt(zdrU))+row('PIT',young?'0 zł (ulga)':'− '+fmt(pitU))+row('Netto',fmt(nettoU),true);
+  document.getElementById('c-b2b-rows').innerHTML=row('Przychód',fmt(sal))+row('ZUS',zusB===0?'0 zł (ulga na start)':'− '+fmt(zusB))+row('Koszty','− '+fmt(costs))+row('Zdrowotna','− '+fmt(zdrB))+row('PIT','− '+fmt(pitB))+row('Netto',fmt(nettoB),true);
+}
+
+// ============ MIESZKANIE ============
+const MIASTA=[
+  {name:'Warszawa',reg:'Mazowieckie',pokoj:1800,kawalerka:3800,dwa:5200,tier:'expensive',tags:['największy rynek pracy','wysokie zarobki','drogi transport']},
+  {name:'Kraków',reg:'Małopolskie',pokoj:1500,kawalerka:3200,dwa:4400,tier:'expensive',tags:['dużo IT','dobra komunikacja']},
+  {name:'Wrocław',reg:'Dolnośląskie',pokoj:1400,kawalerka:3000,dwa:4100,tier:'mid',tags:['dużo korporacji','student-friendly']},
+  {name:'Trójmiasto',reg:'Pomorskie',pokoj:1400,kawalerka:2900,dwa:4000,tier:'mid',tags:['morze','dobra jakość życia']},
+  {name:'Poznań',reg:'Wielkopolskie',pokoj:1300,kawalerka:2700,dwa:3700,tier:'mid',tags:['stabilny rynek','blisko Berlina']},
+  {name:'Łódź',reg:'Łódzkie',pokoj:900,kawalerka:1900,dwa:2600,tier:'cheap',tags:['najtańsze duże miasto','rozwijający się']},
+  {name:'Katowice',reg:'Śląskie',pokoj:1000,kawalerka:2100,dwa:2900,tier:'cheap',tags:['IT i BPO','dobre połączenia']},
+  {name:'Lublin',reg:'Lubelskie',pokoj:900,kawalerka:1800,dwa:2500,tier:'cheap',tags:['duże miasto studenckie','niskie koszty']},
+  {name:'Rzeszów',reg:'Podkarpackie',pokoj:850,kawalerka:1700,dwa:2400,tier:'cheap',tags:['szybko rosnące','niskie koszty']},
+  {name:'Szczecin',reg:'Zachodniopomorskie',pokoj:1100,kawalerka:2200,dwa:3000,tier:'mid',tags:['blisko Niemiec','niedoceniony']},
+  {name:'Białystok',reg:'Podlaskie',pokoj:800,kawalerka:1600,dwa:2200,tier:'cheap',tags:['spokojne','blisko natury']},
+  {name:'Bydgoszcz',reg:'Kujawsko-Pomorskie',pokoj:950,kawalerka:1900,dwa:2600,tier:'cheap',tags:['dobre uczelnie','niskie koszty']},
+];
+let userBudget=null; let aptType='kawalerka';
+function calcMiasto() {
+  const income=parseFloat(document.getElementById('m-income').value)||0;
+  const exp=parseFloat(document.getElementById('m-expenses').value)||0;
+  aptType=document.getElementById('m-type').value;
+  const rentPct=parseFloat(document.getElementById('m-pct').value);
+  if(!income) return;
+  userBudget=Math.round(income*rentPct);
+  const left=income-userBudget-exp;
+  document.getElementById('m-budget').textContent=fmt(userBudget);
+  document.getElementById('m-left').textContent=fmt(left);
+  document.getElementById('m-results').style.display='grid';
+  const aff=MIASTA.filter(c=>c[aptType]<=userBudget);
+  const mv=document.getElementById('m-verdict');
+  mv.style.display='flex';
+  if(aff.length>=6){mv.textContent=`✓ Komfortowy budżet — ${aff.length} miast w zasięgu`;mv.className='verdict-bar vb-ok';}
+  else if(aff.length>=2){mv.textContent=`${aff.length} miast w zasięgu. Szukaj aktywnie.`;mv.className='verdict-bar vb-warn';}
+  else{mv.textContent=`Tylko ${aff.length} miasto w zasięgu. Rozważ pokój lub współlokatora.`;mv.className='verdict-bar vb-bad';}
+  renderMiasta();
+}
+function renderMiasta() {
+  const grid=document.getElementById('miasto-grid'); grid.innerHTML='';
+  const max=Math.max(...MIASTA.map(c=>c[aptType]||c.kawalerka));
+  MIASTA.forEach(city=>{
+    const price=city[aptType]||city.kawalerka;
+    const barPct=Math.round(price/max*100);
+    const barCls=city.tier==='cheap'?'mbc':city.tier==='mid'?'mbm':'mbe';
+    const isOk=userBudget?price<=userBudget:null;
+    const card=document.createElement('div');
+    card.className='miasto-card'+(isOk===true?' ok':'');
+    card.innerHTML=`
+      ${isOk!==null?`<div class="miasto-status ${isOk?'ms-ok':'ms-no'}">${isOk?'W zasięgu':'Za drogie'}</div>`:''}
+      <div class="miasto-name">${city.name}</div>
+      <div class="miasto-reg">${city.reg}</div>
+      <div class="miasto-price">${price.toLocaleString('pl-PL')} zł</div>
+      <div class="miasto-plbl">śr. cena ${aptType==='pokoj'?'pokoju':aptType==='dwa'?'2 pokoi':'kawalerki'} / mc</div>
+      <div class="miasto-bar"><div class="miasto-bar-fill ${barCls}" style="width:${barPct}%"></div></div>
+      <div class="miasto-tags">${city.tags.map(t=>`<span class="miasto-tag">${t}</span>`).join('')}</div>`;
+    grid.appendChild(card);
+  });
+}
+renderMiasta();
+calcUoP();
+</script>
+</body>
+</html>
