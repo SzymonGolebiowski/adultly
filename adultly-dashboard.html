@@ -1,180 +1,170 @@
 <!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Adultly — Dashboard</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-:root {
-  --black: #111110;
-  --white: #fafaf8;
-  --accent: #1a6b47;
-  --accent-light: #e8f5ee;
-  --accent-mid: #2d9a68;
-  --gray-1: #f5f4f1;
-  --gray-2: #e8e7e2;
-  --gray-3: #a8a79f;
-  --gray-4: #6b6a63;
-  --serif: 'DM Serif Display', Georgia, serif;
-  --sans: 'DM Sans', sans-serif;
-}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adultly — Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+        :root {
+            --black: #111110;
+            --white: #fafaf8;
+            --accent: #1a6b47;
+            --accent-light: #e8f5ee;
+            --accent-mid: #2d9a68;
+            --gray-1: #f5f4f1;
+            --gray-2: #e8e7e2;
+            --gray-3: #a8a79f;
+            --gray-4: #6b6a63;
+            --serif: 'DM Serif Display', Georgia, serif;
+            --sans: 'DM Sans', sans-serif;
+        }
 
-body {
-  font-family: var(--sans);
-  background: var(--gray-1);
-  color: var(--black);
-}
+        body {
+            font-family: var(--sans);
+            background: var(--gray-1);
+            color: var(--black);
+            line-height: 1.5;
+        }
 
-.dashboard-container { display: flex; min-height: 100vh; }
-.main-content { flex: 1; padding: 40px; }
+        .dashboard-container { display: flex; min-height: 100vh; }
+        .main-content { flex: 1; padding: 40px; max-width: 1200px; margin: 0 auto; }
 
-.dashboard-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-  gap: 24px;
-}
+        .dashboard-card {
+            background: var(--white);
+            border: 1px solid var(--gray-2);
+            border-radius: 24px;
+            padding: 32px;
+            margin-bottom: 24px;
+        }
 
-.dashboard-card {
-  background: var(--white);
-  border: 1px solid var(--gray-2);
-  border-radius: 24px;
-  padding: 32px;
-}
+        .card-title { font-family: var(--serif); font-size: 24px; margin-bottom: 8px; }
+        .card-desc { color: var(--gray-4); font-size: 14px; margin-bottom: 24px; }
 
-.card-title { font-family: var(--serif); font-size: 24px; margin-bottom: 8px; }
-.card-desc { color: var(--gray-4); font-size: 14px; margin-bottom: 24px; }
+        /* Suwaki stylizacja */
+        input[type=range] { width: 100%; margin: 15px 0; accent-color: var(--black); cursor: pointer; }
 
-/* STYLE DLA TWOICH NOWYCH BENEFITÓW */
-.benefit-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: var(--white);
-  border: 1px solid var(--gray-2);
-  padding: 12px;
-  border-radius: 12px;
-  margin-bottom: 8px;
-}
-.benefit-btn {
-  background: var(--black);
-  color: white;
-  text-decoration: none;
-  padding: 8px 14px;
-  border-radius: 8px;
-  font-size: 12px;
-  font-weight: 600;
-}
+        /* Styl nowych benefitów bankowych */
+        .benefit-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--white);
+            border: 1px solid var(--gray-2);
+            padding: 14px;
+            border-radius: 16px;
+            margin-bottom: 10px;
+            transition: transform 0.2s;
+        }
+        .benefit-item:hover { transform: translateY(-2px); border-color: var(--accent-mid); }
+        .benefit-btn {
+            background: var(--black);
+            color: white;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-size: 13px;
+            font-weight: 600;
+        }
 
-/* Suwaki */
-input[type=range] { width: 100%; margin: 15px 0; accent-color: var(--black); }
-
-/* Subskrypcje */
-.sub-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
-.sub-icon { width: 32px; height: 32px; background: var(--gray-2); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
-
-.active { display: block; }
-.tab-content { display: none; }
-.tab-content.active { display: block; }
-
-</style>
+        /* Styl subskrypcji */
+        .sub-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .sub-icon { 
+            width: 36px; height: 36px; background: var(--gray-2); 
+            border-radius: 10px; display: flex; align-items: center; 
+            justify-content: center; font-weight: bold; font-size: 14px;
+        }
+    </style>
 </head>
 <body>
 
 <div class="dashboard-container">
-  <main class="main-content">
-    <div id="tab-home" class="tab-content active">
-      <div class="dashboard-grid">
-        
+    <main class="main-content">
         <div class="dashboard-card">
-          <div class="card-title">Budżet miesięczny</div>
-          <div class="card-desc">Ustaw swoje realne przepływy, aby zobaczyć potencjał oszczędności.</div>
+            <div class="card-title">Budżet miesięczny</div>
+            <div class="card-desc">Ustaw swoje realne przepływy, aby zobaczyć potencjał oszczędności.</div>
 
-          <div style="margin-bottom:20px">
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
-              <div style="font-size:14px; color:var(--gray-4)">Dochód netto</div>
-              <div id="val-inc" style="font-weight:600">5 000 zł</div>
+            <div style="margin-bottom:24px">
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+                    <div style="font-size:14px; color:var(--gray-4)">Dochód netto (miesięcznie)</div>
+                    <div id="val-inc" style="font-weight:600">5 000 zł</div>
+                </div>
+                <input type="range" id="range-inc" min="0" max="15000" step="100" value="5000" oninput="updateFinance()">
+                
+                <div style="display:flex; justify-content:space-between; margin-bottom:8px; margin-top:20px">
+                    <div style="font-size:14px; color:var(--gray-4)">Wydatki stałe</div>
+                    <div id="val-exp" style="font-weight:600">3 200 zł</div>
+                </div>
+                <input type="range" id="range-exp" min="0" max="10000" step="100" value="3200" oninput="updateFinance()">
             </div>
-            <input type="range" id="range-inc" min="0" max="15000" step="100" value="5000" oninput="updateFinance()">
-            
-            <div style="display:flex; justify-content:space-between; margin-bottom:8px; margin-top:16px">
-              <div style="font-size:14px; color:var(--gray-4)">Wydatki miesięczne</div>
-              <div id="val-exp" style="font-weight:600">3 200 zł</div>
+
+            <div style="margin-top:32px; padding-top:24px; border-top:1px solid var(--gray-2);">
+                <div style="font-family:var(--serif); font-size:20px; margin-bottom:16px;">Twoje dodatkowe korzyści</div>
+                <div id="benefit-list">
+                    </div>
             </div>
-            <input type="range" id="range-exp" min="0" max="10000" step="100" value="3200" oninput="updateFinance()">
-          </div>
 
-          <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--gray-2);">
-              <div style="font-family:var(--serif); font-size:18px; margin-bottom:12px;">Twoje dodatkowe korzyści</div>
-              <div id="benefit-list">
-                  </div>
-          </div>
-
-          <div style="font-family:var(--serif); font-size:18px; margin-top:20px; margin-bottom:12px;">Twoje stałe opłaty</div>
-          <div class="sub-row">
-            <div class="sub-icon">N</div>
-            <div style="flex:1; font-size:14px">Netflix</div>
-            <div style="font-size:14px; font-weight:600">43,00 zł</div>
-          </div>
-          <div class="sub-row">
-            <div class="sub-icon">S</div>
-            <div style="flex:1; font-size:14px">Spotify</div>
-            <div style="font-size:14px; font-weight:600">19,99 zł</div>
-          </div>
+            <div style="font-family:var(--serif); font-size:20px; margin-top:32px; margin-bottom:16px;">Twoje stałe opłaty</div>
+            <div class="sub-row">
+                <div class="sub-icon" style="background:#E50914; color:white;">N</div>
+                <div style="flex:1; font-size:14px">Netflix</div>
+                <div style="font-size:14px; font-weight:600">43,00 zł</div>
+            </div>
+            <div class="sub-row">
+                <div class="sub-icon" style="background:#1DB954; color:white;">S</div>
+                <div style="flex:1; font-size:14px">Spotify</div>
+                <div style="font-size:14px; font-weight:600">19,99 zł</div>
+            </div>
         </div>
-
-      </div>
-    </div>
-  </main>
+    </main>
 </div>
 
 <script>
-function updateFinance() {
-    const inc = parseInt(document.getElementById('range-inc').value);
-    const exp = parseInt(document.getElementById('range-exp').value);
-    
-    // Aktualizacja cyferek nad suwakami
-    document.getElementById('val-inc').textContent = inc.toLocaleString() + ' zł';
-    document.getElementById('val-exp').textContent = exp.toLocaleString() + ' zł';
+    function updateFinance() {
+        const inc = parseInt(document.getElementById('range-inc').value);
+        const exp = parseInt(document.getElementById('range-exp').value);
+        
+        // Aktualizacja liczb nad suwakami
+        document.getElementById('val-inc').textContent = inc.toLocaleString() + ' zł';
+        document.getElementById('val-exp').textContent = exp.toLocaleString() + ' zł';
 
-    // Logika wstrzykiwania benefitów
-    const container = document.getElementById('benefit-list');
-    if (!container) return;
+        const container = document.getElementById('benefit-list');
+        if (!container) return;
 
-    let benefits = [];
-    
-    // Oferta 1: Zawsze widoczna (Premia)
-    benefits.push({
-        name: "550 zł za otwarcie konta",
-        bank: "Pekao S.A.",
-        link: "https://www.pekao.com.pl"
-    });
-
-    // Oferta 2: Tylko gdy dochód jest większy od wydatków (Oszczędności)
-    if (inc > exp) {
+        let benefits = [];
+        
+        // Oferta 1: Zawsze widoczna (Konto z premią)
         benefits.push({
-            name: "7% na oszczędnościach",
-            bank: "VeloBank",
-            link: "https://www.velobank.pl"
+            name: "Odbierz 550 zł za nowe konto",
+            bank: "Pekao S.A.",
+            link: "https://www.pekao.com.pl"
         });
+
+        // Oferta 2: Tylko jeśli użytkownik oszczędza (inc > exp)
+        if (inc > exp) {
+            benefits.push({
+                name: "Zyskaj 7% na oszczędnościach",
+                bank: "VeloBank",
+                link: "https://www.velobank.pl"
+            });
+        }
+
+        // Renderowanie kafelków
+        container.innerHTML = benefits.map(b => `
+            <div class="benefit-item">
+                <div>
+                    <div style="font-weight:600; font-size:14px;">${b.name}</div>
+                    <div style="font-size:12px; color:var(--accent); font-weight:500;">${b.bank}</div>
+                </div>
+                <a href="${b.link}" target="_blank" class="benefit-btn">Odbierz</a>
+            </div>
+        `).join('');
     }
 
-    // Generowanie HTML dla kafelków benefitów
-    container.innerHTML = benefits.map(b => `
-        <div class="benefit-item">
-            <div>
-                <div style="font-weight:600; font-size:14px; color:var(--black);">${b.name}</div>
-                <div style="font-size:12px; color:var(--accent); font-weight:500;">${b.bank}</div>
-            </div>
-            <a href="${b.link}" target="_blank" class="benefit-btn">Odbierz</a>
-        </div>
-    `).join('');
-}
-
-// Odpalenie funkcji na starcie, żeby od razu widzieć kafelki
-updateFinance();
+    // Uruchomienie funkcji od razu po załadowaniu strony
+    window.onload = updateFinance;
 </script>
 
 </body>
