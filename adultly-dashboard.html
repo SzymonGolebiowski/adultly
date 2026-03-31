@@ -20,909 +20,161 @@
   --gray-4: #6b6a63;
   --serif: 'DM Serif Display', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
-  --amber: #92400e;
-  --amber-bg: #fef3c7;
-  --red: #991b1b;
-  --red-bg: #fee2e2;
-  --sidebar-w: 240px;
 }
-html, body { height: 100%; }
+
 body {
   font-family: var(--sans);
   background: var(--gray-1);
   color: var(--black);
-  -webkit-font-smoothing: antialiased;
 }
 
-/* LAYOUT */
-.app {
-  display: flex;
-  min-height: 100vh;
+.dashboard-container { display: flex; min-height: 100vh; }
+.main-content { flex: 1; padding: 40px; }
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
 }
 
-/* SIDEBAR */
-.sidebar {
-  width: var(--sidebar-w);
+.dashboard-card {
   background: var(--white);
-  border-right: 1px solid var(--gray-2);
+  border: 1px solid var(--gray-2);
+  border-radius: 24px;
+  padding: 32px;
+}
+
+.card-title { font-family: var(--serif); font-size: 24px; margin-bottom: 8px; }
+.card-desc { color: var(--gray-4); font-size: 14px; margin-bottom: 24px; }
+
+/* STYLE DLA TWOICH NOWYCH BENEFITÓW */
+.benefit-item {
   display: flex;
-  flex-direction: column;
-  position: fixed;
-  top: 0; left: 0; bottom: 0;
-  z-index: 100;
-  padding: 28px 0;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--gray-2);
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 8px;
 }
-.sidebar-logo {
-  font-family: var(--serif);
-  font-size: 22px;
-  padding: 0 24px 28px;
-  border-bottom: 1px solid var(--gray-2);
-  margin-bottom: 20px;
-}
-.sidebar-logo span { color: var(--accent); }
-.sidebar-nav { flex: 1; padding: 0 12px; }
-.nav-item {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 10px;
-  cursor: pointer; margin-bottom: 2px;
-  transition: background 0.15s;
-  text-decoration: none;
-}
-.nav-item:hover { background: var(--gray-1); }
-.nav-item.active { background: var(--accent-light); }
-.nav-item.active .nav-item-label { color: var(--accent); font-weight: 500; }
-.nav-item.active .nav-item-icon { filter: none; }
-.nav-item-icon { font-size: 18px; width: 22px; text-align: center; }
-.nav-item-label { font-size: 14px; color: var(--gray-4); }
-.nav-item.active .nav-item-label { color: var(--accent); }
-.nav-section-label {
-  font-size: 10px; font-weight: 500; color: var(--gray-3);
-  letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 16px 12px 6px;
-}
-.sidebar-bottom {
-  padding: 16px 12px 0;
-  border-top: 1px solid var(--gray-2);
-  margin-top: 12px;
-}
-.sidebar-profile {
-  display: flex; align-items: center; gap: 10px;
-  padding: 10px 12px; border-radius: 10px; cursor: pointer;
-  transition: background 0.15s;
-}
-.sidebar-profile:hover { background: var(--gray-1); }
-.sidebar-avatar {
-  width: 32px; height: 32px; border-radius: 10px;
+.benefit-btn {
   background: var(--black);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif); font-size: 14px; color: var(--white);
-  flex-shrink: 0;
-}
-.sidebar-profile-name { font-size: 13px; font-weight: 500; color: var(--black); }
-.sidebar-profile-sub { font-size: 11px; color: var(--gray-3); }
-
-/* MAIN */
-.main {
-  margin-left: var(--sidebar-w);
-  flex: 1;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
+  color: white;
+  text-decoration: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
 }
 
-/* TOP BAR */
-.topbar {
-  background: var(--white);
-  border-bottom: 1px solid var(--gray-2);
-  padding: 16px 32px;
-  display: flex; align-items: center; justify-content: space-between;
-  position: sticky; top: 0; z-index: 50;
-}
-.topbar-greeting { font-size: 13px; color: var(--gray-4); }
-.topbar-name { font-size: 16px; font-weight: 500; color: var(--black); }
-.topbar-actions { display: flex; gap: 10px; align-items: center; }
-.topbar-btn {
-  font-family: var(--sans); font-size: 13px;
-  padding: 8px 16px; border-radius: 99px;
-  border: 1px solid var(--gray-2); background: var(--white);
-  cursor: pointer; color: var(--gray-4);
-  transition: all 0.15s; display: flex; align-items: center; gap: 6px;
-}
-.topbar-btn:hover { border-color: var(--gray-3); color: var(--black); }
-.topbar-btn.primary { background: var(--black); color: var(--white); border-color: var(--black); }
-.topbar-btn.primary:hover { background: var(--accent); border-color: var(--accent); }
-.notif-dot {
-  width: 8px; height: 8px; border-radius: 50%;
-  background: #ef4444; flex-shrink: 0;
-}
+/* Suwaki */
+input[type=range] { width: 100%; margin: 15px 0; accent-color: var(--black); }
 
-/* PAGE CONTENT */
-.page { padding: 32px; flex: 1; }
+/* Subskrypcje */
+.sub-row { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+.sub-icon { width: 32px; height: 32px; background: var(--gray-2); border-radius: 8px; display: flex; align-items: center; justify-content: center; }
+
+.active { display: block; }
 .tab-content { display: none; }
 .tab-content.active { display: block; }
 
-/* SCORE HERO */
-.score-hero {
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-  gap: 16px;
-  margin-bottom: 24px;
-  animation: fadeUp 0.5s ease both;
-}
-.score-main {
-  background: var(--black);
-  border-radius: 20px;
-  padding: 28px;
-  position: relative;
-  overflow: hidden;
-  grid-column: span 1;
-}
-.score-main::after {
-  content: '';
-  position: absolute;
-  bottom: -60px; right: -60px;
-  width: 200px; height: 200px;
-  background: rgba(45,154,104,0.15);
-  border-radius: 50%;
-}
-.score-label { font-size: 12px; color: rgba(255,255,255,0.5); margin-bottom: 8px; }
-.score-number {
-  font-family: var(--serif);
-  font-size: 72px; color: var(--white);
-  line-height: 1; margin-bottom: 4px;
-}
-.score-number span { font-size: 28px; opacity: 0.4; }
-.score-desc { font-size: 13px; color: rgba(255,255,255,0.6); margin-bottom: 20px; }
-.score-bars { display: flex; flex-direction: column; gap: 8px; }
-.score-bar-row { display: flex; align-items: center; gap: 10px; }
-.score-bar-label { font-size: 12px; color: rgba(255,255,255,0.5); width: 72px; }
-.score-bar-track { flex: 1; background: rgba(255,255,255,0.1); border-radius: 99px; height: 4px; }
-.score-bar-fill { height: 4px; border-radius: 99px; transition: width 1s ease; }
-.fill-good { background: var(--accent-mid); }
-.fill-warn { background: #f59e0b; }
-
-/* STAT CARDS */
-.stat-card {
-  background: var(--white);
-  border: 1px solid var(--gray-2);
-  border-radius: 20px;
-  padding: 24px;
-  display: flex; flex-direction: column; justify-content: space-between;
-}
-.stat-card-label { font-size: 12px; color: var(--gray-3); margin-bottom: 8px; }
-.stat-card-value { font-family: var(--serif); font-size: 36px; color: var(--black); line-height: 1; margin-bottom: 8px; }
-.stat-card-value.green { color: var(--accent); }
-.stat-card-value.amber { color: #d97706; }
-.stat-card-sub { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
-.stat-card-bar { margin-top: 16px; }
-.stat-bar-track { background: var(--gray-1); border-radius: 99px; height: 6px; }
-.stat-bar-fill { height: 6px; border-radius: 99px; background: var(--accent-mid); transition: width 1s ease; }
-
-/* GRID 2COL */
-.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px; }
-
-/* SECTION HEADER */
-.sec-header {
-  display: flex; align-items: center; justify-content: space-between;
-  margin-bottom: 14px;
-}
-.sec-title { font-size: 15px; font-weight: 500; color: var(--black); }
-.sec-link { font-size: 13px; color: var(--accent); cursor: pointer; }
-.sec-link:hover { text-decoration: underline; }
-
-/* INSIGHTS */
-.insights-list { display: flex; flex-direction: column; gap: 10px; }
-.insight {
-  background: var(--white); border: 1px solid var(--gray-2);
-  border-radius: 14px; padding: 16px;
-  display: flex; align-items: flex-start; gap: 14px;
-  cursor: pointer; transition: border-color 0.15s, transform 0.15s;
-}
-.insight:hover { border-color: var(--gray-3); transform: translateX(2px); }
-.insight-icon {
-  width: 40px; height: 40px; border-radius: 12px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 18px; flex-shrink: 0;
-}
-.ig-green { background: var(--accent-light); }
-.ig-amber { background: var(--amber-bg); }
-.ig-blue { background: #eff6ff; }
-.ig-red { background: var(--red-bg); }
-.insight-body { flex: 1; }
-.insight-title { font-size: 14px; font-weight: 500; color: var(--black); margin-bottom: 3px; }
-.insight-desc { font-size: 13px; color: var(--gray-4); line-height: 1.5; }
-.insight-cta {
-  font-size: 12px; color: var(--accent); font-weight: 500;
-  margin-top: 8px; display: inline-block;
-}
-.insight-arrow { color: var(--gray-3); font-size: 18px; align-self: center; }
-
-/* DEADLINES */
-.deadlines-list { display: flex; flex-direction: column; gap: 8px; }
-.deadline {
-  background: var(--white); border: 1px solid var(--gray-2);
-  border-radius: 12px; padding: 14px 16px;
-  display: flex; align-items: center; gap: 14px;
-  cursor: pointer; transition: border-color 0.15s;
-}
-.deadline:hover { border-color: var(--gray-3); }
-.deadline-indicator { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
-.di-red { background: #ef4444; box-shadow: 0 0 0 3px #fee2e2; }
-.di-amber { background: #f59e0b; box-shadow: 0 0 0 3px var(--amber-bg); }
-.di-green { background: var(--accent-mid); box-shadow: 0 0 0 3px var(--accent-light); }
-.deadline-info { flex: 1; }
-.deadline-name { font-size: 14px; font-weight: 500; color: var(--black); }
-.deadline-date { font-size: 12px; color: var(--gray-3); }
-.deadline-badge {
-  font-size: 12px; font-weight: 500;
-  padding: 4px 10px; border-radius: 99px;
-}
-.db-red { background: var(--red-bg); color: var(--red); }
-.db-amber { background: var(--amber-bg); color: var(--amber); }
-.db-green { background: var(--accent-light); color: var(--accent); }
-
-/* MODULES GRID */
-.modules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
-.module-tile {
-  background: var(--white); border: 1px solid var(--gray-2);
-  border-radius: 16px; padding: 20px;
-  cursor: pointer; transition: all 0.2s;
-  position: relative; overflow: hidden;
-}
-.module-tile::before {
-  content: ''; position: absolute;
-  top: 0; left: 0; right: 0; height: 3px;
-  background: var(--accent-mid); opacity: 0;
-  transition: opacity 0.2s;
-}
-.module-tile:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,0.07); border-color: var(--gray-3); }
-.module-tile:hover::before { opacity: 1; }
-.module-tile-icon { font-size: 28px; margin-bottom: 12px; }
-.module-tile-name { font-size: 14px; font-weight: 500; color: var(--black); margin-bottom: 4px; }
-.module-tile-desc { font-size: 12px; color: var(--gray-4); line-height: 1.5; }
-.module-tile-status {
-  display: inline-block; margin-top: 10px;
-  font-size: 11px; font-weight: 500;
-  padding: 3px 8px; border-radius: 99px;
-}
-.ms-live { background: var(--accent-light); color: var(--accent); }
-.ms-soon { background: var(--gray-1); color: var(--gray-3); }
-
-/* BUDGET CARD */
-.budget-card {
-  background: var(--white); border: 1px solid var(--gray-2);
-  border-radius: 20px; padding: 24px;
-}
-.budget-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 20px; }
-.budget-amount { font-family: var(--serif); font-size: 40px; color: var(--black); line-height: 1; }
-.budget-label { font-size: 12px; color: var(--gray-3); margin-bottom: 4px; }
-.budget-edit { font-size: 13px; color: var(--accent); cursor: pointer; }
-.budget-bars { display: flex; flex-direction: column; gap: 10px; }
-.budget-row { display: flex; align-items: center; gap: 12px; }
-.budget-row-label { font-size: 13px; color: var(--gray-4); width: 110px; }
-.budget-row-track { flex: 1; background: var(--gray-1); border-radius: 99px; height: 8px; }
-.budget-row-fill { height: 8px; border-radius: 99px; }
-.bf-green { background: var(--accent-mid); }
-.bf-amber { background: #f59e0b; }
-.bf-gray { background: var(--gray-2); }
-.budget-row-val { font-size: 13px; font-weight: 500; color: var(--black); width: 70px; text-align: right; }
-
-/* PROFILE PAGE */
-.profile-page { max-width: 640px; }
-.profile-hero-big {
-  display: flex; align-items: center; gap: 20px; margin-bottom: 32px;
-}
-.avatar-big {
-  width: 72px; height: 72px; border-radius: 20px;
-  background: var(--black);
-  display: flex; align-items: center; justify-content: center;
-  font-family: var(--serif); font-size: 28px; color: var(--white);
-}
-.profile-name-big { font-family: var(--serif); font-size: 28px; color: var(--black); }
-.profile-sub-big { font-size: 14px; color: var(--gray-4); }
-.profile-edit-btn {
-  margin-left: auto; font-family: var(--sans); font-size: 13px;
-  padding: 8px 16px; border-radius: 99px;
-  border: 1px solid var(--gray-2); background: var(--white);
-  cursor: pointer; color: var(--gray-4); transition: all 0.15s;
-}
-.profile-edit-btn:hover { border-color: var(--gray-3); color: var(--black); }
-
-.profile-section { margin-bottom: 24px; }
-.profile-section-title {
-  font-size: 11px; font-weight: 500; color: var(--gray-3);
-  text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 10px;
-}
-.profile-card-list {
-  background: var(--white); border: 1px solid var(--gray-2);
-  border-radius: 14px; overflow: hidden;
-}
-.profile-row {
-  display: flex; align-items: center;
-  padding: 14px 16px; border-bottom: 1px solid var(--gray-2);
-  cursor: pointer; transition: background 0.15s;
-}
-.profile-row:last-child { border-bottom: none; }
-.profile-row:hover { background: var(--gray-1); }
-.profile-row-icon { font-size: 16px; width: 28px; }
-.profile-row-body { flex: 1; }
-.profile-row-label { font-size: 14px; color: var(--black); }
-.profile-row-value { font-size: 12px; color: var(--gray-3); margin-top: 1px; }
-.profile-row-right { font-size: 16px; color: var(--gray-3); }
-.profile-row-badge {
-  font-size: 11px; font-weight: 500;
-  padding: 3px 8px; border-radius: 99px;
-  margin-right: 8px;
-}
-
-/* ADD ITEM */
-.add-item-row {
-  display: flex; align-items: center;
-  padding: 12px 16px; cursor: pointer;
-  transition: background 0.15s; border-radius: 14px;
-  border: 1px dashed var(--gray-2); margin-top: 8px;
-  color: var(--gray-3); font-size: 13px; gap: 8px;
-}
-.add-item-row:hover { border-color: var(--accent); color: var(--accent); background: var(--accent-light); }
-
-/* ANIMATIONS */
-@keyframes fadeUp {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-.anim-1 { animation: fadeUp 0.5s ease 0.05s both; }
-.anim-2 { animation: fadeUp 0.5s ease 0.1s both; }
-.anim-3 { animation: fadeUp 0.5s ease 0.15s both; }
-.anim-4 { animation: fadeUp 0.5s ease 0.2s both; }
-.anim-5 { animation: fadeUp 0.5s ease 0.25s both; }
-
-/* BOTTOM NAV (mobile) */
-.bottom-nav { display: none; }
-
-/* RESPONSIVE */
-@media (max-width: 768px) {
-  .sidebar { display: none; }
-  .main { margin-left: 0; }
-  .topbar { padding: 14px 16px; }
-  .page { padding: 16px 16px 80px; }
-  .score-hero { grid-template-columns: 1fr; }
-  .score-main { grid-column: span 1; }
-  .grid-2, .grid-3 { grid-template-columns: 1fr; }
-  .modules-grid { grid-template-columns: 1fr 1fr; }
-  .bottom-nav {
-    display: flex; position: fixed;
-    bottom: 0; left: 0; right: 0;
-    background: rgba(250,250,248,0.95);
-    backdrop-filter: blur(12px);
-    border-top: 1px solid var(--gray-2);
-    padding: 8px 0 20px; z-index: 100;
-  }
-  .bottom-nav-item {
-    flex: 1; display: flex; flex-direction: column;
-    align-items: center; gap: 3px; cursor: pointer; padding: 6px 0;
-  }
-  .bottom-nav-icon { font-size: 22px; }
-  .bottom-nav-label { font-size: 10px; color: var(--gray-3); }
-  .bottom-nav-item.active .bottom-nav-label { color: var(--accent); font-weight: 500; }
-}
-@media (max-width: 480px) {
-  .modules-grid { grid-template-columns: 1fr; }
-}
 </style>
 </head>
 <body>
 
-<div class="app">
+<div class="dashboard-container">
+  <main class="main-content">
+    <div id="tab-home" class="tab-content active">
+      <div class="dashboard-grid">
+        
+        <div class="dashboard-card">
+          <div class="card-title">Budżet miesięczny</div>
+          <div class="card-desc">Ustaw swoje realne przepływy, aby zobaczyć potencjał oszczędności.</div>
 
-  <!-- SIDEBAR -->
-  <aside class="sidebar">
-    <div class="sidebar-logo">Adult<span>ly</span></div>
-    <nav class="sidebar-nav">
-      <div class="nav-section-label">Główne</div>
-      <a class="nav-item active" onclick="switchTab('home', this)">
-        <span class="nav-item-icon">⊞</span>
-        <span class="nav-item-label">Dashboard</span>
-      </a>
-      <a class="nav-item" onclick="switchTab('profile', this)">
-        <span class="nav-item-icon">👤</span>
-        <span class="nav-item-label">Mój profil</span>
-      </a>
-
-      <div class="nav-section-label">Narzędzia</div>
-      <a class="nav-item" onclick="switchTab('finance', this)">
-        <span class="nav-item-icon">💰</span>
-        <span class="nav-item-label">Finanse</span>
-      </a>
-      <a class="nav-item" onclick="switchTab('work', this)">
-        <span class="nav-item-icon">💼</span>
-        <span class="nav-item-label">Praca i CV</span>
-      </a>
-      <a class="nav-item" onclick="switchTab('home', this)" style="opacity:0.4;pointer-events:none">
-        <span class="nav-item-icon">🏠</span>
-        <span class="nav-item-label">Mieszkanie</span>
-      </a>
-      <a class="nav-item" onclick="switchTab('home', this)" style="opacity:0.4;pointer-events:none">
-        <span class="nav-item-icon">📋</span>
-        <span class="nav-item-label">Formalności</span>
-      </a>
-      <a class="nav-item" onclick="switchTab('home', this)" style="opacity:0.4;pointer-events:none">
-        <span class="nav-item-icon">🗂️</span>
-        <span class="nav-item-label">Życie codzienne</span>
-      </a>
-    </nav>
-    <div class="sidebar-bottom">
-      <div class="sidebar-profile" onclick="switchTab('profile', null)">
-        <div class="sidebar-avatar">S</div>
-        <div>
-          <div class="sidebar-profile-name">Szymon G.</div>
-          <div class="sidebar-profile-sub">Student · UW</div>
-        </div>
-      </div>
-    </div>
-  </aside>
-
-  <!-- MAIN -->
-  <main class="main">
-
-    <!-- TOPBAR -->
-    <div class="topbar">
-      <div>
-        <div class="topbar-greeting">Dzień dobry,</div>
-        <div class="topbar-name">Szymon 👋</div>
-      </div>
-      <div class="topbar-actions">
-        <button class="topbar-btn">
-          <span class="notif-dot"></span>
-          3 alerty
-        </button>
-        <button class="topbar-btn primary" onclick="switchTab('work', null)">Uzupełnij CV →</button>
-      </div>
-    </div>
-
-    <!-- PAGE -->
-    <div class="page">
-
-      <!-- DASHBOARD -->
-      <div class="tab-content active" id="tab-home">
-
-        <div class="score-hero">
-          <div class="score-main">
-            <div class="score-label">Adulting score</div>
-            <div class="score-number">72<span>/100</span></div>
-            <div class="score-desc">Niezłe początki — 3 rzeczy do ogarnięcia</div>
-            <div class="score-bars">
-              <div class="score-bar-row">
-                <div class="score-bar-label">Finanse</div>
-                <div class="score-bar-track"><div class="score-bar-fill fill-good" style="width:65%"></div></div>
-              </div>
-              <div class="score-bar-row">
-                <div class="score-bar-label">Praca</div>
-                <div class="score-bar-track"><div class="score-bar-fill fill-warn" style="width:40%"></div></div>
-              </div>
-              <div class="score-bar-row">
-                <div class="score-bar-label">Mieszkanie</div>
-                <div class="score-bar-track"><div class="score-bar-fill fill-good" style="width:80%"></div></div>
-              </div>
-              <div class="score-bar-row">
-                <div class="score-bar-label">Dokumenty</div>
-                <div class="score-bar-track"><div class="score-bar-fill fill-warn" style="width:50%"></div></div>
-              </div>
+          <div style="margin-bottom:20px">
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px">
+              <div style="font-size:14px; color:var(--gray-4)">Dochód netto</div>
+              <div id="val-inc" style="font-weight:600">5 000 zł</div>
             </div>
+            <input type="range" id="range-inc" min="0" max="15000" step="100" value="5000" oninput="updateFinance()">
+            
+            <div style="display:flex; justify-content:space-between; margin-bottom:8px; margin-top:16px">
+              <div style="font-size:14px; color:var(--gray-4)">Wydatki miesięczne</div>
+              <div id="val-exp" style="font-weight:600">3 200 zł</div>
+            </div>
+            <input type="range" id="range-exp" min="0" max="10000" step="100" value="3200" oninput="updateFinance()">
           </div>
 
-          <div class="stat-card anim-1">
-            <div>
-              <div class="stat-card-label">Możesz zaoszczędzić</div>
-              <div class="stat-card-value green">340 zł</div>
-              <div class="stat-card-sub">miesięcznie na subskrypcjach i lepszych ofertach</div>
-            </div>
-            <div class="stat-card-bar">
-              <div class="stat-bar-track"><div class="stat-bar-fill" style="width:68%"></div></div>
-            </div>
+          <div style="margin-top:24px; padding-top:20px; border-top:1px solid var(--gray-2);">
+              <div style="font-family:var(--serif); font-size:18px; margin-bottom:12px;">Twoje dodatkowe korzyści</div>
+              <div id="benefit-list">
+                  </div>
           </div>
 
-          <div class="stat-card anim-2">
-            <div>
-              <div class="stat-card-label">Najbliższy termin</div>
-              <div class="stat-card-value amber">12 dni</div>
-              <div class="stat-card-sub">OC samochodu kończy się 15 kwietnia — odnów teraz</div>
-            </div>
-            <div style="margin-top:16px">
-              <span style="font-size:12px;background:var(--red-bg);color:var(--red);padding:4px 10px;border-radius:99px;font-weight:500">Pilne</span>
-            </div>
+          <div style="font-family:var(--serif); font-size:18px; margin-top:20px; margin-bottom:12px;">Twoje stałe opłaty</div>
+          <div class="sub-row">
+            <div class="sub-icon">N</div>
+            <div style="flex:1; font-size:14px">Netflix</div>
+            <div style="font-size:14px; font-weight:600">43,00 zł</div>
           </div>
-        </div>
-
-        <div class="grid-2 anim-3">
-          <div>
-            <div class="sec-header">
-              <div class="sec-title">Adultly podpowiada</div>
-              <div class="sec-link">Zobacz wszystkie</div>
-            </div>
-            <div class="insights-list">
-              <div class="insight" onclick="switchTab('finance', null)">
-                <div class="insight-icon ig-green">💡</div>
-                <div class="insight-body">
-                  <div class="insight-title">B2B dałoby ci +680 zł więcej</div>
-                  <div class="insight-desc">Przy twojej ofercie pracy przejście na B2B opłaca się. Sprawdź wyliczenie.</div>
-                  <span class="insight-cta">Otwórz kalkulator →</span>
-                </div>
-              </div>
-              <div class="insight">
-                <div class="insight-icon ig-amber">⚡</div>
-                <div class="insight-body">
-                  <div class="insight-title">4 subskrypcje których nie używasz</div>
-                  <div class="insight-desc">Spotify, Siłownia, Adobe, Canal+. Razem 220 zł/mc których możesz nie wydawać.</div>
-                  <span class="insight-cta">Przejrzyj subskrypcje →</span>
-                </div>
-              </div>
-              <div class="insight" onclick="switchTab('work', null)">
-                <div class="insight-icon ig-blue">🎯</div>
-                <div class="insight-body">
-                  <div class="insight-title">CV gotowe tylko w 60%</div>
-                  <div class="insight-desc">Brakuje opisu doświadczenia. Rekruterzy pomijają niekompletne CV.</div>
-                  <span class="insight-cta">Uzupełnij CV →</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div>
-            <div class="sec-header">
-              <div class="sec-title">Nadchodzące terminy</div>
-              <div class="sec-link">+ Dodaj</div>
-            </div>
-            <div class="deadlines-list">
-              <div class="deadline">
-                <div class="deadline-indicator di-red"></div>
-                <div class="deadline-info">
-                  <div class="deadline-name">OC samochodu</div>
-                  <div class="deadline-date">Kończy się 15 kwietnia 2026</div>
-                </div>
-                <div class="deadline-badge db-red">12 dni</div>
-              </div>
-              <div class="deadline">
-                <div class="deadline-indicator di-amber"></div>
-                <div class="deadline-info">
-                  <div class="deadline-name">Umowa najmu</div>
-                  <div class="deadline-date">Kończy się 30 czerwca 2026</div>
-                </div>
-                <div class="deadline-badge db-amber">93 dni</div>
-              </div>
-              <div class="deadline">
-                <div class="deadline-indicator di-amber"></div>
-                <div class="deadline-info">
-                  <div class="deadline-name">Przegląd techniczny auta</div>
-                  <div class="deadline-date">Maj 2026</div>
-                </div>
-                <div class="deadline-badge db-amber">~60 dni</div>
-              </div>
-              <div class="deadline">
-                <div class="deadline-indicator di-green"></div>
-                <div class="deadline-info">
-                  <div class="deadline-name">Dowód osobisty</div>
-                  <div class="deadline-date">Ważny do 2028</div>
-                </div>
-                <div class="deadline-badge db-green">OK</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="sec-header anim-4">
-          <div class="sec-title">Twoje narzędzia</div>
-        </div>
-        <div class="modules-grid anim-5">
-          <div class="module-tile" onclick="switchTab('finance', null)">
-            <div class="module-tile-icon">💰</div>
-            <div class="module-tile-name">Finanse</div>
-            <div class="module-tile-desc">Kalkulator UoP vs B2B, budżet, oszczędności</div>
-            <div class="module-tile-status ms-live">Dostępne</div>
-          </div>
-          <div class="module-tile" onclick="switchTab('work', null)">
-            <div class="module-tile-icon">💼</div>
-            <div class="module-tile-name">Praca i CV</div>
-            <div class="module-tile-desc">Generator CV z AI, oferty po kierunku</div>
-            <div class="module-tile-status ms-live">Dostępne</div>
-          </div>
-          <div class="module-tile" style="opacity:0.6">
-            <div class="module-tile-icon">🏠</div>
-            <div class="module-tile-name">Mieszkanie</div>
-            <div class="module-tile-desc">Mapa najmu, kalkulator czy cię stać</div>
-            <div class="module-tile-status ms-soon">Wkrótce</div>
-          </div>
-          <div class="module-tile" style="opacity:0.6">
-            <div class="module-tile-icon">📋</div>
-            <div class="module-tile-name">Formalności</div>
-            <div class="module-tile-desc">Checklist absolwenta, ZUS, PIT</div>
-            <div class="module-tile-status ms-soon">Wkrótce</div>
-          </div>
-          <div class="module-tile" style="opacity:0.6">
-            <div class="module-tile-icon">🗂️</div>
-            <div class="module-tile-name">Życie codzienne</div>
-            <div class="module-tile-desc">Ubezpieczenia, BIK, umowy, pułapki</div>
-            <div class="module-tile-status ms-soon">Wkrótce</div>
-          </div>
-          <div class="module-tile" style="border: 1px dashed var(--gray-2); background: transparent;">
-            <div class="module-tile-icon">＋</div>
-            <div class="module-tile-name" style="color:var(--gray-3)">Więcej wkrótce</div>
-            <div class="module-tile-desc" style="color:var(--gray-3)">Nowe moduły co miesiąc</div>
+          <div class="sub-row">
+            <div class="sub-icon">S</div>
+            <div style="flex:1; font-size:14px">Spotify</div>
+            <div style="font-size:14px; font-weight:600">19,99 zł</div>
           </div>
         </div>
 
       </div>
-
-      <!-- FINANSE -->
-      <div class="tab-content" id="tab-finance">
-        <div class="sec-header" style="margin-bottom:24px">
-          <div style="font-family:var(--serif);font-size:28px">Finanse</div>
-        </div>
-        <div class="grid-2">
-          <div class="budget-card">
-            <div class="budget-top">
-              <div>
-                <div class="budget-label">Dochód netto / miesiąc</div>
-                <div class="budget-amount">6 000 zł</div>
-              </div>
-              <div class="budget-edit">Edytuj</div>
-            </div>
-            <div class="budget-bars">
-              <div class="budget-row">
-                <div class="budget-row-label">Wynajem</div>
-                <div class="budget-row-track"><div class="budget-row-fill bf-amber" style="width:30%"></div></div>
-                <div class="budget-row-val">1 800 zł</div>
-              </div>
-              <div class="budget-row">
-                <div class="budget-row-label">Jedzenie</div>
-                <div class="budget-row-track"><div class="budget-row-fill bf-green" style="width:17%"></div></div>
-                <div class="budget-row-val">1 000 zł</div>
-              </div>
-              <div class="budget-row">
-                <div class="budget-row-label">Transport</div>
-                <div class="budget-row-track"><div class="budget-row-fill bf-green" style="width:8%"></div></div>
-                <div class="budget-row-val">500 zł</div>
-              </div>
-              <div class="budget-row">
-                <div class="budget-row-label">Subskrypcje</div>
-                <div class="budget-row-track"><div class="budget-row-fill bf-amber" style="width:7%"></div></div>
-                <div class="budget-row-val">420 zł</div>
-              </div>
-              <div class="budget-row">
-                <div class="budget-row-label">Wolne</div>
-                <div class="budget-row-track"><div class="budget-row-fill bf-green" style="width:38%"></div></div>
-                <div class="budget-row-val">2 280 zł</div>
-              </div>
-            </div>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:12px">
-            <div class="stat-card">
-              <div class="stat-card-label">Oszczędności w tym miesiącu</div>
-              <div class="stat-card-value green">2 280 zł</div>
-              <div class="stat-card-sub">38% dochodu · dobry wynik</div>
-            </div>
-            <div class="stat-card">
-              <div class="stat-card-label">Możliwe dodatkowe oszczędności</div>
-              <div class="stat-card-value amber">340 zł</div>
-              <div class="stat-card-sub">po optymalizacji subskrypcji</div>
-            </div>
-          </div>
-        </div>
-        <div class="sec-header">
-          <div class="sec-title">Kalkulatory</div>
-        </div>
-        <div class="modules-grid">
-          <div class="module-tile">
-            <div class="module-tile-icon">⚖️</div>
-            <div class="module-tile-name">UoP vs B2B</div>
-            <div class="module-tile-desc">Co bardziej się opłaca przy twojej ofercie pracy</div>
-            <div class="module-tile-status ms-live">Otwórz →</div>
-          </div>
-          <div class="module-tile">
-            <div class="module-tile-icon">🏙️</div>
-            <div class="module-tile-name">Koszty życia w mieście</div>
-            <div class="module-tile-desc">Ile potrzebujesz żeby normalnie żyć w X</div>
-            <div class="module-tile-status ms-live">Otwórz →</div>
-          </div>
-          <div class="module-tile">
-            <div class="module-tile-icon">📈</div>
-            <div class="module-tile-name">Kalkulator oszczędności</div>
-            <div class="module-tile-desc">Kiedy uzbierasz na cel przy obecnym tempie</div>
-            <div class="module-tile-status ms-soon">Wkrótce</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PRACA -->
-      <div class="tab-content" id="tab-work">
-        <div class="sec-header" style="margin-bottom:24px">
-          <div style="font-family:var(--serif);font-size:28px">Praca i CV</div>
-        </div>
-        <div class="insight ig-blue" style="margin-bottom:24px;border-radius:16px">
-          <div class="insight-icon ig-blue" style="font-size:24px;width:48px;height:48px">📄</div>
-          <div class="insight-body">
-            <div class="insight-title">CV gotowe w 60% — uzupełnij żeby zwiększyć szanse</div>
-            <div class="insight-desc">Brakuje opisu doświadczenia, umiejętności i zdjęcia profilowego. Rekruterzy pomijają niekompletne CV w 8 na 10 przypadków.</div>
-            <span class="insight-cta">Otwórz generator CV →</span>
-          </div>
-          <div style="background:var(--gray-1);border-radius:99px;height:6px;width:80px;align-self:center;overflow:hidden">
-            <div style="background:var(--accent-mid);height:100%;width:60%;border-radius:99px"></div>
-          </div>
-        </div>
-        <div class="sec-header"><div class="sec-title">Oferty dla ciebie</div><div class="sec-link">Filtruj</div></div>
-        <div style="display:flex;flex-direction:column;gap:10px">
-          <div class="insight" style="border-radius:14px">
-            <div class="insight-icon ig-green" style="font-size:20px">🏦</div>
-            <div class="insight-body">
-              <div class="insight-title">Junior Financial Analyst · PKO Bank Polski</div>
-              <div class="insight-desc">Warszawa · 6 000–8 000 zł · UoP · Finanse, Excel, Raportowanie</div>
-            </div>
-            <div style="font-size:13px;color:var(--accent);font-weight:500;white-space:nowrap">6–8k zł</div>
-          </div>
-          <div class="insight" style="border-radius:14px">
-            <div class="insight-icon ig-blue" style="font-size:20px">🔷</div>
-            <div class="insight-body">
-              <div class="insight-title">Analityk Rachunkowości · Deloitte</div>
-              <div class="insight-desc">Warszawa · 5 000–7 000 zł · Big4 · Możliwość stażu</div>
-            </div>
-            <div style="font-size:13px;color:var(--accent);font-weight:500;white-space:nowrap">5–7k zł</div>
-          </div>
-          <div class="insight" style="border-radius:14px">
-            <div class="insight-icon ig-amber" style="font-size:20px">🏛️</div>
-            <div class="insight-body">
-              <div class="insight-title">Specjalista ds. Finansów · mBank</div>
-              <div class="insight-desc">Warszawa / Remote · 7 000–9 000 zł · B2B ok · Fintech</div>
-            </div>
-            <div style="font-size:13px;color:var(--accent);font-weight:500;white-space:nowrap">7–9k zł</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PROFIL -->
-      <div class="tab-content" id="tab-profile">
-        <div class="profile-page">
-          <div class="profile-hero-big">
-            <div class="avatar-big">S</div>
-            <div>
-              <div class="profile-name-big">Szymon Gołębiowski</div>
-              <div class="profile-sub-big">Student · Finanse i Rachunkowość · UW · Warszawa</div>
-            </div>
-            <button class="profile-edit-btn">Edytuj profil</button>
-          </div>
-
-          <div class="profile-section">
-            <div class="profile-section-title">Dane podstawowe</div>
-            <div class="profile-card-list">
-              <div class="profile-row">
-                <div class="profile-row-icon">💼</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Status</div>
-                  <div class="profile-row-value">Student ostatniego roku</div>
-                </div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">🎓</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Kierunek</div>
-                  <div class="profile-row-value">Finanse i Rachunkowość · UW</div>
-                </div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">📍</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Miasto</div>
-                  <div class="profile-row-value">Warszawa</div>
-                </div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">💰</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Dochód netto</div>
-                  <div class="profile-row-value">6 000 zł / miesiąc</div>
-                </div>
-                <div class="profile-row-right">›</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="profile-section">
-            <div class="profile-section-title">Wydatki stałe</div>
-            <div class="profile-card-list">
-              <div class="profile-row">
-                <div class="profile-row-icon">🏠</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Wynajem</div>
-                  <div class="profile-row-value">1 800 zł / mc</div>
-                </div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">📱</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Subskrypcje</div>
-                  <div class="profile-row-value">Netflix, Spotify, Siłownia, Adobe · 420 zł/mc</div>
-                </div>
-                <div class="profile-row-badge db-amber">Dużo</div>
-                <div class="profile-row-right">›</div>
-              </div>
-            </div>
-            <div class="add-item-row">＋ Dodaj wydatek stały</div>
-          </div>
-
-          <div class="profile-section">
-            <div class="profile-section-title">Dokumenty i terminy</div>
-            <div class="profile-card-list">
-              <div class="profile-row">
-                <div class="profile-row-icon">🚗</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">OC samochodu</div>
-                  <div class="profile-row-value" style="color:var(--red)">Kończy się za 12 dni!</div>
-                </div>
-                <div class="profile-row-badge db-red">Pilne</div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">🏠</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Umowa najmu</div>
-                  <div class="profile-row-value">Kończy się 30 czerwca 2026</div>
-                </div>
-                <div class="profile-row-badge db-amber">93 dni</div>
-                <div class="profile-row-right">›</div>
-              </div>
-              <div class="profile-row">
-                <div class="profile-row-icon">🪪</div>
-                <div class="profile-row-body">
-                  <div class="profile-row-label">Dowód osobisty</div>
-                  <div class="profile-row-value">Ważny do 2028</div>
-                </div>
-                <div class="profile-row-badge db-green">OK</div>
-                <div class="profile-row-right">›</div>
-              </div>
-            </div>
-            <div class="add-item-row">＋ Dodaj dokument lub termin</div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </main>
-
-  <!-- BOTTOM NAV (mobile) -->
-  <div class="bottom-nav">
-    <div class="bottom-nav-item active" id="bnav-home" onclick="switchTab('home', null)">
-      <div class="bottom-nav-icon">⊞</div>
-      <div class="bottom-nav-label">Główna</div>
-    </div>
-    <div class="bottom-nav-item" id="bnav-finance" onclick="switchTab('finance', null)">
-      <div class="bottom-nav-icon">💰</div>
-      <div class="bottom-nav-label">Finanse</div>
-    </div>
-    <div class="bottom-nav-item" id="bnav-work" onclick="switchTab('work', null)">
-      <div class="bottom-nav-icon">💼</div>
-      <div class="bottom-nav-label">Praca</div>
-    </div>
-    <div class="bottom-nav-item" id="bnav-profile" onclick="switchTab('profile', null)">
-      <div class="bottom-nav-icon">👤</div>
-      <div class="bottom-nav-label">Profil</div>
-    </div>
-  </div>
-
 </div>
 
 <script>
-function switchTab(tab, navEl) {
-  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
-  document.getElementById('tab-' + tab).classList.add('active');
-  document.querySelectorAll('.sidebar .nav-item').forEach(n => n.classList.remove('active'));
-  document.querySelectorAll('.bottom-nav-item').forEach(n => n.classList.remove('active'));
-  if (navEl) navEl.classList.add('active');
-  const bnav = document.getElementById('bnav-' + tab);
-  if (bnav) bnav.classList.add('active');
+function updateFinance() {
+    const inc = parseInt(document.getElementById('range-inc').value);
+    const exp = parseInt(document.getElementById('range-exp').value);
+    
+    // Aktualizacja cyferek nad suwakami
+    document.getElementById('val-inc').textContent = inc.toLocaleString() + ' zł';
+    document.getElementById('val-exp').textContent = exp.toLocaleString() + ' zł';
+
+    // Logika wstrzykiwania benefitów
+    const container = document.getElementById('benefit-list');
+    if (!container) return;
+
+    let benefits = [];
+    
+    // Oferta 1: Zawsze widoczna (Premia)
+    benefits.push({
+        name: "550 zł za otwarcie konta",
+        bank: "Pekao S.A.",
+        link: "https://www.pekao.com.pl"
+    });
+
+    // Oferta 2: Tylko gdy dochód jest większy od wydatków (Oszczędności)
+    if (inc > exp) {
+        benefits.push({
+            name: "7% na oszczędnościach",
+            bank: "VeloBank",
+            link: "https://www.velobank.pl"
+        });
+    }
+
+    // Generowanie HTML dla kafelków benefitów
+    container.innerHTML = benefits.map(b => `
+        <div class="benefit-item">
+            <div>
+                <div style="font-weight:600; font-size:14px; color:var(--black);">${b.name}</div>
+                <div style="font-size:12px; color:var(--accent); font-weight:500;">${b.bank}</div>
+            </div>
+            <a href="${b.link}" target="_blank" class="benefit-btn">Odbierz</a>
+        </div>
+    `).join('');
 }
+
+// Odpalenie funkcji na starcie, żeby od razu widzieć kafelki
+updateFinance();
 </script>
 
 </body>
