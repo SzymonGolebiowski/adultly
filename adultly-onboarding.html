@@ -645,7 +645,10 @@ function showInsights(income, expenses, rent, employment, name) {
 }
 
 function goToDashboard() {
+  localStorage.setItem('adultly_profile', JSON.stringify(profile));
+  localStorage.setItem('adultly_onboarding_done', 'true');
   window.location.href = 'adultly-dashboard.html';
+};
 }
 </script>
 </body>
