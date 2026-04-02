@@ -1,0 +1,1561 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Finanse</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --red: #d93025;
+  --red-light: #fde8e6;
+  --yellow: #b45309;
+  --yellow-light: #fef3c7;
+  --blue: #1d4ed8;
+  --blue-light: #eff6ff;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--gray-1);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════════════════════════════════
+   LAYOUT
+═══════════════════════════════════════ */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px;
+  background: var(--white);
+  border-right: 1px solid var(--gray-2);
+  padding: 32px 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--black);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 40px;
+}
+.nav-section {
+  font-size: 10px; font-weight: 700; color: var(--gray-3);
+  letter-spacing: 0.1em; text-transform: uppercase;
+  margin: 24px 0 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--gray-4);
+  cursor: pointer; transition: all 0.15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); }
+
+.sidebar-user {
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 12px; background: var(--gray-1);
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--accent); display: flex; align-items: center;
+  justify-content: center; color: white; font-size: 14px;
+  font-weight: 700; flex-shrink: 0;
+}
+.user-name { font-size: 13px; font-weight: 500; }
+.user-status { font-size: 11px; color: var(--gray-3); }
+
+.main { flex: 1; padding: 40px; overflow-y: auto; max-width: 960px; }
+
+/* ═══════════════════════════════════════
+   PAGE HEADER
+═══════════════════════════════════════ */
+.page-header { margin-bottom: 32px; }
+.page-eyebrow { font-size: 13px; color: var(--gray-3); margin-bottom: 6px; }
+.page-title { font-family: var(--serif); font-size: 32px; line-height: 1.2; }
+.page-title em { font-style: italic; color: var(--accent); }
+
+/* ═══════════════════════════════════════
+   CALCULATOR TABS
+═══════════════════════════════════════ */
+.calc-nav {
+  display: flex; gap: 6px; margin-bottom: 28px;
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 14px; padding: 6px;
+}
+.calc-nav-btn {
+  flex: 1; padding: 10px 8px; border-radius: 10px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--gray-4); cursor: pointer; border: none;
+  background: transparent; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; line-height: 1.3; text-align: center;
+}
+.calc-nav-btn:hover { background: var(--gray-1); color: var(--black); }
+.calc-nav-btn.active {
+  background: var(--black); color: white;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+}
+.calc-nav-btn .btn-icon { font-size: 16px; }
+
+.calc-panel { display: none; animation: panelIn 0.25s ease both; }
+.calc-panel.active { display: block; }
+@keyframes panelIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   CARD SYSTEM
+═══════════════════════════════════════ */
+.card {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 20px; padding: 28px;
+}
+.card + .card { margin-top: 16px; }
+.card-dark {
+  background: var(--black); border-radius: 20px; padding: 28px;
+  color: white; position: relative; overflow: hidden;
+}
+.card-dark::after {
+  content: ''; position: absolute; bottom: -40px; right: -40px;
+  width: 160px; height: 160px;
+  background: rgba(45,154,104,0.12); border-radius: 50%;
+}
+
+.card-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray-3); margin-bottom: 16px;
+}
+.card-label-white {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px;
+}
+
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* ═══════════════════════════════════════
+   FORM ELEMENTS
+═══════════════════════════════════════ */
+.field { margin-bottom: 14px; }
+.field label {
+  display: block; font-size: 12px; font-weight: 500;
+  color: var(--gray-4); margin-bottom: 6px; letter-spacing: 0.01em;
+}
+.field input, .field select {
+  width: 100%; font-family: var(--sans); font-size: 15px;
+  padding: 11px 14px; border: 1px solid var(--gray-2);
+  border-radius: 11px; background: var(--gray-1); color: var(--black);
+  transition: border-color 0.15s, background 0.15s; appearance: none;
+}
+.field input:focus, .field select:focus {
+  outline: none; border-color: var(--accent); background: var(--white);
+}
+.field input[type="range"] {
+  padding: 0; border: none; background: transparent; cursor: pointer;
+  accent-color: var(--accent);
+}
+
+.range-row {
+  display: flex; justify-content: space-between;
+  font-size: 13px; margin-bottom: 6px;
+}
+.range-row strong { font-weight: 700; }
+
+/* Toggle group (forma zatrudnienia, płeć, itp.) */
+.toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.toggle-btn {
+  padding: 8px 14px; border-radius: 99px; font-family: var(--sans);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--gray-2); background: var(--gray-1);
+  color: var(--gray-4); transition: all 0.15s;
+}
+.toggle-btn:hover { border-color: var(--accent-mid); color: var(--black); }
+.toggle-btn.active {
+  background: var(--accent); border-color: var(--accent);
+  color: white; box-shadow: 0 2px 8px rgba(26,107,71,0.25);
+}
+
+/* Checkbox */
+.check-group { display: flex; flex-direction: column; gap: 10px; }
+.check-item {
+  display: flex; align-items: flex-start; gap: 10px; cursor: pointer;
+  padding: 10px 12px; border-radius: 10px; border: 1px solid var(--gray-2);
+  background: var(--gray-1); transition: all 0.15s;
+}
+.check-item:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+.check-item input[type="checkbox"] { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+.check-item-body {}
+.check-item-title { font-size: 14px; font-weight: 500; color: var(--black); }
+.check-item-desc { font-size: 12px; color: var(--gray-4); margin-top: 2px; line-height: 1.4; }
+
+/* Calc btn */
+.calc-btn {
+  width: 100%; padding: 14px; border-radius: 12px;
+  background: var(--black); color: white;
+  font-family: var(--sans); font-size: 15px; font-weight: 600;
+  border: none; cursor: pointer; transition: background 0.2s, transform 0.15s;
+  margin-top: 4px;
+}
+.calc-btn:hover { background: var(--accent); transform: translateY(-1px); }
+
+/* ═══════════════════════════════════════
+   RESULT BOXES
+═══════════════════════════════════════ */
+.result-area {
+  margin-top: 20px; animation: panelIn 0.3s ease both;
+}
+
+/* Big result number */
+.result-hero {
+  display: flex; align-items: baseline; gap: 8px; margin-bottom: 6px;
+}
+.result-number {
+  font-family: var(--serif); font-size: 48px; line-height: 1; color: white;
+}
+.result-unit { font-size: 18px; color: rgba(255,255,255,0.5); }
+.result-label { font-size: 12px; color: rgba(255,255,255,0.45); margin-bottom: 20px; }
+
+/* Breakdown rows */
+.breakdown { display: flex; flex-direction: column; gap: 0; }
+.breakdown-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid rgba(255,255,255,0.07);
+  font-size: 13px;
+}
+.breakdown-row:last-child { border-bottom: none; padding-bottom: 0; }
+.breakdown-row.total {
+  border-top: 1px solid rgba(255,255,255,0.15);
+  border-bottom: none; padding-top: 12px; margin-top: 4px;
+}
+.breakdown-label { color: rgba(255,255,255,0.55); }
+.breakdown-label.sub { font-size: 11px; color: rgba(255,255,255,0.35); padding-left: 12px; }
+.breakdown-value { font-weight: 600; color: white; }
+.breakdown-value.minus { color: #f87171; }
+.breakdown-value.plus { color: #6ee7b7; }
+.breakdown-value.total-val { font-family: var(--serif); font-size: 18px; color: #6ee7b7; }
+
+/* Comparison grid */
+.compare-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 10px; margin-top: 16px;
+}
+.compare-box {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 14px; padding: 16px; text-align: center;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.compare-box.best {
+  border-color: var(--accent-mid);
+  box-shadow: 0 0 0 1px var(--accent-mid), 0 4px 16px rgba(45,154,104,0.12);
+}
+.compare-box-label { font-size: 11px; color: var(--gray-4); margin-bottom: 8px; }
+.compare-box-value { font-family: var(--serif); font-size: 22px; color: var(--black); }
+.compare-box.best .compare-box-value { color: var(--accent); }
+.compare-box-diff { font-size: 11px; font-weight: 600; color: var(--accent); margin-top: 4px; }
+.compare-box-diff.neg { color: var(--red); }
+.compare-best-badge {
+  font-size: 10px; font-weight: 700; background: var(--accent-light);
+  color: var(--accent); padding: 3px 8px; border-radius: 99px; margin-bottom: 6px;
+  display: inline-block;
+}
+
+/* PIT ulgi list */
+.ulgi-list { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.ulga-item {
+  display: flex; align-items: flex-start; gap: 12px;
+  padding: 12px 14px; border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+}
+.ulga-item.active-ulga {
+  background: rgba(110,231,183,0.08);
+  border-color: rgba(110,231,183,0.2);
+}
+.ulga-item.inactive { opacity: 0.45; }
+.ulga-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.ulga-body { flex: 1; }
+.ulga-name { font-size: 13px; font-weight: 600; color: white; margin-bottom: 2px; }
+.ulga-desc { font-size: 11px; color: rgba(255,255,255,0.5); line-height: 1.4; }
+.ulga-value { font-size: 13px; font-weight: 700; color: #6ee7b7; white-space: nowrap; flex-shrink: 0; }
+.ulga-value.na { color: rgba(255,255,255,0.3); font-weight: 400; font-size: 11px; }
+
+/* Konta bankowe */
+.bank-question {
+  margin-bottom: 20px; padding-bottom: 20px;
+  border-bottom: 1px solid var(--gray-2);
+}
+.bank-question:last-of-type { border-bottom: none; }
+.bank-q-title { font-size: 14px; font-weight: 600; margin-bottom: 10px; }
+.bank-q-desc { font-size: 12px; color: var(--gray-4); margin-bottom: 12px; }
+
+.bank-result-card {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 16px; padding: 20px; margin-bottom: 10px;
+  display: flex; align-items: flex-start; gap: 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.bank-result-card:hover {
+  border-color: var(--accent-mid);
+  box-shadow: 0 4px 16px rgba(45,154,104,0.1);
+  transform: translateY(-1px);
+}
+.bank-result-card.rank-1 {
+  border-color: var(--accent-mid);
+  box-shadow: 0 0 0 1px var(--accent-mid), 0 4px 20px rgba(45,154,104,0.12);
+}
+.bank-rank {
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+  background: var(--gray-1); color: var(--gray-4);
+}
+.bank-rank.gold { background: #fef3c7; color: #92400e; }
+.bank-body { flex: 1; }
+.bank-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
+.bank-match { font-size: 12px; color: var(--accent); font-weight: 600; margin-bottom: 6px; }
+.bank-pros { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 8px; }
+.bank-pro-tag {
+  font-size: 11px; background: var(--gray-1);
+  border: 1px solid var(--gray-2); border-radius: 99px;
+  padding: 3px 9px; color: var(--gray-4);
+}
+.bank-desc { font-size: 12px; color: var(--gray-4); line-height: 1.4; }
+.bank-cta {
+  flex-shrink: 0; display: flex; flex-direction: column;
+  align-items: flex-end; gap: 8px;
+}
+.bank-cta-pill {
+  background: var(--accent); color: white;
+  font-size: 12px; font-weight: 700; padding: 7px 14px;
+  border-radius: 99px; white-space: nowrap;
+}
+.bank-partner-tag { font-size: 10px; color: var(--gray-3); white-space: nowrap; }
+.bank-arrow { font-size: 14px; color: var(--accent-mid); }
+
+/* Penalty callout */
+.penalty-callout {
+  background: var(--red-light); border: 1px solid rgba(217,48,37,0.2);
+  border-radius: 12px; padding: 14px 16px; margin-bottom: 16px;
+  display: flex; align-items: center; gap: 10px;
+}
+.penalty-icon { font-size: 20px; flex-shrink: 0; }
+.penalty-text { font-size: 13px; line-height: 1.4; }
+.penalty-text strong { color: var(--red); }
+
+/* ═══════════════════════════════════════
+   INLINE REKOMENDACJE
+═══════════════════════════════════════ */
+.rec-group { margin-top: 16px; animation: panelIn 0.35s ease both; }
+.rec-group-label {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.08em;
+  text-transform: uppercase; color: var(--gray-3); margin-bottom: 8px;
+}
+.rec-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: linear-gradient(135deg, var(--accent-light) 0%, rgba(232,245,238,0.4) 100%);
+  border: 1px solid rgba(45,154,104,0.2); border-radius: 14px;
+  padding: 16px 18px; margin-bottom: 8px;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.rec-card:hover {
+  border-color: var(--accent-mid);
+  box-shadow: 0 4px 20px rgba(45,154,104,0.15);
+  transform: translateY(-1px);
+}
+.rec-icon {
+  width: 40px; height: 40px; background: white; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 20px; flex-shrink: 0;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.07);
+  border: 1px solid rgba(45,154,104,0.12);
+}
+.rec-body { flex: 1; min-width: 0; }
+.rec-trigger {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.06em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 3px;
+}
+.rec-title { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 3px; line-height: 1.3; }
+.rec-desc { font-size: 12px; color: var(--gray-4); line-height: 1.4; }
+.rec-partner { font-size: 10px; color: var(--gray-3); margin-top: 3px; }
+.rec-badge { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.rec-pill { background: var(--accent); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+.rec-arrow { font-size: 14px; color: var(--accent-mid); }
+
+/* ═══════════════════════════════════════
+   INFO TOOLTIP
+═══════════════════════════════════════ */
+.info-note {
+  background: var(--blue-light); border: 1px solid rgba(29,78,216,0.15);
+  border-radius: 10px; padding: 10px 14px; font-size: 12px;
+  color: var(--blue); line-height: 1.5; margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════
+   MOBILE NAV
+═══════════════════════════════════════ */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--gray-2);
+  padding: 8px 16px 20px; z-index: 100; justify-content: space-around;
+}
+.mobile-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10px; color: var(--gray-4); cursor: pointer;
+  padding: 6px 12px; border-radius: 10px; transition: color 0.15s;
+}
+.mobile-nav-item.active { color: var(--accent); }
+.mobile-nav-icon { font-size: 20px; }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .main { padding: 24px 16px 90px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .compare-grid { grid-template-columns: 1fr 1fr; }
+  .calc-nav { flex-wrap: wrap; }
+  .calc-nav-btn { font-size: 12px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="adultly-dashboard.html" class="logo">adultly.</a>
+  <div class="nav-section">Główne</div>
+  <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+  <div class="nav-section">Narzędzia</div>
+  <a href="adultly-finanse.html" class="nav-item active">💰 Finanse</a>
+  <a href="adultly-dashboard.html#praca" class="nav-item">💼 Praca i CV</a>
+  <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+  <a href="adultly-dashboard.html#dokumenty" class="nav-item">📋 Dokumenty</a>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebar-avatar">?</div>
+    <div>
+      <div class="user-name" id="sidebar-name">Ładowanie...</div>
+      <div class="user-status" id="sidebar-status">—</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Narzędzia finansowe</div>
+    <div class="page-title">Twoje <em>finanse</em> — bez ściemy</div>
+  </div>
+
+  <!-- CALC TABS NAV -->
+  <div class="calc-nav">
+    <button class="calc-nav-btn active" onclick="switchCalc('netto', this)">
+      <span class="btn-icon">💵</span> Ile zarabiam netto?
+    </button>
+    <button class="calc-nav-btn" onclick="switchCalc('pit', this)">
+      <span class="btn-icon">📋</span> Ulgi i zwrot z PIT
+    </button>
+    <button class="calc-nav-btn" onclick="switchCalc('konto', this)">
+      <span class="btn-icon">🏦</span> Czy mój bank jest OK?
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       KALKULATOR 1 — NETTO
+  ═══════════════════════════════════════ -->
+  <div class="calc-panel active" id="panel-netto">
+    <div class="two-col">
+
+      <!-- INPUT -->
+      <div class="card">
+        <div class="card-label">Forma zatrudnienia</div>
+        <div class="toggle-group" id="forma-group" style="margin-bottom:20px;">
+          <button class="toggle-btn active" onclick="setForma('uop', this)">Umowa o pracę</button>
+          <button class="toggle-btn" onclick="setForma('zlecenie', this)">Zlecenie</button>
+          <button class="toggle-btn" onclick="setForma('dzielo', this)">O dzieło</button>
+          <button class="toggle-btn" onclick="setForma('b2b_lin', this)">B2B liniowy</button>
+          <button class="toggle-btn" onclick="setForma('b2b_ryczalt', this)">B2B ryczałt</button>
+        </div>
+
+        <div class="field">
+          <label>Wynagrodzenie brutto (zł / miesiąc)</label>
+          <div class="range-row">
+            <span>Przesuń lub wpisz:</span>
+            <strong id="brutto-display">6 000 zł</strong>
+          </div>
+          <input type="range" id="brutto-range" min="2000" max="30000" step="250" value="6000"
+            oninput="syncBrutto('range')">
+          <input type="number" id="brutto-input" value="6000" min="1000" max="99999"
+            style="margin-top:8px;"
+            oninput="syncBrutto('input')">
+        </div>
+
+        <!-- Opcje kontekstowe -->
+        <div id="opt-uop" class="opt-block">
+          <div class="field">
+            <label>Ulga dla młodych (do 26 lat)?</label>
+            <div class="toggle-group" id="ulga26-group">
+              <button class="toggle-btn active" onclick="setToggle('ulga26', true, this)">Tak — mam ≤26 lat</button>
+              <button class="toggle-btn" onclick="setToggle('ulga26', false, this)">Nie</button>
+            </div>
+          </div>
+          <div class="field" style="margin-top:12px;">
+            <label>Koszty uzyskania przychodu</label>
+            <div class="toggle-group" id="kup-group">
+              <button class="toggle-btn active" onclick="setToggle('kup50', false, this)">Standardowe (250 zł)</button>
+              <button class="toggle-btn" onclick="setToggle('kup50', true, this)">50% (twórcy, IT)</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="opt-zlecenie" class="opt-block" style="display:none;">
+          <div class="field">
+            <label>Status</label>
+            <div class="toggle-group" id="student-group">
+              <button class="toggle-btn active" onclick="setToggle('isStudent', true, this)">Student ≤26 lat (0 ZUS)</button>
+              <button class="toggle-btn" onclick="setToggle('isStudent', false, this)">Inne zatrudnienie równolegle</button>
+              <button class="toggle-btn" onclick="setToggle('isStudent', 'pełny', this)">Brak innego tytułu (pełny ZUS)</button>
+            </div>
+          </div>
+        </div>
+
+        <div id="opt-dzielo" class="opt-block" style="display:none;">
+          <div class="field">
+            <label>Koszty uzyskania przychodu</label>
+            <div class="toggle-group" id="kup-dzielo-group">
+              <button class="toggle-btn active" onclick="setToggle('kupDzielo', 0.2, this)">20% (standardowe)</button>
+              <button class="toggle-btn" onclick="setToggle('kupDzielo', 0.5, this)">50% (twórcze, IT)</button>
+            </div>
+          </div>
+          <div class="info-note">⚠️ Umowa o dzieło nie daje ubezpieczenia zdrowotnego ani emerytalnego. Przy braku innego zatrudnienia możesz nie mieć dostępu do NFZ.</div>
+        </div>
+
+        <div id="opt-b2b" class="opt-block" style="display:none;">
+          <div class="field">
+            <label>Wariant ZUS</label>
+            <select id="zus-b2b" onchange="calcNetto()">
+              <option value="0">Ulga na start — 0 zł (pierwsze 6 mc)</option>
+              <option value="330">Mały ZUS Plus — ok. 330 zł</option>
+              <option value="1773" selected>Pełny ZUS — ok. 1 773 zł</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Koszty firmowe miesięcznie (sprzęt, biuro, usługi)</label>
+            <input type="number" id="koszty-b2b" value="0" placeholder="np. 500"
+              oninput="calcNetto()">
+          </div>
+        </div>
+
+        <div id="opt-b2b-ryczalt" class="opt-block" style="display:none;">
+          <div class="field">
+            <label>Stawka ryczałtu</label>
+            <select id="ryczalt-rate" onchange="calcNetto()">
+              <option value="0.085">8.5% — większość usług</option>
+              <option value="0.12" selected>12% — IT, programiści</option>
+              <option value="0.15">15% — wolne zawody</option>
+            </select>
+          </div>
+          <div class="field">
+            <label>Wariant ZUS</label>
+            <select id="zus-ryczalt" onchange="calcNetto()">
+              <option value="0">Ulga na start — 0 zł</option>
+              <option value="330">Mały ZUS Plus — ok. 330 zł</option>
+              <option value="1773" selected>Pełny ZUS — ok. 1 773 zł</option>
+            </select>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- WYNIK -->
+      <div id="netto-result-col">
+        <div class="card-dark" id="netto-result-card">
+          <div class="card-label-white">NETTO NA RĘKĘ</div>
+          <div class="result-hero">
+            <div class="result-number" id="netto-value">—</div>
+            <div class="result-unit">zł/mc</div>
+          </div>
+          <div class="result-label" id="netto-sublabel">Uzupełnij dane po lewej</div>
+          <div class="breakdown" id="netto-breakdown"></div>
+        </div>
+
+        <!-- Efektywna stawka godzinowa -->
+        <div class="card" style="margin-top:16px;">
+          <div class="card-label">EFEKTYWNA STAWKA GODZINOWA</div>
+          <div style="display:flex; align-items:baseline; gap:6px; margin-bottom:6px;">
+            <div style="font-family:var(--serif); font-size:32px;" id="hourly-rate">—</div>
+            <div style="font-size:14px; color:var(--gray-4);">zł / godz.</div>
+          </div>
+          <div style="font-size:12px; color:var(--gray-4); line-height:1.5;" id="hourly-note">
+            Zakładając 168 godzin pracy miesięcznie (21 dni × 8h)
+          </div>
+        </div>
+
+        <!-- Rec netto -->
+        <div id="netto-rec"></div>
+      </div>
+
+    </div>
+
+    <!-- Porównanie form — pojawia się po obliczeniu -->
+    <div id="netto-compare" style="display:none; margin-top:16px;">
+      <div class="card">
+        <div class="card-label">PORÓWNANIE PRZY TWOJEJ KWOCIE BRUTTO</div>
+        <div class="compare-grid" id="compare-grid-inner"></div>
+        <div style="font-size:11px; color:var(--gray-3); margin-top:12px;">
+          * Obliczenia uproszczone, przy pełnym ZUS B2B i założeniu braku dodatkowych kosztów. Traktuj jako punkt wyjścia, nie jako doradztwo podatkowe.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       KALKULATOR 2 — PIT OPTIMIZER
+  ═══════════════════════════════════════ -->
+  <div class="calc-panel" id="panel-pit">
+    <div class="two-col">
+
+      <!-- INPUT -->
+      <div class="card">
+        <div class="card-label">Twój profil podatkowy</div>
+
+        <div class="field">
+          <label>Roczny dochód brutto (szacunkowo)</label>
+          <input type="number" id="pit-income" placeholder="np. 72000" oninput="calcPIT()">
+        </div>
+
+        <div class="field">
+          <label>Forma zatrudnienia (główna)</label>
+          <select id="pit-forma" onchange="calcPIT()">
+            <option value="uop">Umowa o pracę</option>
+            <option value="zlecenie">Umowa zlecenie</option>
+            <option value="b2b">B2B / działalność gospodarcza</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Wiek</label>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setPitToggle('pitAge', '≤26', this)">Do 26 lat</button>
+            <button class="toggle-btn" onclick="setPitToggle('pitAge', '27-35', this)">27–35 lat</button>
+            <button class="toggle-btn" onclick="setPitToggle('pitAge', '>35', this)">Powyżej 35</button>
+          </div>
+        </div>
+
+        <div class="card-label" style="margin-top:20px;">Zaznacz co dotyczy ciebie</div>
+        <div class="check-group">
+          <label class="check-item">
+            <input type="checkbox" id="ch-internet" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Płacę za internet w domu</div>
+              <div class="check-item-desc">Ulga na internet — do 760 zł odliczenia od dochodu</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ch-malzonek" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Jestem w związku małżeńskim</div>
+              <div class="check-item-desc">Możliwe wspólne rozliczenie — opłaca się gdy jedno z was zarabia mniej</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ch-dzieci" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Mam dzieci na utrzymaniu</div>
+              <div class="check-item-desc">Ulga prorodzinna — 1 112,04 zł rocznie na pierwsze dziecko</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ch-ippk" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Wpłacam na IKZE / IKE</div>
+              <div class="check-item-desc">IKZE: odliczenie od dochodu (limit 2024: 9 388 zł). IKE: zwolnienie z podatku Belki.</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ch-rehab" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Mam orzeczenie o niepełnosprawności</div>
+              <div class="check-item-desc">Ulga rehabilitacyjna — odliczenie wydatków na rehabilitację i leki</div>
+            </div>
+          </label>
+          <label class="check-item">
+            <input type="checkbox" id="ch-darowizna" onchange="calcPIT()">
+            <div class="check-item-body">
+              <div class="check-item-title">Przekazuję darowizny (OPP, Kościół, krew)</div>
+              <div class="check-item-desc">Odliczenie do 6% dochodu — np. regularne wpłaty na organizacje charytatywne</div>
+            </div>
+          </label>
+        </div>
+
+        <div class="info-note" style="margin-top:16px;">
+          💡 Wyniki są szacunkowe i uproszczone. Przed rozliczeniem skonsultuj się z księgowym lub użyj oficjalnych narzędzi e-Urząd Skarbowy.
+        </div>
+      </div>
+
+      <!-- WYNIK PIT -->
+      <div>
+        <div class="card-dark" id="pit-result-card">
+          <div class="card-label-white">TWÓJ PIT — SZACUNEK</div>
+          <div class="result-hero">
+            <div class="result-number" id="pit-value">—</div>
+            <div class="result-unit">zł</div>
+          </div>
+          <div class="result-label" id="pit-sublabel">Wpisz dochód i zaznacz co dotyczy</div>
+          <div id="pit-verdict" style="margin-bottom:16px;"></div>
+          <div class="ulgi-list" id="pit-ulgi-list"></div>
+        </div>
+
+        <div id="pit-rec" style="margin-top:0;"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════
+       KALKULATOR 3 — PORÓWNYWARKA KONT
+  ═══════════════════════════════════════ -->
+  <div class="calc-panel" id="panel-konto">
+    <div class="two-col">
+
+      <!-- PYTANIA -->
+      <div class="card">
+        <div class="card-label">Powiedz mi o swoich nawykach</div>
+
+        <div class="bank-question">
+          <div class="bank-q-title">Ile wypłacasz miesięcznie z bankomatów?</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setBank('atm', 0, this)">Nie wypłacam</button>
+            <button class="toggle-btn" onclick="setBank('atm', 300, this)">Do 300 zł</button>
+            <button class="toggle-btn" onclick="setBank('atm', 800, this)">300–800 zł</button>
+            <button class="toggle-btn" onclick="setBank('atm', 1500, this)">Ponad 800 zł</button>
+          </div>
+        </div>
+
+        <div class="bank-question">
+          <div class="bank-q-title">Czy płacisz kartą za granicą lub w walutach?</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setBank('foreign', false, this)">Rzadko lub nigdy</button>
+            <button class="toggle-btn" onclick="setBank('foreign', true, this)">Tak, regularnie</button>
+          </div>
+        </div>
+
+        <div class="bank-question">
+          <div class="bank-q-title">Ile masz oszczędności / ile chcesz odkładać?</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setBank('savings', 'low', this)">Mało / zaczyna</button>
+            <button class="toggle-btn" onclick="setBank('savings', 'mid', this)">2–20 tys. zł</button>
+            <button class="toggle-btn" onclick="setBank('savings', 'high', this)">Ponad 20 tys. zł</button>
+          </div>
+        </div>
+
+        <div class="bank-question">
+          <div class="bank-q-title">Jak ważny jest dla ciebie cashback / nagrody?</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setBank('rewards', false, this)">Nieważne</button>
+            <button class="toggle-btn" onclick="setBank('rewards', true, this)">Tak, chcę cashback</button>
+          </div>
+        </div>
+
+        <div class="bank-question" style="border:none; margin-bottom:0; padding-bottom:0;">
+          <div class="bank-q-title">Czy zakładasz / masz działalność gospodarcza?</div>
+          <div class="toggle-group">
+            <button class="toggle-btn active" onclick="setBank('b2b', false, this)">Nie</button>
+            <button class="toggle-btn" onclick="setBank('b2b', true, this)">Tak lub planuję</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WYNIK KONTA -->
+      <div>
+        <div id="bank-penalty" style="display:none;"></div>
+        <div id="bank-results">
+          <div class="card" style="text-align:center; padding:40px 24px; color:var(--gray-3);">
+            <div style="font-size:32px; margin-bottom:12px;">🏦</div>
+            <div style="font-size:14px;">Odpowiedz na pytania — dopasujemy konto do twoich nawyków</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">⊞</div>Dashboard
+  </div>
+  <div class="mobile-nav-item active">
+    <div class="mobile-nav-icon">💰</div>Finanse
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">💼</div>Praca
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-mieszkanie.html'">
+    <div class="mobile-nav-icon">🏠</div>Mieszkanie
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">📋</div>Dokumenty
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════
+// PROFIL Z LOCALSTORAGE
+// ═══════════════════════════════════════
+let profile = {};
+try {
+  const raw = localStorage.getItem('adultly_profile');
+  profile = raw ? JSON.parse(raw) : {};
+} catch(e) { profile = {}; }
+
+const profileIncome = parseInt(profile.income) || 0;
+const profileName   = profile.name || 'Użytkownik';
+const profileStatus = profile.status || '';
+
+document.getElementById('sidebar-avatar').textContent = profileName.charAt(0).toUpperCase();
+document.getElementById('sidebar-name').textContent = profileName;
+document.getElementById('sidebar-status').textContent =
+  ({student:'Student', absolwent:'Świeży absolwent', pracuje:'Pracownik'})[profileStatus] || 'Użytkownik';
+
+// ═══════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════
+const state = {
+  // netto
+  forma: 'uop',
+  brutto: 6000,
+  ulga26: true,
+  kup50: false,
+  isStudent: true,
+  kupDzielo: 0.2,
+  // pit
+  pitAge: '≤26',
+  // bank
+  bank: { atm: 0, foreign: false, savings: 'low', rewards: false, b2b: false }
+};
+
+// ═══════════════════════════════════════
+// HELPERS
+// ═══════════════════════════════════════
+const fmt = n => Math.round(n).toLocaleString('pl-PL') + ' zł';
+const fmtNoZl = n => Math.round(n).toLocaleString('pl-PL');
+
+// ═══════════════════════════════════════
+// NAWIGACJA MIĘDZY KALKULATORAMI
+// ═══════════════════════════════════════
+function switchCalc(id, btn) {
+  document.querySelectorAll('.calc-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.calc-nav-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// KALKULATOR 1 — NETTO
+// ═══════════════════════════════════════
+function setForma(forma, btn) {
+  state.forma = forma;
+  document.querySelectorAll('#forma-group .toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+
+  document.querySelectorAll('.opt-block').forEach(b => b.style.display = 'none');
+  if (forma === 'uop')         document.getElementById('opt-uop').style.display = 'block';
+  if (forma === 'zlecenie')    document.getElementById('opt-zlecenie').style.display = 'block';
+  if (forma === 'dzielo')      document.getElementById('opt-dzielo').style.display = 'block';
+  if (forma === 'b2b_lin')     document.getElementById('opt-b2b').style.display = 'block';
+  if (forma === 'b2b_ryczalt') document.getElementById('opt-b2b-ryczalt').style.display = 'block';
+
+  calcNetto();
+}
+
+function setToggle(key, value, btn) {
+  state[key] = value;
+  const group = btn.closest('.toggle-group');
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  calcNetto();
+}
+
+function syncBrutto(source) {
+  if (source === 'range') {
+    state.brutto = parseInt(document.getElementById('brutto-range').value);
+    document.getElementById('brutto-input').value = state.brutto;
+  } else {
+    state.brutto = parseInt(document.getElementById('brutto-input').value) || 0;
+    document.getElementById('brutto-range').value = Math.min(30000, Math.max(2000, state.brutto));
+  }
+  document.getElementById('brutto-display').textContent = fmt(state.brutto);
+  calcNetto();
+}
+
+function calcNetto() {
+  const brutto = state.brutto;
+  if (!brutto) return;
+  document.getElementById('brutto-display').textContent = fmt(brutto);
+  document.getElementById('brutto-range').value = Math.min(30000, brutto);
+
+  let netto = 0;
+  let breakdown = [];
+
+  if (state.forma === 'uop') {
+    // Składki pracownika
+    const emer    = brutto * 0.0976;
+    const rent    = brutto * 0.015;
+    const chor    = brutto * 0.0245;
+    const podstawaZdrow = brutto - emer - rent - chor;
+    const zdrow   = podstawaZdrow * 0.09;
+    // PIT
+    const kup     = state.kup50 ? Math.min(brutto * 0.5, 85528/12) : 250;
+    const podstawaPIT = Math.max(0, podstawaZdrow - kup);
+    let pit = 0;
+    if (!state.ulga26) {
+      pit = Math.max(0, podstawaPIT * 0.12 - 300); // kwota wolna ~3600/rok = 300/mc
+    }
+    netto = Math.round(brutto - emer - rent - chor - zdrow - pit);
+
+    breakdown = [
+      { label: 'Wynagrodzenie brutto',    value: fmt(brutto),        cls: '' },
+      { label: 'Emerytalne (9.76%)',       value: '− ' + fmt(emer),  cls: 'minus' },
+      { label: 'Rentowe (1.5%)',           value: '− ' + fmt(rent),  cls: 'minus' },
+      { label: 'Chorobowe (2.45%)',        value: '− ' + fmt(chor),  cls: 'minus' },
+      { label: 'Zdrowotna (9%)',           value: '− ' + fmt(zdrow), cls: 'minus' },
+      { label: state.ulga26 ? 'PIT — Ulga dla młodych ✓' : 'Zaliczka PIT (12%)',
+                                           value: state.ulga26 ? '0 zł' : '− ' + fmt(pit), cls: state.ulga26 ? 'plus' : 'minus' },
+      { label: 'Netto na rękę',            value: fmt(netto),        cls: 'total-val', isTotal: true },
+    ];
+
+  } else if (state.forma === 'zlecenie') {
+    // Student / brak ZUS
+    if (state.isStudent === true) {
+      const kup = brutto * 0.2;
+      const pit = Math.max(0, (brutto - kup) * 0.12 - 300);
+      netto = Math.round(brutto - pit);
+      breakdown = [
+        { label: 'Kwota brutto',        value: fmt(brutto),        cls: '' },
+        { label: 'ZUS — student ≤26 lat', value: '0 zł',          cls: 'plus' },
+        { label: 'KUP 20%',             value: '− ' + fmt(kup),   cls: 'minus' },
+        { label: 'Zaliczka PIT 12%',    value: '− ' + fmt(pit),   cls: 'minus' },
+        { label: 'Netto',               value: fmt(netto),         cls: 'total-val', isTotal: true },
+      ];
+    } else if (state.isStudent === false) {
+      // Inne zatrudnienie równolegle → tylko PIT, bez ZUS (tytuł z UoP)
+      const kup = brutto * 0.2;
+      const pit = Math.max(0, (brutto - kup) * 0.12);
+      netto = Math.round(brutto - pit);
+      breakdown = [
+        { label: 'Kwota brutto',               value: fmt(brutto),      cls: '' },
+        { label: 'ZUS — płaci główny pracodawca', value: 'nie dotyczy', cls: 'plus' },
+        { label: 'KUP 20%',                    value: '− ' + fmt(kup),  cls: 'minus' },
+        { label: 'Zaliczka PIT 12%',           value: '− ' + fmt(pit),  cls: 'minus' },
+        { label: 'Netto',                      value: fmt(netto),        cls: 'total-val', isTotal: true },
+      ];
+    } else {
+      // Pełny ZUS
+      const emer = brutto * 0.0976;
+      const rent = brutto * 0.015;
+      const chor = brutto * 0.0245;
+      const zdro = (brutto - emer - rent - chor) * 0.09;
+      const kup  = brutto * 0.2;
+      const pit  = Math.max(0, (brutto - kup) * 0.12);
+      netto = Math.round(brutto - emer - rent - chor - zdro - pit);
+      breakdown = [
+        { label: 'Kwota brutto',     value: fmt(brutto),       cls: '' },
+        { label: 'ZUS pełny',        value: '− ' + fmt(emer+rent+chor), cls: 'minus' },
+        { label: 'Zdrowotna',        value: '− ' + fmt(zdro),  cls: 'minus' },
+        { label: 'KUP 20% + PIT 12%', value: '− ' + fmt(pit), cls: 'minus' },
+        { label: 'Netto',            value: fmt(netto),         cls: 'total-val', isTotal: true },
+      ];
+    }
+
+  } else if (state.forma === 'dzielo') {
+    const kup = brutto * state.kupDzielo;
+    const pit = Math.max(0, (brutto - kup) * 0.12);
+    netto = Math.round(brutto - pit);
+    breakdown = [
+      { label: 'Kwota brutto',                             value: fmt(brutto),    cls: '' },
+      { label: 'ZUS',                                      value: '0 zł',         cls: 'plus' },
+      { label: `KUP ${state.kupDzielo * 100}%`,            value: '− ' + fmt(kup), cls: 'minus' },
+      { label: 'Zaliczka PIT 12%',                         value: '− ' + fmt(pit), cls: 'minus' },
+      { label: 'Netto',                                    value: fmt(netto),      cls: 'total-val', isTotal: true },
+    ];
+
+  } else if (state.forma === 'b2b_lin') {
+    const zus       = parseInt(document.getElementById('zus-b2b').value) || 0;
+    const koszty    = parseInt(document.getElementById('koszty-b2b').value) || 0;
+    const zdrow     = brutto * 0.049;
+    const podstawa  = Math.max(0, brutto - zus - koszty);
+    const pit       = podstawa * 0.19;
+    netto = Math.round(brutto - zus - zdrow - pit);
+
+    breakdown = [
+      { label: 'Przychód brutto',          value: fmt(brutto),        cls: '' },
+      { label: 'ZUS (wybrana opcja)',       value: '− ' + fmt(zus),   cls: 'minus' },
+      { label: 'Składka zdrowotna (4.9%)', value: '− ' + fmt(zdrow),  cls: 'minus' },
+      { label: 'Koszty firmowe',            value: koszty ? '− ' + fmt(koszty) : '—', cls: koszty ? 'minus' : '' },
+      { label: 'Podatek liniowy 19%',       value: '− ' + fmt(pit),   cls: 'minus' },
+      { label: 'Netto',                     value: fmt(netto),         cls: 'total-val', isTotal: true },
+    ];
+
+  } else if (state.forma === 'b2b_ryczalt') {
+    const zus      = parseInt(document.getElementById('zus-ryczalt').value) || 0;
+    const rate     = parseFloat(document.getElementById('ryczalt-rate').value);
+    const zdrow    = brutto * 0.049;
+    const pit      = brutto * rate;
+    netto = Math.round(brutto - zus - zdrow - pit);
+
+    breakdown = [
+      { label: 'Przychód brutto',          value: fmt(brutto),           cls: '' },
+      { label: 'ZUS (wybrana opcja)',       value: '− ' + fmt(zus),      cls: 'minus' },
+      { label: 'Składka zdrowotna (4.9%)', value: '− ' + fmt(zdrow),     cls: 'minus' },
+      { label: `Ryczałt ${rate * 100}%`,   value: '− ' + fmt(pit),       cls: 'minus' },
+      { label: 'Netto',                    value: fmt(netto),             cls: 'total-val', isTotal: true },
+    ];
+  }
+
+  // Render wyniku
+  document.getElementById('netto-value').textContent = fmtNoZl(netto);
+  document.getElementById('netto-sublabel').textContent =
+    `Przy ${fmt(brutto)} brutto · ${({uop:'UoP', zlecenie:'Zlecenie', dzielo:'Dzieło', b2b_lin:'B2B liniowy', b2b_ryczalt:'B2B ryczałt'})[state.forma]}`;
+
+  document.getElementById('netto-breakdown').innerHTML = breakdown.map(r => `
+    <div class="breakdown-row ${r.isTotal ? 'total' : ''}">
+      <span class="breakdown-label">${r.label}</span>
+      <span class="breakdown-value ${r.cls}">${r.value}</span>
+    </div>`).join('');
+
+  // Stawka godzinowa
+  const hourly = netto / 168;
+  document.getElementById('hourly-rate').textContent = hourly.toFixed(2).replace('.', ',');
+
+  // Porównanie form
+  renderNettoCompare(brutto, netto);
+  renderNettoRec(netto, brutto);
+}
+
+function renderNettoCompare(brutto, currentNetto) {
+  const wrap = document.getElementById('netto-compare');
+  wrap.style.display = 'block';
+
+  // Szybkie kalkulacje dla porównania — uproszczone
+  const calcUop = (b) => {
+    const e=b*0.0976,r=b*0.015,c=b*0.0245,z=(b-e-r-c)*0.09;
+    const pit=Math.max(0,(b-e-r-c-250)*0.12-300);
+    return Math.round(b-e-r-c-z-pit);
+  };
+  const calcZlecStudnt = (b) => {
+    const kup=b*0.2, pit=Math.max(0,(b-kup)*0.12-300);
+    return Math.round(b-pit);
+  };
+  const calcDzielo = (b) => {
+    const kup=b*0.5, pit=Math.max(0,(b-kup)*0.12);
+    return Math.round(b-pit);
+  };
+  const calcB2bLin = (b) => {
+    const zus=1773, zdrow=b*0.049, pit=(b-zus)*0.19;
+    return Math.round(b-zus-zdrow-pit);
+  };
+  const calcB2bRyczalt = (b) => {
+    const zus=1773, zdrow=b*0.049, pit=b*0.12;
+    return Math.round(b-zus-zdrow-pit);
+  };
+
+  const options = [
+    { label: 'UoP', val: calcUop(brutto) },
+    { label: 'Zlecenie (student)', val: calcZlecStudnt(brutto) },
+    { label: 'Dzieło 50% KUP', val: calcDzielo(brutto) },
+    { label: 'B2B liniowy', val: calcB2bLin(brutto) },
+    { label: 'B2B ryczałt 12%', val: calcB2bRyczalt(brutto) },
+  ];
+
+  const best = Math.max(...options.map(o => o.val));
+
+  document.getElementById('compare-grid-inner').innerHTML = options.map(o => {
+    const isBest = o.val === best;
+    const diff   = o.val - options[0].val; // vs UoP jako baza
+    const isCurrent = Math.abs(o.val - currentNetto) < 50;
+    return `
+      <div class="compare-box ${isBest ? 'best' : ''}">
+        ${isBest ? '<div class="compare-best-badge">Najwyższe netto</div>' : ''}
+        <div class="compare-box-label">${o.label}</div>
+        <div class="compare-box-value">${fmtNoZl(o.val)} zł</div>
+        ${diff !== 0 ? `<div class="compare-box-diff ${diff < 0 ? 'neg' : ''}">${diff > 0 ? '+' : ''}${fmtNoZl(diff)} vs UoP</div>` : '<div class="compare-box-diff">— baza</div>'}
+      </div>`;
+  }).join('');
+}
+
+function renderNettoRec(netto, brutto) {
+  const el = document.getElementById('netto-rec');
+  if (!el) return;
+  const recs = [];
+
+  if (state.forma === 'uop' && brutto >= 5000) {
+    const b2bEst = Math.round(brutto - 1773 - brutto*0.049 - (brutto-1773)*0.19);
+    const diff = b2bEst - netto;
+    if (diff > 500) {
+      recs.push({
+        icon:'🏦', trigger:`B2B mogłoby dać ci +${fmt(diff)}/mc`,
+        title:'Konto firmowe mBank — 0 zł + premia 300 zł',
+        desc:'Pierwsze co potrzebujesz na B2B. Darmowe prowadzenie, premia za aktywność.',
+        partner:'Partner: mBank · Oferta partnerska',
+        pill:'+300 zł',
+        url:'https://www.mbank.pl/malafirma/?utm_source=adultly'
+      });
+      recs.push({
+        icon:'📊', trigger:'Rozliczenia B2B bez stresu',
+        title:'Księgowość online ifirma — od 61 zł/mc',
+        desc:'Faktury, ZUS, VAT w jednym miejscu. Pierwszy miesiąc gratis.',
+        partner:'Partner: ifirma · Oferta partnerska',
+        pill:'1 mc gratis',
+        url:'https://www.ifirma.pl/?utm_source=adultly'
+      });
+    }
+  }
+
+  if ((state.forma === 'b2b_lin' || state.forma === 'b2b_ryczalt') && netto > 3000) {
+    recs.push({
+      icon:'📈', trigger:`Masz ${fmt(netto)}/mc — zainwestuj nadwyżkę`,
+      title:'Zacznij inwestować w ETF — XTB (0% prowizji)',
+      desc:'Konto w 15 minut, 0% prowizji na ETF do 100 000 EUR obrotu. Polecane dla B2B z nadwyżką.',
+      partner:'Partner: XTB · Oferta partnerska',
+      pill:'0% prowizji',
+      url:'https://www.xtb.com/pl?utm_source=adultly'
+    });
+  }
+
+  if (state.forma === 'zlecenie' && state.isStudent === true) {
+    recs.push({
+      icon:'💳', trigger:'Student bez ZUS — zadbaj o przyszłą emeryturę',
+      title:'IKE / IKZE — zacznij odkładać teraz',
+      desc:'Na zleceniu nie odprowadzasz składek emerytalnych. Własne IKZE daje też ulgę podatkową.',
+      partner:'Partner: XTB · Oferta partnerska',
+      pill:'Otwórz IKZE',
+      url:'https://www.xtb.com/pl/ikze?utm_source=adultly'
+    });
+  }
+
+  el.innerHTML = recs.length === 0 ? '' : `
+    <div class="rec-group">
+      <div class="rec-group-label">Adultly podpowiada — co dalej</div>
+      ${recs.map(r => `
+        <a class="rec-card" href="${r.url}" target="_blank" rel="noopener sponsored">
+          <div class="rec-icon">${r.icon}</div>
+          <div class="rec-body">
+            <div class="rec-trigger">${r.trigger}</div>
+            <div class="rec-title">${r.title}</div>
+            <div class="rec-desc">${r.desc}</div>
+            <div class="rec-partner">${r.partner}</div>
+          </div>
+          <div class="rec-badge">
+            <span class="rec-pill">${r.pill}</span>
+            <span class="rec-arrow">›</span>
+          </div>
+        </a>`).join('')}
+    </div>`;
+}
+
+// Init kalkulator netto
+calcNetto();
+
+// ═══════════════════════════════════════
+// KALKULATOR 2 — PIT OPTIMIZER
+// ═══════════════════════════════════════
+function setPitToggle(key, value, btn) {
+  state[key] = value;
+  const group = btn.closest('.toggle-group');
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  calcPIT();
+}
+
+function calcPIT() {
+  const rocznyBrutto = parseInt(document.getElementById('pit-income').value) || 0;
+  if (!rocznyBrutto) return;
+
+  const forma     = document.getElementById('pit-forma').value;
+  const age       = state.pitAge;
+  const internet  = document.getElementById('ch-internet').checked;
+  const malzonek  = document.getElementById('ch-malzonek').checked;
+  const dzieci    = document.getElementById('ch-dzieci').checked;
+  const ikze      = document.getElementById('ch-ippk').checked;
+  const rehab     = document.getElementById('ch-rehab').checked;
+  const darow     = document.getElementById('ch-darowizna').checked;
+
+  // Ulgi i ich wartości
+  const ulgi = [];
+
+  // Ulga dla młodych
+  const isYoung = age === '≤26' && (forma === 'uop' || forma === 'zlecenie');
+  const youngLimit = 85528;
+  if (isYoung) {
+    const zwolnienie = Math.min(rocznyBrutto, youngLimit);
+    ulgi.push({
+      active: true,
+      icon: '🎓',
+      name: 'Ulga dla młodych (do 26 lat)',
+      desc: `Zwolnienie z PIT do ${fmtNoZl(youngLimit)} zł rocznie. Pracodawca nie pobiera zaliczek.`,
+      oszczednosc: Math.round(Math.min(rocznyBrutto, youngLimit) * 0.12),
+      typ: 'zwolnienie',
+      wartoscZwolnienia: zwolnienie
+    });
+  } else {
+    if (age === '≤26') {
+      ulgi.push({ active: false, icon: '🎓', name: 'Ulga dla młodych', desc: 'Dostępna tylko na UoP i zlecenie (nie B2B)', oszczednosc: 0, typ: null });
+    }
+  }
+
+  // Internet
+  if (internet) {
+    ulgi.push({ active: true, icon: '📡', name: 'Ulga na internet', desc: 'Odliczenie wydatków na internet od podstawy opodatkowania (max 760 zł/rok).', oszczednosc: Math.round(760 * 0.12), typ: 'odliczenie', wartoscOdliczenia: 760 });
+  }
+
+  // Małżonek
+  if (malzonek) {
+    ulgi.push({ active: true, icon: '💑', name: 'Wspólne rozliczenie z małżonkiem', desc: 'Opłaca się gdy jedno z was zarabia wyraźnie mniej. Podatek liczony od średniej — oszczędność przy przeskoku progu.', oszczednosc: null, typ: 'sytuacyjna' });
+  }
+
+  // Dzieci
+  if (dzieci) {
+    const ulgaDzieci = 1112.04;
+    ulgi.push({ active: true, icon: '👶', name: 'Ulga prorodzinna', desc: `${fmt(ulgaDzieci)} rocznie na pierwsze dziecko. Odliczana od podatku (nie od dochodu).`, oszczednosc: Math.round(ulgaDzieci), typ: 'odliczenie_od_podatku', wartoscOdliczenia: ulgaDzieci });
+  }
+
+  // IKZE
+  if (ikze) {
+    const limitIKZE = 9388;
+    ulgi.push({ active: true, icon: '📈', name: 'IKZE — odliczenie od dochodu', desc: `Wpłaty na IKZE (max ${fmt(limitIKZE)}/rok) odliczasz od dochodu. Przy stawce 12% to oszczędność do ${fmt(limitIKZE*0.12)}/rok.`, oszczednosc: Math.round(limitIKZE * 0.12), typ: 'odliczenie', wartoscOdliczenia: limitIKZE });
+  }
+
+  // Rehabilitacja
+  if (rehab) {
+    ulgi.push({ active: true, icon: '♿', name: 'Ulga rehabilitacyjna', desc: 'Odliczasz wydatki na rehabilitację, leki (nadwyżka ponad 100 zł/mc), sprzęt. Kwota zależy od realnych wydatków.', oszczednosc: null, typ: 'sytuacyjna' });
+  }
+
+  // Darowizny
+  if (darow) {
+    const maxDar = Math.round(rocznyBrutto * 0.06);
+    ulgi.push({ active: true, icon: '❤️', name: 'Odliczenie darowizn', desc: `Do 6% dochodu — przy twoich zarobkach max ${fmt(maxDar)}/rok. Dotyczy darowizn na OPP, kultu religijnego, krwi.`, oszczednosc: Math.round(maxDar * 0.12), typ: 'odliczenie', wartoscOdliczenia: maxDar });
+  }
+
+  // Ulga dla klasy średniej (historyczna, zniesiona — dla informacji)
+  // Kwota wolna
+  ulgi.push({ active: true, icon: '🔓', name: 'Kwota wolna od podatku (30 000 zł/rok)', desc: `Pierwsze ${fmt(30000)} dochodu rocznie jest wolne od PIT. To ${fmt(300)}/mc mniej podatku przy stawce 12%.`, oszczednosc: Math.min(rocznyBrutto, 30000) >= 30000 ? 3600 : Math.round(rocznyBrutto * 0.12), typ: 'kwota_wolna' });
+
+  // Oblicz szacunkowy podatek i oszczędności
+  let podstawa = rocznyBrutto;
+  let oszczedzono = 0;
+  let zwrot = 0;
+
+  // Ulga dla młodych — zwolnienie z PIT
+  if (isYoung && rocznyBrutto <= youngLimit) {
+    zwrot = 0; // całość zwolniona
+    document.getElementById('pit-value').textContent = '0';
+    document.getElementById('pit-sublabel').textContent = `Cały dochód (${fmt(rocznyBrutto)}) objęty ulgą dla młodych — nie płacisz PIT!`;
+    document.getElementById('pit-verdict').innerHTML = `
+      <div style="background:rgba(110,231,183,0.12); border:1px solid rgba(110,231,183,0.2); border-radius:10px; padding:12px 14px; font-size:13px; color:#6ee7b7; margin-top:4px;">
+        🎉 Twój cały dochód jest zwolniony z PIT. Upewnij się że złożyłeś/aś oświadczenie PIT-2 u pracodawcy.
+      </div>`;
+  } else {
+    // Standardowe obliczenie
+    let odliczeniaOdDochodu = 0;
+    let odliczeniaOdPodatku = 0;
+
+    ulgi.forEach(u => {
+      if (u.active && u.typ === 'odliczenie' && u.wartoscOdliczenia) {
+        odliczeniaOdDochodu += u.wartoscOdliczenia;
+      }
+      if (u.active && u.typ === 'odliczenie_od_podatku' && u.wartoscOdliczenia) {
+        odliczeniaOdPodatku += u.wartoscOdliczenia;
+      }
+      if (u.active && u.typ === 'zwolnienie' && u.wartoscZwolnienia) {
+        podstawa -= u.wartoscZwolnienia;
+      }
+    });
+
+    // Kwota wolna
+    podstawa = Math.max(0, podstawa - odliczeniaOdDochodu);
+    const kosztyUzys = forma === 'uop' ? Math.min(rocznyBrutto * 12 * 250 / 12, 3000) : 0;
+    podstawa = Math.max(0, podstawa - kosztyUzys);
+
+    let podatek = 0;
+    if (podstawa <= 120000) {
+      podatek = Math.max(0, podstawa * 0.12 - 3600);
+    } else {
+      podatek = (120000 * 0.12 - 3600) + (podstawa - 120000) * 0.32;
+    }
+    podatek = Math.max(0, podatek - odliczeniaOdPodatku);
+
+    // Szacunkowy zwrot (vs brak ulg)
+    const podatekBezUlg = Math.max(0, rocznyBrutto * 0.12 - 3600);
+    zwrot = Math.round(Math.max(0, podatekBezUlg - podatek));
+
+    document.getElementById('pit-value').textContent = fmtNoZl(Math.round(podatek));
+    document.getElementById('pit-sublabel').textContent = `Szacunkowy roczny PIT przy ${fmt(rocznyBrutto)} dochodu`;
+
+    const zwrotHTML = zwrot > 100
+      ? `<div style="background:rgba(110,231,183,0.12); border:1px solid rgba(110,231,183,0.2); border-radius:10px; padding:12px 14px; font-size:13px; color:#6ee7b7; margin-top:4px;">
+          ✅ Dzięki ulgom możesz zaoszczędzić szacunkowo <strong style="color:#6ee7b7;">${fmt(zwrot)}</strong> rocznie vs brak odliczeń.
+         </div>`
+      : '';
+    document.getElementById('pit-verdict').innerHTML = zwrotHTML;
+  }
+
+  // Render listy ulg
+  document.getElementById('pit-ulgi-list').innerHTML = ulgi.map(u => `
+    <div class="ulga-item ${u.active ? 'active-ulga' : 'inactive'}">
+      <div class="ulga-icon">${u.icon}</div>
+      <div class="ulga-body">
+        <div class="ulga-name">${u.name}</div>
+        <div class="ulga-desc">${u.desc}</div>
+      </div>
+      <div class="ulga-value ${u.oszczednosc === null ? 'na' : ''}">
+        ${u.oszczednosc === null ? 'indyw.' : u.oszczednosc > 0 ? '−' + fmt(u.oszczednosc) + ' podatku' : '—'}
+      </div>
+    </div>`).join('');
+
+  renderPitRec(rocznyBrutto, isYoung, ikze, dzieci);
+}
+
+function renderPitRec(roczny, isYoung, ikze, dzieci) {
+  const el = document.getElementById('pit-rec');
+  if (!el) return;
+  const recs = [];
+
+  if (!ikze) {
+    recs.push({
+      icon:'📈', trigger:`Możesz odliczyć do ${fmt(9388)} rocznie z IKZE`,
+      title:'Otwórz IKZE w XTB — oszczędzaj i płać mniej podatku',
+      desc:'Wpłaty na IKZE odliczasz od dochodu. Przy 12% stawce to nawet ' + fmt(Math.round(9388*0.12)) + ' mniej podatku rocznie.',
+      partner:'Partner: XTB · Oferta partnerska',
+      pill:'Odlicz od podatku',
+      url:'https://www.xtb.com/pl/ikze?utm_source=adultly'
+    });
+  }
+
+  recs.push({
+    icon:'🧮', trigger:'Rozlicz PIT szybko i bezbłędnie',
+    title:'e-pity 2025 — bezpłatny program do PIT',
+    desc:'Importuje dane z US, liczy wszystkie ulgi automatycznie. Zero pomyłek, wysyłka w 1 kliknięciu.',
+    partner:'Bezpłatne narzędzie · brak powiązania afiliacyjnego',
+    pill:'Pobierz gratis',
+    url:'https://www.e-pity.pl/?utm_source=adultly'
+  });
+
+  el.innerHTML = `
+    <div class="rec-group">
+      <div class="rec-group-label">Adultly podpowiada — zanim złożysz PIT</div>
+      ${recs.map(r => `
+        <a class="rec-card" href="${r.url}" target="_blank" rel="noopener sponsored">
+          <div class="rec-icon">${r.icon}</div>
+          <div class="rec-body">
+            <div class="rec-trigger">${r.trigger}</div>
+            <div class="rec-title">${r.title}</div>
+            <div class="rec-desc">${r.desc}</div>
+            <div class="rec-partner">${r.partner}</div>
+          </div>
+          <div class="rec-badge">
+            <span class="rec-pill">${r.pill}</span>
+            <span class="rec-arrow">›</span>
+          </div>
+        </a>`).join('')}
+    </div>`;
+}
+
+// ═══════════════════════════════════════
+// KALKULATOR 3 — PORÓWNYWARKA KONT
+// ═══════════════════════════════════════
+function setBank(key, value, btn) {
+  state.bank[key] = value;
+  const group = btn.closest('.toggle-group');
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderBankResults();
+}
+
+// Baza kont — każde ma scoring per cecha
+const KONTA = [
+  {
+    id: 'mbank_ekonto',
+    name: 'mBank eKonto',
+    logo: '🏦',
+    scores: { atm_free: true, foreign: false, savings_rate: 0, rewards: false, b2b: false, welcome: 300 },
+    pros: ['Darmowe przelewy', 'Aplikacja mobilna top-tier', 'Bankomaty w Polsce bezpłatnie', 'Premia 300 zł na start'],
+    desc: 'Solidny wybór dla każdego — zero opłat, dobra aplikacja, premia powitalna.',
+    pill: 'Premia 300 zł',
+    url: 'https://www.mbank.pl/konto/?utm_source=adultly',
+    partner: 'Partner: mBank',
+    affiliate: true
+  },
+  {
+    id: 'revolut',
+    name: 'Revolut (Standard)',
+    logo: '⚡',
+    scores: { atm_free: false, foreign: true, savings_rate: 0.04, rewards: false, b2b: false, welcome: 0 },
+    pros: ['Najlepszy kurs walut', 'Bezpłatne płatności za granicą', 'Konto oszczędnościowe 4%', 'Wirtualne karty jednorazowe'],
+    desc: 'Niezastąpiony przy podróżach i zakupach w walutach. Darmowy plan wystarczy na start.',
+    pill: 'Kurs bez marży',
+    url: 'https://www.revolut.com/pl-PL/?utm_source=adultly',
+    partner: 'Brak afiliacji',
+    affiliate: false
+  },
+  {
+    id: 'pekao_getin',
+    name: 'Pekao Konto Przekorzystne',
+    logo: '🏛️',
+    scores: { atm_free: true, foreign: false, savings_rate: 0, rewards: true, b2b: false, welcome: 550 },
+    pros: ['Premia 550 zł', 'Cashback 10% w wybranych sklepach', 'Darmowe wypłaty z bankomatów', 'Konto oszczędnościowe w pakiecie'],
+    desc: 'Najwyższa premia powitalna + cashback — opłacalne jeśli aktywnie płacisz kartą.',
+    pill: 'Premia 550 zł',
+    url: 'https://www.pekao.com.pl/konto/?utm_source=adultly',
+    partner: 'Partner: Pekao S.A.',
+    affiliate: true
+  },
+  {
+    id: 'velobank',
+    name: 'VeloBank + Konto Oszczędnościowe',
+    logo: '💚',
+    scores: { atm_free: true, foreign: false, savings_rate: 0.07, rewards: false, b2b: false, welcome: 0 },
+    pros: ['7% na koncie oszczędnościowym', 'Darmowe konto główne', 'Aplikacja z analizą wydatków', 'Bez limitów minimalnych'],
+    desc: 'Najlepszy wybór jeśli chcesz pomnażać oszczędności. 7% to aktualnie jedna z najwyższych stawek.',
+    pill: '7% rocznie',
+    url: 'https://www.velobank.pl/?utm_source=adultly',
+    partner: 'Partner: VeloBank',
+    affiliate: true
+  },
+  {
+    id: 'ing_mobi',
+    name: 'ING Moje ING',
+    logo: '🧡',
+    scores: { atm_free: true, foreign: false, savings_rate: 0.05, rewards: false, b2b: false, welcome: 200 },
+    pros: ['Darmowe konto i bankomaty', 'Konto oszczędnościowe 5%', 'Analityka wydatków w app', 'Premia 200 zł'],
+    desc: 'Dobre konto ogólne z porządnym kontem oszczędnościowym — dobry kompromis.',
+    pill: '5% oszczędności',
+    url: 'https://www.ing.pl/indywidualni/konta/?utm_source=adultly',
+    partner: 'Partner: ING Bank Śląski',
+    affiliate: true
+  },
+  {
+    id: 'mbank_firmowe',
+    name: 'mBank Konto Firmowe',
+    logo: '💼',
+    scores: { atm_free: true, foreign: false, savings_rate: 0, rewards: false, b2b: true, welcome: 300 },
+    pros: ['Darmowe przez pierwsze 2 lata', 'Fakturowanie w aplikacji', 'Integracja z ifirma', 'Premia 300 zł dla nowych'],
+    desc: 'Jeśli zakładasz działalność — to najczęstszy wybór freelancerów w Polsce.',
+    pill: '0 zł prowadzenie',
+    url: 'https://www.mbank.pl/malafirma/?utm_source=adultly',
+    partner: 'Partner: mBank',
+    affiliate: true
+  },
+];
+
+function scoreKonto(konto, prefs) {
+  let score = 0;
+  const { atm, foreign, savings, rewards, b2b } = prefs;
+
+  if (atm === 0 && !konto.scores.atm_free) score -= 0;
+  if (atm >= 300 && konto.scores.atm_free) score += 20;
+  if (atm >= 800 && konto.scores.atm_free) score += 10;
+  if (foreign && konto.scores.foreign) score += 30;
+  if (foreign && !konto.scores.foreign) score -= 10;
+  if (savings === 'high' && konto.scores.savings_rate >= 0.06) score += 25;
+  if (savings === 'mid' && konto.scores.savings_rate >= 0.04) score += 15;
+  if (rewards && konto.scores.rewards) score += 20;
+  if (b2b && konto.scores.b2b) score += 40;
+  if (b2b && !konto.scores.b2b) score -= 20;
+  score += konto.scores.welcome / 30;
+
+  return score;
+}
+
+function renderBankResults() {
+  const prefs = state.bank;
+
+  // Filtr B2B: jeśli B2B, pokaż konto firmowe + Revolut; jeśli nie, nie pokazuj konta firmowego
+  let pool = KONTA.filter(k => prefs.b2b ? true : k.id !== 'mbank_firmowe');
+  if (!prefs.b2b) pool = pool.filter(k => k.id !== 'mbank_firmowe');
+
+  // Jeśli zagranica → wymuś Revolut w wynikach
+  const scored = pool
+    .map(k => ({ ...k, score: scoreKonto(k, prefs) }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 3);
+
+  // Penalty callout — jeśli ktoś ma banki z prowizją (uproszczone założenie)
+  const penaltyEl = document.getElementById('bank-penalty');
+  if (prefs.atm >= 800 || prefs.foreign) {
+    const szacunek = (prefs.atm >= 800 ? 25*12 : 0) + (prefs.foreign ? 15*12 : 0);
+    penaltyEl.style.display = 'flex';
+    penaltyEl.innerHTML = `
+      <div class="penalty-callout">
+        <div class="penalty-icon">💸</div>
+        <div class="penalty-text">Przy twoich nawykach możesz tracić <strong>ok. ${fmt(szacunek)} rocznie</strong> na prowizjach w tradycyjnych bankach. Poniższe konta eliminują te koszty.</div>
+      </div>`;
+  } else {
+    penaltyEl.style.display = 'none';
+  }
+
+  document.getElementById('bank-results').innerHTML = scored.map((k, i) => `
+    <a class="bank-result-card ${i === 0 ? 'rank-1' : ''}" href="${k.url}" target="_blank" rel="noopener ${k.affiliate ? 'sponsored' : ''}">
+      <div class="bank-rank ${i === 0 ? 'gold' : ''}">${i === 0 ? '🥇' : i === 1 ? '2' : '3'}</div>
+      <div class="bank-body">
+        <div class="bank-name">${k.logo} ${k.name}</div>
+        <div class="bank-match">${i === 0 ? '✦ Najlepsze dopasowanie do twoich nawyków' : i === 1 ? 'Dobre dopasowanie' : 'Warto rozważyć'}</div>
+        <div class="bank-pros">${k.pros.map(p => `<span class="bank-pro-tag">${p}</span>`).join('')}</div>
+        <div class="bank-desc">${k.desc}</div>
+      </div>
+      <div class="bank-cta">
+        <span class="bank-cta-pill">${k.pill}</span>
+        <span class="bank-partner-tag">${k.partner}</span>
+        <span class="bank-arrow">›</span>
+      </div>
+    </a>`).join('');
+}
+
+// Init bank z defaultami
+renderBankResults();
+
+// Prefill z profilu jeśli dostępny
+if (profileIncome > 0) {
+  const pitInput = document.getElementById('pit-income');
+  if (pitInput && !pitInput.value) pitInput.value = profileIncome * 12;
+}
+</script>
+
+</body>
+</html>
