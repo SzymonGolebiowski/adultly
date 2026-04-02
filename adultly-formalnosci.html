@@ -1,0 +1,1118 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Formalności</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --red: #d93025;
+  --red-light: #fde8e6;
+  --yellow: #b45309;
+  --yellow-light: #fef3c7;
+  --blue: #1d4ed8;
+  --blue-light: #eff6ff;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+html, body { height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--gray-1);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ═══════════ LAYOUT ═══════════ */
+.layout { display: flex; min-height: 100vh; }
+
+.sidebar {
+  width: 260px; background: var(--white);
+  border-right: 1px solid var(--gray-2);
+  padding: 32px 20px; position: sticky;
+  top: 0; height: 100vh; overflow-y: auto; flex-shrink: 0;
+}
+.logo {
+  font-family: var(--serif); font-size: 24px;
+  color: var(--black); text-decoration: none;
+  display: block; margin-bottom: 40px;
+}
+.nav-section {
+  font-size: 10px; font-weight: 700; color: var(--gray-3);
+  letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--gray-4);
+  cursor: pointer; transition: all 0.15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); }
+.sidebar-user {
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 12px; background: var(--gray-1);
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--accent); display: flex; align-items: center;
+  justify-content: center; color: white; font-size: 14px;
+  font-weight: 700; flex-shrink: 0;
+}
+.user-name { font-size: 13px; font-weight: 500; }
+.user-status { font-size: 11px; color: var(--gray-3); }
+
+.main { flex: 1; padding: 40px; overflow-y: auto; max-width: 860px; }
+
+/* ═══════════ PAGE HEADER ═══════════ */
+.page-header { margin-bottom: 32px; }
+.page-eyebrow { font-size: 13px; color: var(--gray-3); margin-bottom: 6px; }
+.page-title { font-family: var(--serif); font-size: 32px; line-height: 1.2; }
+.page-title em { font-style: italic; color: var(--accent); }
+
+/* ═══════════ ŚCIEŻKI — WYBÓR ═══════════ */
+.paths-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin-bottom: 32px;
+}
+.path-btn {
+  background: var(--white); border: 2px solid var(--gray-2);
+  border-radius: 16px; padding: 16px 10px;
+  text-align: center; cursor: pointer;
+  transition: all 0.2s; display: flex;
+  flex-direction: column; align-items: center; gap: 8px;
+  font-family: var(--sans);
+}
+.path-btn:hover { border-color: var(--accent-mid); background: var(--accent-light); }
+.path-btn.active {
+  border-color: var(--accent);
+  background: var(--accent-light);
+  box-shadow: 0 0 0 1px var(--accent);
+}
+.path-icon { font-size: 26px; }
+.path-label {
+  font-size: 12px; font-weight: 600; color: var(--black);
+  line-height: 1.3; text-align: center;
+}
+.path-btn.active .path-label { color: var(--accent); }
+
+/* ═══════════ PROGRESS BAR ═══════════ */
+.progress-wrap { margin-bottom: 28px; }
+.progress-meta {
+  display: flex; justify-content: space-between;
+  font-size: 13px; color: var(--gray-4); margin-bottom: 8px;
+}
+.progress-meta strong { color: var(--accent); }
+.progress-bar {
+  height: 6px; background: var(--gray-2);
+  border-radius: 99px; overflow: hidden;
+}
+.progress-fill {
+  height: 100%; background: var(--accent-mid);
+  border-radius: 99px;
+  transition: width 0.4s cubic-bezier(0.16,1,0.3,1);
+}
+
+/* ═══════════ GRUPY KROKÓW ═══════════ */
+.step-group { margin-bottom: 20px; }
+.step-group-header {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 12px; cursor: pointer;
+  user-select: none;
+}
+.step-group-icon { font-size: 20px; }
+.step-group-title {
+  font-size: 15px; font-weight: 700; color: var(--black); flex: 1;
+}
+.step-group-count {
+  font-size: 12px; color: var(--gray-3);
+  background: var(--gray-2); padding: 3px 9px;
+  border-radius: 99px;
+}
+.step-group-count.done { background: var(--accent-light); color: var(--accent); }
+.step-group-chevron {
+  font-size: 14px; color: var(--gray-3);
+  transition: transform 0.2s;
+}
+.step-group.collapsed .step-group-chevron { transform: rotate(-90deg); }
+.step-group.collapsed .step-items { display: none; }
+
+/* ═══════════ KROKI — CHECKLISTY ═══════════ */
+.step-items { display: flex; flex-direction: column; gap: 8px; }
+
+.step-item {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 14px; padding: 16px 18px;
+  display: flex; align-items: flex-start; gap: 14px;
+  transition: border-color 0.15s, background 0.15s;
+  cursor: pointer; position: relative; overflow: hidden;
+}
+.step-item:hover { border-color: var(--accent-mid); }
+.step-item.done {
+  background: var(--accent-light);
+  border-color: rgba(45,154,104,0.25);
+}
+.step-item.done::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0;
+  width: 3px; background: var(--accent-mid);
+}
+
+.step-checkbox {
+  width: 22px; height: 22px; border-radius: 6px;
+  border: 2px solid var(--gray-2); background: var(--white);
+  flex-shrink: 0; display: flex; align-items: center;
+  justify-content: center; font-size: 13px;
+  transition: all 0.15s; margin-top: 1px;
+}
+.step-item.done .step-checkbox {
+  background: var(--accent); border-color: var(--accent); color: white;
+}
+
+.step-body { flex: 1; min-width: 0; }
+.step-title {
+  font-size: 14px; font-weight: 600; color: var(--black);
+  margin-bottom: 4px; line-height: 1.3;
+}
+.step-item.done .step-title {
+  text-decoration: line-through; color: var(--gray-4);
+}
+.step-why {
+  font-size: 12px; color: var(--gray-4);
+  line-height: 1.5; margin-bottom: 8px;
+}
+.step-item.done .step-why { display: none; }
+
+.step-links { display: flex; flex-wrap: wrap; gap: 6px; }
+.step-link {
+  font-size: 11px; font-weight: 600;
+  padding: 4px 10px; border-radius: 99px;
+  text-decoration: none; transition: all 0.15s;
+  display: inline-flex; align-items: center; gap: 4px;
+}
+.step-link.official {
+  background: var(--blue-light); color: var(--blue);
+  border: 1px solid rgba(29,78,216,0.15);
+}
+.step-link.official:hover { background: #dbeafe; }
+.step-link.partner {
+  background: var(--accent-light); color: var(--accent);
+  border: 1px solid rgba(45,154,104,0.2);
+}
+.step-link.partner:hover { background: #d1fae5; }
+.step-link.info {
+  background: var(--gray-1); color: var(--gray-4);
+  border: 1px solid var(--gray-2);
+}
+.step-link.info:hover { color: var(--black); }
+.step-item.done .step-links { display: none; }
+
+/* Ważność / badge */
+.step-urgency {
+  flex-shrink: 0; margin-top: 2px;
+}
+.urgency-badge {
+  font-size: 10px; font-weight: 700; padding: 3px 8px;
+  border-radius: 99px; white-space: nowrap;
+}
+.urgency-badge.high { background: var(--red-light); color: var(--red); }
+.urgency-badge.mid { background: var(--yellow-light); color: var(--yellow); }
+.urgency-badge.low { background: var(--gray-1); color: var(--gray-4); border: 1px solid var(--gray-2); }
+
+/* ═══════════ UKOŃCZENIE ═══════════ */
+.completion-card {
+  background: var(--black); border-radius: 20px;
+  padding: 32px; text-align: center; color: white;
+  display: none; animation: popIn 0.4s cubic-bezier(0.16,1,0.3,1) both;
+  margin-top: 24px;
+}
+.completion-card.show { display: block; }
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
+}
+.completion-emoji { font-size: 48px; margin-bottom: 16px; }
+.completion-title {
+  font-family: var(--serif); font-size: 26px;
+  margin-bottom: 10px;
+}
+.completion-title em { font-style: italic; color: #6ee7b7; }
+.completion-desc { font-size: 14px; color: rgba(255,255,255,0.6); line-height: 1.6; }
+
+/* ═══════════ PUSTY STAN ═══════════ */
+.empty-state {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 20px; padding: 48px 24px; text-align: center;
+}
+.empty-icon { font-size: 40px; margin-bottom: 16px; }
+.empty-title { font-family: var(--serif); font-size: 22px; margin-bottom: 10px; }
+.empty-desc { font-size: 14px; color: var(--gray-4); line-height: 1.7; }
+
+/* ═══════════ MOBILNA NAWIGACJA ═══════════ */
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--gray-2);
+  padding: 8px 16px 20px; z-index: 100; justify-content: space-around;
+}
+.mobile-nav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; font-size: 10px; color: var(--gray-4);
+  cursor: pointer; padding: 6px 12px; border-radius: 10px;
+}
+.mobile-nav-item.active { color: var(--accent); }
+.mobile-nav-icon { font-size: 20px; }
+
+/* ═══════════ ANIMACJE ═══════════ */
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.step-group { animation: fadeUp 0.3s ease both; }
+.step-group:nth-child(2) { animation-delay: 0.05s; }
+.step-group:nth-child(3) { animation-delay: 0.1s; }
+.step-group:nth-child(4) { animation-delay: 0.15s; }
+
+/* ═══════════ RESPONSIVE ═══════════ */
+@media (max-width: 900px) {
+  .paths-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .main { padding: 24px 16px 90px; }
+  .paths-grid { grid-template-columns: repeat(2, 1fr); }
+  .path-btn { padding: 14px 8px; }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="adultly-dashboard.html" class="logo">adultly.</a>
+  <div class="nav-section">Główne</div>
+  <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+  <div class="nav-section">Narzędzia</div>
+  <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
+  <a href="adultly-dashboard.html" class="nav-item">💼 Praca i CV</a>
+  <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+  <a href="adultly-dashboard.html" class="nav-item">📋 Dokumenty</a>
+  <a href="adultly-formalnosci.html" class="nav-item active">✅ Formalności</a>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebar-avatar">?</div>
+    <div>
+      <div class="user-name" id="sidebar-name">Ładowanie...</div>
+      <div class="user-status" id="sidebar-status">—</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Krok po kroku</div>
+    <div class="page-title">Formalności bez <em>stresu</em></div>
+  </div>
+
+  <!-- WYBÓR ŚCIEŻKI -->
+  <div class="paths-grid" id="paths-grid">
+    <button class="path-btn" onclick="selectPath('licealista', this)">
+      <div class="path-icon">🎒</div>
+      <div class="path-label">Idę na studia</div>
+    </button>
+    <button class="path-btn" onclick="selectPath('student', this)">
+      <div class="path-icon">📚</div>
+      <div class="path-label">Kończę studia</div>
+    </button>
+    <button class="path-btn" onclick="selectPath('absolwent', this)">
+      <div class="path-icon">💼</div>
+      <div class="path-label">Pierwsza praca</div>
+    </button>
+    <button class="path-btn" onclick="selectPath('b2b', this)">
+      <div class="path-icon">🏢</div>
+      <div class="path-label">Zakładam B2B</div>
+    </button>
+    <button class="path-btn" onclick="selectPath('mieszkanie', this)">
+      <div class="path-icon">🏠</div>
+      <div class="path-label">Pierwsze mieszkanie</div>
+    </button>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="checklist-area">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-icon">👆</div>
+      <div class="empty-title">Wybierz swój moment</div>
+      <div class="empty-desc">Kliknij jedną z kart powyżej — dostaniesz<br>spersonalizowaną checklistę co i kiedy zrobić.</div>
+    </div>
+  </div>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">⊞</div>Dashboard
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'">
+    <div class="mobile-nav-icon">💰</div>Finanse
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">💼</div>Praca
+  </div>
+  <div class="mobile-nav-item active">
+    <div class="mobile-nav-icon">✅</div>Formalności
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">📋</div>Dokumenty
+  </div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════
+// PROFIL Z LOCALSTORAGE
+// ═══════════════════════════════════════
+let profile = {};
+try {
+  const raw = localStorage.getItem('adultly_profile');
+  profile = raw ? JSON.parse(raw) : {};
+} catch(e) { profile = {}; }
+
+const profileName   = profile.name || 'Użytkownik';
+const profileStatus = profile.status || '';
+const profileEmp    = profile.employment || '';
+
+document.getElementById('sidebar-avatar').textContent = profileName.charAt(0).toUpperCase();
+document.getElementById('sidebar-name').textContent = profileName;
+document.getElementById('sidebar-status').textContent =
+  ({student:'Student', absolwent:'Świeży absolwent', pracuje:'Pracownik'})[profileStatus] || 'Użytkownik';
+
+// ═══════════════════════════════════════
+// STAN
+// ═══════════════════════════════════════
+let currentPath = null;
+let checked = {};  // { pathId: Set<stepId> }
+
+// Wczytaj zapisany postęp
+try {
+  const saved = localStorage.getItem('adultly_formalnosci');
+  if (saved) checked = JSON.parse(saved, (k, v) => Array.isArray(v) ? new Set(v) : v);
+  // JSON.parse nie odtworzy Set — naprawiam:
+  Object.keys(checked).forEach(k => {
+    if (!(checked[k] instanceof Set)) checked[k] = new Set(checked[k]);
+  });
+} catch(e) { checked = {}; }
+
+function saveProgress() {
+  const toSave = {};
+  Object.keys(checked).forEach(k => { toSave[k] = [...checked[k]]; });
+  localStorage.setItem('adultly_formalnosci', JSON.stringify(toSave));
+}
+
+// ═══════════════════════════════════════
+// BAZA DANYCH ŚCIEŻEK
+// ═══════════════════════════════════════
+const PATHS = {
+
+  licealista: {
+    label: 'Idę na studia',
+    intro: 'Idziesz na studia — oto co warto ogarnąć zanim zaczniesz, żeby nie tracić pieniędzy i czasu.',
+    groups: [
+      {
+        id: 'konto',
+        icon: '🏦',
+        title: 'Konto bankowe i karta',
+        steps: [
+          {
+            id: 'konto_student',
+            title: 'Otwórz konto studenckie (0 zł za prowadzenie)',
+            why: 'Zwykłe konta często mają opłaty. Konto studenckie jest darmowe do 26 roku życia — i tak zostanie gdy skończysz studia, o ile masz wpływy.',
+            urgency: 'high',
+            links: [
+              { label: 'mBank konto studenckie', type: 'partner', url: 'https://www.mbank.pl/mlodzi/?utm_source=adultly' },
+              { label: 'Porównaj konta studenckie', type: 'info', url: 'https://www.comperia.pl/konta-osobiste?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'blik',
+            title: 'Aktywuj BLIK i płatności mobilne',
+            why: 'Na stołówce, w akademiku i na imprezach nikt nie nosi gotówki. BLIK jest w każdej aplikacji bankowej — wystarczy go aktywować.',
+            urgency: 'mid',
+            links: []
+          },
+        ]
+      },
+      {
+        id: 'praca_studia',
+        icon: '💸',
+        title: 'Czy pracować na studiach?',
+        steps: [
+          {
+            id: 'zlecenie_zus',
+            title: 'Zrozum: student do 26 lat nie płaci ZUS na zleceniu',
+            why: 'To ogromna zaleta. Zarabiasz np. 3 000 zł brutto na zleceniu — płacisz tylko PIT (ok. 20% KUP), więc na rękę wychodzi ~2 500 zł. Na UoP byłoby ~2 200 zł bo ZUS schodzi z pracodawcy i twojego konta.',
+            urgency: 'high',
+            links: [
+              { label: 'Kalkulator netto (zlecenie studenta)', type: 'partner', url: 'adultly-finanse.html' },
+            ]
+          },
+          {
+            id: 'pit_student',
+            title: 'Sprawdź ulgę dla młodych — zero PIT do 26 lat na UoP/zleceniu',
+            why: 'Jeśli zarabiasz mniej niż 85 528 zł rocznie (ok. 7 127 zł/mc) i masz do 26 lat — nie płacisz PIT w ogóle. Powiedz o tym pracodawcy i złóż oświadczenie.',
+            urgency: 'high',
+            links: [
+              { label: 'Sprawdź ulgę dla młodych', type: 'official', url: 'https://www.podatki.gov.pl/pit/ulga-dla-mlodych/?utm_source=adultly' },
+              { label: 'Kalkulator netto', type: 'partner', url: 'adultly-finanse.html' },
+            ]
+          },
+          {
+            id: 'oszczednosci_start',
+            title: 'Zacznij odkładać choć 10% każdej wypłaty od razu',
+            why: 'Nawet 200 zł miesięcznie przez 4 lata studiów to 9 600 zł + odsetki. Najlepsza inwestycja to zacząć wcześnie — nie odkładaj "jak zacznę więcej zarabiać".',
+            urgency: 'mid',
+            links: [
+              { label: 'Konto oszczędnościowe 7% — VeloBank', type: 'partner', url: 'https://www.velobank.pl/oszczednosci/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'nfz_legitymacja',
+        icon: '🏥',
+        title: 'Ubezpieczenie zdrowotne i legitymacja',
+        steps: [
+          {
+            id: 'nfz_przez_uczelnie',
+            title: 'Sprawdź że uczelnia zgłosiła cię do NFZ',
+            why: 'Jako student dziennych studiów masz prawo do bezpłatnej opieki zdrowotnej przez uczelnię (lub rodziców do 26 lat). Upewnij się że jesteś zgłoszony — bez tego wizyty są płatne.',
+            urgency: 'high',
+            links: [
+              { label: 'Sprawdź swoje ubezpieczenie (NFZ)', type: 'official', url: 'https://zip.nfz.gov.pl/ap-portal/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'legitymacja',
+            title: 'Wyróbogólnopolską legitymację studencką (ELS)',
+            why: 'Zniżki 50% na PKP i komunikację miejską, tańsze kino, muzea, software (Spotify Student, GitHub Pro, Figma). Warta dziesiątki złotych miesięcznie.',
+            urgency: 'mid',
+            links: [
+              { label: 'Legitymacja elektroniczna — mLegitymacja', type: 'official', url: 'https://mlegitymacja.pl/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+  student: {
+    label: 'Kończę studia',
+    intro: 'Kończysz studia — to jeden z najbardziej pracowitych momentów w życiu jeśli chodzi o formalności. Ten plan pomoże ci nic nie przegapić.',
+    groups: [
+      {
+        id: 'dyplom_uczelnia',
+        icon: '🎓',
+        title: 'Dyplom i uczelnia',
+        steps: [
+          {
+            id: 'suplement',
+            title: 'Odbierz suplement do dyplomu (Supplement to Diploma)',
+            why: 'Suplement opisuje twoje przedmioty i oceny po angielsku — niezbędny przy aplikowaniu do pracy za granicą lub do firm z kapitałem zagranicznym. Uczelnia wydaje go razem z dyplomem.',
+            urgency: 'high',
+            links: []
+          },
+          {
+            id: 'legitymacja_zwrot',
+            title: 'Zwróć legitymację studencką (ważna 3 mc po obronie)',
+            why: 'Legitymacja traci ważność 3 miesiące po ukończeniu studiów. Używaj jej do tego czasu — potem musisz ją oddać.',
+            urgency: 'mid',
+            links: []
+          },
+          {
+            id: 'akademik_wymeldowanie',
+            title: 'Wymelduj się z akademika i z uczelni',
+            why: 'Jeśli byłeś zameldowany w akademiku — wymelduj się. Brak wymeldowania może powodować problemy przy późniejszym meldowaniu się w nowym miejscu.',
+            urgency: 'mid',
+            links: []
+          },
+        ]
+      },
+      {
+        id: 'nfz_po_studiach',
+        icon: '🏥',
+        title: 'Ubezpieczenie zdrowotne',
+        steps: [
+          {
+            id: 'nfz_grace',
+            title: 'Masz 4 miesiące ubezpieczenia po ukończeniu studiów — nie zmarnuj ich',
+            why: 'Po zakończeniu studiów twoje ubezpieczenie przez uczelnię trwa jeszcze 4 miesiące. Umów się na wszystkie odłożone wizyty, stomatolog, badania — teraz, za darmo.',
+            urgency: 'high',
+            links: [
+              { label: 'Zapisz się na wizytę (NFZ)', type: 'official', url: 'https://zip.nfz.gov.pl/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'nfz_po_4mc',
+            title: 'Po 4 miesiącach: zadbaj o nowe ubezpieczenie',
+            why: 'Opcje: (1) Pierwsza praca na UoP — pracodawca zgłosi cię automatycznie. (2) Rodzice do 26 lat — poproś ich o dopisanie. (3) Dobrowolne ubezpieczenie ZUS (~600 zł/mc).',
+            urgency: 'high',
+            links: [
+              { label: 'Dobrowolne ubezpieczenie NFZ', type: 'official', url: 'https://www.nfz.gov.pl/dla-ubezpieczonego/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'praca_pierwsze_kroki',
+        icon: '💼',
+        title: 'Pierwsze kroki na rynku pracy',
+        steps: [
+          {
+            id: 'cv_aktualizacja',
+            title: 'Zaktualizuj CV i profil LinkedIn przed aplikowaniem',
+            why: 'Dyplom i projekty ze studiów to twój największy atut teraz. Dodaj pracę dyplomową, projekty, praktyki. Rekruterzy sprawdzają LinkedIn zanim klikną "zaproś na rozmowę".',
+            urgency: 'high',
+            links: [
+              { label: 'Generator CV z AI — Adultly', type: 'partner', url: 'adultly-cv-generator.html' },
+              { label: 'Oferty dla świeżych absolwentów', type: 'partner', url: 'https://nofluffjobs.com/pl/junior?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'umowa_czytanie',
+            title: 'Naucz się czytać umowę o pracę zanim podpiszesz',
+            why: 'Kluczowe punkty: rodzaj umowy (na czas określony/nieokreślony), okres próbny, zakaz konkurencji, klauzula poufności, wynagrodzenie brutto vs netto.',
+            urgency: 'high',
+            links: [
+              { label: 'Co sprawdzić w umowie — PIP', type: 'official', url: 'https://www.pip.gov.pl/pl/dla-pracownikow/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+  absolwent: {
+    label: 'Pierwsza praca',
+    intro: 'Masz pierwszą pracę — gratulacje. Teraz czas ogarnąć formalności, żeby nie tracić pieniędzy których nie musisz tracić.',
+    groups: [
+      {
+        id: 'umowa_pit2',
+        icon: '📄',
+        title: 'Pierwsze dni w pracy',
+        steps: [
+          {
+            id: 'pit2_zlozenie',
+            title: 'Złóż PIT-2 u pracodawcy — jeśli to twój jedyny pracodawca',
+            why: 'PIT-2 to oświadczenie że pracodawca może stosować kwotę wolną (3 600 zł rocznie = 300 zł/mc mniej podatku). Bez niego przepłacasz PIT przez cały rok i odzyskujesz dopiero w zeznaniu rocznym.',
+            urgency: 'high',
+            links: [
+              { label: 'Co to jest PIT-2 — wyjaśnienie', type: 'official', url: 'https://www.podatki.gov.pl/pit/pit-2/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'ulga_mlodych_praca',
+            title: 'Sprawdź ulgę dla młodych (do 26 lat) — zero PIT na UoP',
+            why: 'Masz do 26 lat? Złóż oświadczenie o uldze dla młodych. Pracodawca nie pobierze zaliczki na PIT od wynagrodzenia do 85 528 zł rocznie. To nawet kilkaset złotych więcej na rękę miesięcznie.',
+            urgency: 'high',
+            links: [
+              { label: 'Ulga dla młodych — podatki.gov.pl', type: 'official', url: 'https://www.podatki.gov.pl/pit/ulga-dla-mlodych/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'ppk_decyzja',
+            title: 'Zdecyduj co zrobić z PPK — nie ignoruj pisma od pracodawcy',
+            why: 'PPK (Pracownicze Plany Kapitałowe): pracodawca wpłaca 1.5% twojej pensji, ty 2%, państwo 240 zł rocznie. Możesz się wypisać — ale wtedy tracisz "darmowe" pieniądze od pracodawcy. Warto przemyśleć.',
+            urgency: 'mid',
+            links: [
+              { label: 'Kalkulator PPK — Moje PPK', type: 'official', url: 'https://www.mojeppk.pl/kalkulator-ppk.html?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'konto_wynagrodzenie',
+        icon: '🏦',
+        title: 'Konto i finanse',
+        steps: [
+          {
+            id: 'konto_optymalne',
+            title: 'Sprawdź czy twoje konto jest optymalne do wynagrodzenia',
+            why: 'Banki oferują premie za wpływ wynagrodzenia (nawet 550 zł jednorazowo). Warto to porównać — zmiana konta zajmuje 15 minut, a premia zostaje na zawsze.',
+            urgency: 'mid',
+            links: [
+              { label: 'Porównywarka kont — Adultly', type: 'partner', url: 'adultly-finanse.html' },
+            ]
+          },
+          {
+            id: 'budzet_50_30_20',
+            title: 'Ustal budżet miesięczny zanim wydasz pierwszą wypłatę',
+            why: '50% na potrzeby (wynajem, jedzenie, transport), 30% na chcenia, 20% na oszczędności. Bez planu pierwsza wypłata zniknie zanim się obejrzysz.',
+            urgency: 'high',
+            links: [
+              { label: 'Twój budżet w Adultly', type: 'partner', url: 'adultly-dashboard.html' },
+            ]
+          },
+          {
+            id: 'ikze_start',
+            title: 'Rozważ otwarcie IKZE — oszczędzasz i płacisz mniej podatku',
+            why: 'IKZE to konto emerytalne z ulgą podatkową: wpłaty odliczasz od dochodu (limit 2025: ~9 400 zł). Przy stawce 12% to nawet 1 128 zł mniej podatku rocznie. Im wcześniej zaczniesz, tym lepiej.',
+            urgency: 'low',
+            links: [
+              { label: 'Otwórz IKZE w XTB — 0% prowizji', type: 'partner', url: 'https://www.xtb.com/pl/ikze?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'pit_roczny',
+        icon: '📋',
+        title: 'PIT roczny — nie przepłać',
+        steps: [
+          {
+            id: 'pit_termin',
+            title: 'Złóż PIT do 30 kwietnia — przez e-Urząd Skarbowy',
+            why: 'e-PIT jest już częściowo wypełniony przez US — wystarczy sprawdzić i zatwierdzić. Spóźnienie grozi karą. Możliwy zwrot podatku za ulgi (internet, IKZE i inne).',
+            urgency: 'high',
+            links: [
+              { label: 'e-Urząd Skarbowy (e-PIT)', type: 'official', url: 'https://www.podatki.gov.pl/e-urzad-skarbowy/?utm_source=adultly' },
+              { label: 'Sprawdź swoje ulgi — Adultly', type: 'partner', url: 'adultly-finanse.html' },
+            ]
+          },
+          {
+            id: 'pit_zwrot',
+            title: 'Podaj numer konta do zwrotu podatku w e-US',
+            why: 'Jeśli należy ci się zwrot — US przeleje go na konto. Bez podanego numeru czekasz na przekaz pocztowy (tygodnie) lub musisz się zgłosić osobiście.',
+            urgency: 'mid',
+            links: [
+              { label: 'Zaktualizuj dane w e-Urzędzie Skarbowym', type: 'official', url: 'https://www.podatki.gov.pl/e-urzad-skarbowy/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+  b2b: {
+    label: 'Zakładam B2B',
+    intro: 'Zakładasz działalność gospodarczą — to kilka kroków które musisz zrobić w odpowiedniej kolejności. Bez tego możesz zacząć wystawiać faktury nielegalnie lub przepłacać ZUS.',
+    groups: [
+      {
+        id: 'rejestracja',
+        icon: '📝',
+        title: 'Rejestracja działalności',
+        steps: [
+          {
+            id: 'ceidg',
+            title: 'Zarejestruj działalność w CEIDG (bezpłatnie, online, 15 minut)',
+            why: 'CEIDG to Centralna Ewidencja i Informacja o Działalności Gospodarczej. Rejestracja jest darmowa przez internet z profilem zaufanym. Działalność możesz założyć nawet na kilka dni przed wystawieniem pierwszej faktury.',
+            urgency: 'high',
+            links: [
+              { label: 'Zarejestruj w CEIDG.gov.pl', type: 'official', url: 'https://www.ceidg.gov.pl/ceidg/ceidg.public.ui/searchform.aspx?utm_source=adultly' },
+              { label: 'Profil zaufany (jeśli nie masz)', type: 'official', url: 'https://www.gov.pl/web/gov/zaloz-profil-zaufany?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'pkd',
+            title: 'Wybierz właściwy kod PKD dla swojej działalności',
+            why: 'PKD (Polska Klasyfikacja Działalności) określa czym się zajmujesz. Wpisz główny kod + możesz dodać kilka dodatkowych. Kod PKD wpływa na dostępne formy opodatkowania (np. ryczałt IT wymaga PKD 62.xx).',
+            urgency: 'high',
+            links: [
+              { label: 'Wyszukiwarka kodów PKD', type: 'official', url: 'https://www.biznes.gov.pl/pl/firma/zakladanie-firmy/chce-zalozyc-jednoosobowa-dzialalnosc-gospodarcza/pkd?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'forma_opodatkowania',
+            title: 'Wybierz formę opodatkowania — masz 20 dni od pierwszego przychodu',
+            why: 'Trzy opcje: Skala podatkowa (12%/32%) — domyślna. Podatek liniowy 19% — opłacalny przy dochodzie >120 tys./rok. Ryczałt ewidencjonowany (np. 12% IT) — brak kosztów, prosta księgowość. Zmiana możliwa raz w roku (do 20 dnia następnego miesiąca).',
+            urgency: 'high',
+            links: [
+              { label: 'Porównaj formy — kalkulator Adultly', type: 'partner', url: 'adultly-finanse.html' },
+              { label: 'Formy opodatkowania — biznes.gov.pl', type: 'official', url: 'https://www.biznes.gov.pl/pl/firma/podatki-i-ksiegowosc/chce-rozliczac-podatki/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'zus_b2b',
+        icon: '🏛️',
+        title: 'ZUS — wybierz wariant mądrze',
+        steps: [
+          {
+            id: 'ulga_na_start',
+            title: 'Skorzystaj z ulgi na start — 0 zł ZUS przez pierwsze 6 miesięcy',
+            why: 'Nowe firmy mogą nie płacić składek ZUS (poza zdrowotną) przez 6 pełnych miesięcy. Warunek: nie prowadzić działalności w ciągu ostatnich 60 miesięcy i nie pracować dla byłego pracodawcy. To ~1 300 zł oszczędności miesięcznie.',
+            urgency: 'high',
+            links: [
+              { label: 'Ulga na start — ZUS.pl', type: 'official', url: 'https://www.zus.pl/pracujacy/swiadczenia/ulga-na-start?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'maly_zus',
+            title: 'Po 6 mc: przejdź na Mały ZUS Plus (~330 zł) — nie od razu pełny',
+            why: 'Po uldze na start możesz przez 36 miesięcy płacić Mały ZUS Plus (składki proporcjonalne do dochodu). Pełny ZUS (~1 773 zł) dopiero potem. Oszczędzasz ~1 400 zł/mc przez 3 lata.',
+            urgency: 'high',
+            links: [
+              { label: 'Mały ZUS Plus — warunki', type: 'official', url: 'https://www.zus.pl/pracujacy/swiadczenia/maly-zus-plus?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'skladka_zdrowotna',
+            title: 'Zrozum składkę zdrowotną — zależy od formy opodatkowania',
+            why: 'Od 2022 r. składka zdrowotna to nie ryczałt ale % dochodu: 4.9% przy liniowym, 9% przy skali, ryczałt wg przychodu. To ważne przy planowaniu finansów — sprawdź kalkulator.',
+            urgency: 'mid',
+            links: [
+              { label: 'Kalkulator netto B2B — Adultly', type: 'partner', url: 'adultly-finanse.html' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'konto_ksiegowosc',
+        icon: '🏦',
+        title: 'Konto firmowe i księgowość',
+        steps: [
+          {
+            id: 'konto_firmowe',
+            title: 'Otwórz konto firmowe — wymagane do fakturowania',
+            why: 'Na działalności musisz mieć oddzielne konto firmowe (wymagane prawnie przy ryczałcie VAT i zalecane zawsze). Separacja finansów to też ochrona w razie kontroli.',
+            urgency: 'high',
+            links: [
+              { label: 'Konto firmowe mBank — 0 zł + premia 300 zł', type: 'partner', url: 'https://www.mbank.pl/malafirma/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'ksiegowosc',
+            title: 'Wybierz program do fakturowania i księgowości',
+            why: 'Przy prostej działalności ryczałtowej wystarczy prosty program (ifirma, wFirma, Fakturownia). Przy liniowym lub skali z kosztami — warto rozważyć księgowego. Błędy w ZUS i VAT kosztują.',
+            urgency: 'high',
+            links: [
+              { label: 'ifirma — od 61 zł/mc (1 mc gratis)', type: 'partner', url: 'https://www.ifirma.pl/?utm_source=adultly' },
+              { label: 'wFirma — sprawdź ofertę', type: 'partner', url: 'https://www.wfirma.pl/?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'vat',
+            title: 'Zdecyduj czy rejestrować się jako czynny VAT-owiec',
+            why: 'Do 200 000 zł przychodu rocznie możesz być zwolniony z VAT. Ale jeśli klient to firma (B2B) — często wolą żebyś był VAT-owcem (mogą odliczyć VAT). Przy usługach dla konsumentów VAT-zwolnienie jest korzystniejsze.',
+            urgency: 'mid',
+            links: [
+              { label: 'VAT dla przedsiębiorcy — biznes.gov.pl', type: 'official', url: 'https://www.biznes.gov.pl/pl/firma/podatki-i-ksiegowosc/vat/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+  mieszkanie: {
+    label: 'Pierwsze mieszkanie',
+    intro: 'Bierzesz pierwsze mieszkanie na wynajem — to więcej formalności niż się wydaje. Ten plan pomoże ci uniknąć kosztownych błędów.',
+    groups: [
+      {
+        id: 'przed_podpisaniem',
+        icon: '🔍',
+        title: 'Zanim podpiszesz umowę',
+        steps: [
+          {
+            id: 'umowa_weryfikacja',
+            title: 'Sprawdź umowę najmu zanim podpiszesz — kluczowe punkty',
+            why: 'Musisz wiedzieć: kto płaci za naprawy (ustawa: wynajmujący za instalacje, najemca za drobne usterki), czy kaucja jest zwrotna i kiedy, co się dzieje przy wcześniejszym wypowiedzeniu, czy możesz podnajmować.',
+            urgency: 'high',
+            links: [
+              { label: 'Prawa najemcy — Rzecznik Praw Obywatelskich', type: 'official', url: 'https://www.rpo.gov.pl/pl/content/prawa-lokatora?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'protokol_zdawczo',
+            title: 'Sporządź protokół zdawczo-odbiorczy ze zdjęciami',
+            why: 'Protokół to dokument który opisuje stan mieszkania przy wprowadzeniu — każda rysa, uszkodzenie, zużyty sprzęt. Bez tego właściciel może żądać kaucji za coś co było już uszkodzone. Rób zdjęcia wszystkiego.',
+            urgency: 'high',
+            links: []
+          },
+          {
+            id: 'kaucja_potwierdzenie',
+            title: 'Kaucja: zapłać przelewem i zachowaj potwierdzenie',
+            why: 'Kaucja musi być zwrócona w ciągu 30 dni od zwrotu mieszkania (minus ewentualne naprawy). Płać przelewem — masz dowód wpłaty. Gotówka bez pokwitowania to proszenie się o kłopoty.',
+            urgency: 'high',
+            links: []
+          },
+        ]
+      },
+      {
+        id: 'po_wprowadzeniu',
+        icon: '📦',
+        title: 'Pierwsze dni w mieszkaniu',
+        steps: [
+          {
+            id: 'liczniki',
+            title: 'Spisz stan liczników w dniu wprowadzenia (gaz, prąd, woda)',
+            why: 'Zapisz stan liczników i zrób zdjęcia z datą. Bez tego możesz zapłacić za zużycie poprzednich lokatorów. Prześlij wartości do dostawców mediów jeśli jesteś stroną umowy.',
+            urgency: 'high',
+            links: []
+          },
+          {
+            id: 'media_przepisanie',
+            title: 'Sprawdź na kogo są umowy na media (prąd, gaz, internet)',
+            why: 'Jeśli umowy są na właściciela — on płaci i przerzuca koszty na ciebie. Jeśli masz przepisać na siebie — potrzebujesz umowy najmu i danych liczników. Sprawdź czy cena taryfy jest aktualna.',
+            urgency: 'mid',
+            links: []
+          },
+          {
+            id: 'ubezpieczenie_oc',
+            title: 'Rozważ ubezpieczenie OC w życiu prywatnym (od 50 zł/rok)',
+            why: 'OC w życiu prywatnym pokrywa szkody które wyrządzisz sąsiadom (zalanie, pożar). Bardzo tanie, a chroni przed ogromną odpowiedzialnością. Wynajmując mieszkanie jesteś za nie odpowiedzialny.',
+            urgency: 'mid',
+            links: [
+              { label: 'Porównaj OC w życiu prywatnym — Rankomat', type: 'partner', url: 'https://rankomat.pl/ubezpieczenia/oc-w-zyciu-prywatnym?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+      {
+        id: 'meldunek_finanse',
+        icon: '📋',
+        title: 'Meldunek i finanse',
+        steps: [
+          {
+            id: 'meldunek',
+            title: 'Zamelduj się (opcjonalne, ale ułatwia życie)',
+            why: 'Meldunek nie jest obowiązkowy ale ułatwia: wyrobienie dowodu, rejestrację samochodu, dostęp do przychodni. Właściciel musi wyrazić zgodę — poproś o to przy podpisywaniu umowy.',
+            urgency: 'low',
+            links: [
+              { label: 'Zameldowanie online — gov.pl', type: 'official', url: 'https://www.gov.pl/web/gov/zamelduj-sie-na-pobyt-staly-lub-czasowy?utm_source=adultly' },
+            ]
+          },
+          {
+            id: 'budzet_wynajem',
+            title: 'Sprawdź czy wynajem mieści się w 30% dochodu',
+            why: 'Zasada 30%: wynajem + media nie powinny przekraczać 30% dochodu netto. Więcej oznacza że pracujesz głównie na mieszkanie — zostaje mało na życie i oszczędności.',
+            urgency: 'high',
+            links: [
+              { label: 'Kalkulator najmu — Adultly', type: 'partner', url: 'adultly-mieszkanie.html' },
+            ]
+          },
+          {
+            id: 'poduszka_awaryjna',
+            title: 'Zbuduj poduszkę awaryjną: 3 miesiące wydatków',
+            why: 'Nagłe naprawy, utrata pracy, choroba — bez poduszki finansowej jedno zdarzenie może cię wstrzymać z czynszem. Cel: 3 × (wynajem + media + jedzenie) odłożone na osobnym koncie.',
+            urgency: 'mid',
+            links: [
+              { label: 'Konto oszczędnościowe 7% — VeloBank', type: 'partner', url: 'https://www.velobank.pl/oszczednosci/?utm_source=adultly' },
+            ]
+          },
+        ]
+      },
+    ]
+  },
+
+};
+
+// ═══════════════════════════════════════
+// LOGIKA GŁÓWNA
+// ═══════════════════════════════════════
+function selectPath(pathId, btnEl) {
+  currentPath = pathId;
+
+  // Zaznacz aktywny przycisk
+  document.querySelectorAll('.path-btn').forEach(b => b.classList.remove('active'));
+  btnEl.classList.add('active');
+
+  renderChecklist(pathId);
+}
+
+function renderChecklist(pathId) {
+  const path = PATHS[pathId];
+  if (!path) return;
+
+  if (!checked[pathId]) checked[pathId] = new Set();
+  const done = checked[pathId];
+
+  // Policz wszystkie kroki
+  const allSteps = path.groups.flatMap(g => g.steps);
+  const totalSteps = allSteps.length;
+  const doneCount  = allSteps.filter(s => done.has(s.id)).length;
+
+  const area = document.getElementById('checklist-area');
+  area.innerHTML = `
+    <div class="progress-wrap">
+      <div class="progress-meta">
+        <span>Postęp: <strong>${doneCount} / ${totalSteps}</strong> kroków</span>
+        <span>${Math.round(doneCount/totalSteps*100)}% ukończone</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" id="prog-fill" style="width:${Math.round(doneCount/totalSteps*100)}%"></div>
+      </div>
+    </div>
+    ${path.groups.map((g, gi) => renderGroup(g, done, gi)).join('')}
+    <div class="completion-card ${doneCount === totalSteps ? 'show' : ''}" id="completion-card">
+      <div class="completion-emoji">🎉</div>
+      <div class="completion-title">Wszystko <em>ogarnięte!</em></div>
+      <div class="completion-desc">Przeszedłeś przez wszystkie kroki dla ścieżki "${path.label}".<br>Wróć gdy będziesz potrzebować kolejnej ścieżki.</div>
+    </div>
+  `;
+}
+
+function renderGroup(group, done, gi) {
+  const groupDone  = group.steps.filter(s => done.has(s.id)).length;
+  const groupTotal = group.steps.length;
+  const allDone    = groupDone === groupTotal;
+
+  return `
+    <div class="step-group" id="grp-${group.id}">
+      <div class="step-group-header" onclick="toggleGroup('${group.id}')">
+        <div class="step-group-icon">${group.icon}</div>
+        <div class="step-group-title">${group.title}</div>
+        <div class="step-group-count ${allDone ? 'done' : ''}">${groupDone}/${groupTotal}</div>
+        <div class="step-group-chevron">›</div>
+      </div>
+      <div class="step-items">
+        ${group.steps.map(s => renderStep(s, done.has(s.id))).join('')}
+      </div>
+    </div>`;
+}
+
+function renderStep(step, isDone) {
+  const urgencyLabel = { high: 'Ważne', mid: 'Warto', low: 'Opcjonalnie' };
+  const linksHtml = step.links.map(l => `
+    <a class="step-link ${l.type}" href="${l.url}" target="${l.url.startsWith('http') ? '_blank' : '_self'}"
+       rel="${l.url.startsWith('http') ? 'noopener' : ''}"
+       onclick="event.stopPropagation()">
+      ${l.type === 'official' ? '🏛️' : l.type === 'partner' ? '→' : 'ℹ️'} ${l.label}
+    </a>`).join('');
+
+  return `
+    <div class="step-item ${isDone ? 'done' : ''}" id="step-${step.id}" onclick="toggleStep('${step.id}')">
+      <div class="step-checkbox">${isDone ? '✓' : ''}</div>
+      <div class="step-body">
+        <div class="step-title">${step.title}</div>
+        <div class="step-why">${step.why}</div>
+        ${step.links.length > 0 ? `<div class="step-links">${linksHtml}</div>` : ''}
+      </div>
+      <div class="step-urgency">
+        <div class="urgency-badge ${step.urgency}">${urgencyLabel[step.urgency]}</div>
+      </div>
+    </div>`;
+}
+
+function toggleStep(stepId) {
+  if (!currentPath) return;
+  if (!checked[currentPath]) checked[currentPath] = new Set();
+
+  const el = document.getElementById('step-' + stepId);
+
+  if (checked[currentPath].has(stepId)) {
+    checked[currentPath].delete(stepId);
+    el.classList.remove('done');
+    el.querySelector('.step-checkbox').textContent = '';
+    el.querySelector('.step-why').style.display = '';
+    el.querySelector('.step-links') && (el.querySelector('.step-links').style.display = '');
+  } else {
+    checked[currentPath].add(stepId);
+    el.classList.add('done');
+    el.querySelector('.step-checkbox').textContent = '✓';
+  }
+
+  saveProgress();
+  updateProgress();
+}
+
+function toggleGroup(groupId) {
+  const grp = document.getElementById('grp-' + groupId);
+  grp.classList.toggle('collapsed');
+}
+
+function updateProgress() {
+  if (!currentPath) return;
+  const path = PATHS[currentPath];
+  const done = checked[currentPath] || new Set();
+  const allSteps   = path.groups.flatMap(g => g.steps);
+  const totalSteps = allSteps.length;
+  const doneCount  = allSteps.filter(s => done.has(s.id)).length;
+  const pct        = Math.round(doneCount / totalSteps * 100);
+
+  const fill = document.getElementById('prog-fill');
+  if (fill) fill.style.width = pct + '%';
+
+  // Aktualizuj liczniki grup
+  path.groups.forEach(g => {
+    const grpDone  = g.steps.filter(s => done.has(s.id)).length;
+    const countEl  = document.querySelector(`#grp-${g.id} .step-group-count`);
+    if (countEl) {
+      countEl.textContent = `${grpDone}/${g.steps.length}`;
+      countEl.className = 'step-group-count' + (grpDone === g.steps.length ? ' done' : '');
+    }
+  });
+
+  // Meta
+  const meta = document.querySelector('.progress-meta');
+  if (meta) {
+    meta.innerHTML = `<span>Postęp: <strong>${doneCount} / ${totalSteps}</strong> kroków</span><span>${pct}% ukończone</span>`;
+  }
+
+  // Completion
+  const comp = document.getElementById('completion-card');
+  if (comp) comp.className = 'completion-card' + (doneCount === totalSteps ? ' show' : '');
+}
+
+// ═══════════════════════════════════════
+// AUTO-PREFILL Z PROFILU ONBOARDINGU
+// ═══════════════════════════════════════
+function autoSelectPath() {
+  const statusMap = {
+    student: 'student',
+    absolwent: 'absolwent',
+    pracuje: 'absolwent',
+  };
+  const empMap = {
+    b2b: 'b2b',
+    'wlasna-firma': 'b2b',
+  };
+
+  let autoPath = null;
+
+  if (empMap[profileEmp]) {
+    autoPath = empMap[profileEmp];
+  } else if (statusMap[profileStatus]) {
+    autoPath = statusMap[profileStatus];
+  }
+
+  if (autoPath) {
+    const btn = document.querySelector(`.path-btn[onclick*="${autoPath}"]`);
+    if (btn) {
+      btn.classList.add('active');
+      selectPath(autoPath, btn);
+    }
+  }
+}
+
+autoSelectPath();
+</script>
+
+</body>
+</html>
