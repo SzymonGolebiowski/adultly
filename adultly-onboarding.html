@@ -274,8 +274,26 @@ input[type=range] { width: 100%; }
       </select>
     </div>
     <div class="field">
-      <label>Kierunek studiów</label>
+      <label>Kierunek studiów / zawód</label>
       <input type="text" id="f-major" placeholder="np. Finanse i Rachunkowość">
+    </div>
+    <div class="field">
+      <label>W jakiej branży szukasz / pracujesz?</label>
+      <select id="f-industry">
+        <option value="">Wybierz branżę...</option>
+        <option value="it">💻 IT / Programowanie / Tech</option>
+        <option value="marketing">📣 Marketing / Social Media / Reklama</option>
+        <option value="finanse">📊 Finanse / Rachunkowość / Controlling</option>
+        <option value="mechanika">🔧 Mechanika / Budowa maszyn / Automatyka</option>
+        <option value="budownictwo">🏗️ Budownictwo / Architektura / Geodezja</option>
+        <option value="logistyka">🚚 Logistyka / Transport / Spedycja</option>
+        <option value="handel">🛒 Handel / Sprzedaż / E-commerce</option>
+        <option value="prawo">⚖️ Prawo / Administracja / HR</option>
+        <option value="medycyna">🏥 Medycyna / Farmacja / Zdrowie</option>
+        <option value="edukacja">📚 Edukacja / Nauka / Badania</option>
+        <option value="gastro">🍽️ Gastronomia / Turystyka / Hotelarstwo</option>
+        <option value="inne">🔍 Inna / Jeszcze nie wiem</option>
+      </select>
     </div>
 
     <button class="btn-next" onclick="nextStep(1)">Dalej →</button>
@@ -465,6 +483,7 @@ function collectData(step) {
     profile.city = document.getElementById('f-city').value;
     profile.status = document.getElementById('f-status').value;
     profile.major = document.getElementById('f-major').value;
+    profile.industry = document.getElementById('f-industry').value;
   }
   if (step === 2) {
     profile.income = document.getElementById('f-income').value;
