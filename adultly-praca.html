@@ -430,7 +430,7 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
           <div class="cv-tip-icon">✉️</div>
           <div class="cv-tip-body">
             <div class="cv-tip-title">Adres e-mail jak dorosły</div>
-            <div class="cv-tip-desc">kiciapysia@wp.pl to żart. imie.nazwisko@gmail.com lub skrót inicjałów — to standard. Rekruterzy naprawdę to zauważają.</div>
+            <div class="cv-tip-desc"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="b0dbd9d3d9d1c0c9c3d9d1f0c7c09ec0dc">[email&#160;protected]</a> to żart. <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="abc2c6c2ce85c5cad1dcc2d8c0c4ebccc6cac2c785c8c4c6">[email&#160;protected]</a> lub skrót inicjałów — to standard. Rekruterzy naprawdę to zauważają.</div>
           </div>
         </div>
         <div class="cv-tip">
@@ -637,6 +637,11 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
   ══════════════════════════════════ -->
   <div class="mod-panel" id="panel-oferty">
 
+    <div id="industry-banner" style="display:none; background:var(--accent-light); border:1px solid var(--accent); border-radius:12px; padding:12px 16px; margin-bottom:16px; font-size:13px; color:var(--accent); display:flex; align-items:center; justify-content:space-between; gap:8px;">
+      <span id="industry-banner-text">🎯 Oferty dopasowane do twojej branży z profilu</span>
+      <span style="color:var(--gray-4); cursor:pointer; white-space:nowrap;" onclick="resetIndustryFilter()">Zmień →</span>
+    </div>
+
     <div class="card job-filters">
       <div class="card-label">DOPASUJ OFERTY DO SIEBIE</div>
       <div class="field">
@@ -660,10 +665,15 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
         <label>Branża</label>
         <div class="job-filter-row" style="flex-wrap:wrap;">
           <button class="toggle-btn active" onclick="setJobFilter('cat', 'all', this)">Wszystkie</button>
-          <button class="toggle-btn" onclick="setJobFilter('cat', 'it', this)">IT / Tech</button>
-          <button class="toggle-btn" onclick="setJobFilter('cat', 'marketing', this)">Marketing</button>
-          <button class="toggle-btn" onclick="setJobFilter('cat', 'finanse', this)">Finanse</button>
-          <button class="toggle-btn" onclick="setJobFilter('cat', 'inne', this)">Inne</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'it', this)">💻 IT / Tech</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'marketing', this)">📣 Marketing</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'finanse', this)">📊 Finanse</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'mechanika', this)">🔧 Mechanika</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'budownictwo', this)">🏗️ Budownictwo</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'logistyka', this)">🚚 Logistyka</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'handel', this)">🛒 Handel</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'prawo', this)">⚖️ Prawo / HR</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'inne', this)">🔍 Inne</button>
         </div>
       </div>
     </div>
@@ -700,7 +710,7 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
   <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'"><div class="mobile-nav-icon">📋</div>Dokumenty</div>
 </div>
 
-<script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
 'use strict';
 
 // ═══════════════════════════════════════
@@ -982,69 +992,210 @@ if (profileEmp === 'b2b') setSalForma('b2b', document.querySelectorAll('#sal-for
 // ═══════════════════════════════════════
 const jobFilters = { level: 'junior', mode: 'all', cat: 'all' };
 
-// Baza ofert — linki do platform z filtrami (deep links)
-const JOB_SOURCES = [
-  {
-    level: ['junior', 'student'],
-    mode: ['all', 'remote', 'hybrid'],
-    cat: ['all', 'it'],
-    logo: '🎯', title: 'Junior / Mid Developer — zdalne i hybrydowe',
-    company: 'No Fluff Jobs', salary: '7 000–18 000 zł', tag_remote: true,
-    desc: 'Oferty wyłącznie z podanymi widełkami. Filtruj po technologii, mieście i formie zatrudnienia.',
-    url: 'https://nofluffjobs.com/pl/junior?utm_source=adultly',
-    source: 'No Fluff Jobs · partner'
+// Mapowanie branży → słowa kluczowe i linki na różnych platformach
+const INDUSTRY_CONFIG = {
+  it: {
+    label: 'IT / Tech',
+    keywords: { pracuj: 'programista', linkedin: 'developer junior', goldenline: 'it' },
+    pracujCat: 'it-development;cc,5016',
+    nofluff: 'junior',
+    justjoin: '',
+    salaryRange: '7 000–18 000 zł',
   },
-  {
-    level: ['junior', 'student'],
-    mode: ['all', 'remote', 'hybrid', 'office'],
-    cat: ['all', 'it', 'marketing', 'finanse', 'inne'],
-    logo: '🐂', title: 'Oferty dla juniorów — wszystkie branże',
-    company: 'Bulldogjob', salary: '5 000–12 000 zł',
-    desc: 'Specjalizuje się w ofertach IT, ale ma też inne branże. Widoczne stawki, bez zbędnego marketingu.',
-    url: 'https://bulldogjob.pl/companies/jobs?seniority=junior&utm_source=adultly',
-    source: 'Bulldogjob · brak afiliacji'
+  marketing: {
+    label: 'Marketing',
+    keywords: { pracuj: 'marketing', linkedin: 'marketing junior', goldenline: 'marketing' },
+    pracujCat: 'marketing;cc,5011',
+    nofluff: 'marketing',
+    justjoin: 'marketing',
+    salaryRange: '4 500–9 000 zł',
   },
-  {
-    level: ['student'],
-    mode: ['all', 'hybrid', 'office'],
-    cat: ['all', 'it', 'marketing', 'finanse', 'inne'],
-    logo: '🎓', title: 'Staże i praca dla studentów',
-    company: 'Pracuj.pl — staże', salary: '0–3 500 zł',
-    desc: 'Największa baza staży w Polsce. Filtruj po mieście, branży i czasie trwania stażu.',
-    url: 'https://www.pracuj.pl/praca/staz;tt,7?utm_source=adultly',
-    source: 'Pracuj.pl · brak afiliacji'
+  finanse: {
+    label: 'Finanse',
+    keywords: { pracuj: 'finanse rachunkowość', linkedin: 'finance analyst junior', goldenline: 'finanse' },
+    pracujCat: 'finanse-ksiegowosc-bankowosc;cc,5004',
+    nofluff: 'finance',
+    justjoin: 'finance',
+    salaryRange: '5 000–11 000 zł',
   },
-  {
-    level: ['junior', 'mid'],
-    mode: ['all', 'remote'],
-    cat: ['all', 'it'],
-    logo: '💻', title: 'Remote-first IT — wszystkie poziomy',
-    company: 'Just Join IT', salary: '8 000–30 000 zł',
-    desc: 'Duży agregator ofert IT. Popularne wśród rekruterów — tu trafia dużo ofert zdalnych.',
-    url: 'https://justjoin.it/?orderBy=newest&utm_source=adultly',
-    source: 'Just Join IT · brak afiliacji'
+  mechanika: {
+    label: 'Mechanika / Budowa maszyn',
+    keywords: { pracuj: 'mechanik konstruktor', linkedin: 'inżynier mechanik', goldenline: 'mechanika' },
+    pracujCat: 'inzynieria-produkcja-energetyka;cc,5006',
+    nofluff: 'engineering',
+    justjoin: 'engineering',
+    salaryRange: '5 500–12 000 zł',
   },
-  {
-    level: ['junior', 'mid', 'student'],
-    mode: ['all', 'remote', 'hybrid', 'office'],
-    cat: ['all', 'marketing'],
-    logo: '📣', title: 'Marketing / Social Media / Content',
-    company: 'LinkedIn — marketing PL', salary: '4 500–10 000 zł',
-    desc: 'LinkedIn ma najlepszą bazę ofert marketingowych w Polsce. Załóż profil przed aplikowaniem.',
-    url: 'https://www.linkedin.com/jobs/search/?keywords=marketing%20junior&location=Polska&utm_source=adultly',
-    source: 'LinkedIn · brak afiliacji'
+  budownictwo: {
+    label: 'Budownictwo / Architektura',
+    keywords: { pracuj: 'budownictwo inżynier', linkedin: 'inżynier budowy junior', goldenline: 'budownictwo' },
+    pracujCat: 'budownictwo;cc,5003',
+    nofluff: 'construction',
+    justjoin: '',
+    salaryRange: '5 000–11 000 zł',
   },
-  {
-    level: ['junior', 'mid'],
-    mode: ['all', 'hybrid', 'office'],
-    cat: ['all', 'finanse'],
-    logo: '📊', title: 'Finanse / Controlling / Rachunkowość',
-    company: 'Goldenline — finanse', salary: '5 000–12 000 zł',
-    desc: 'Branża finansowa jest słabiej reprezentowana na platformach IT — tu najłatwiej znaleźć oferty.',
-    url: 'https://www.goldenline.pl/praca/finanse/?utm_source=adultly',
-    source: 'Goldenline · brak afiliacji'
+  logistyka: {
+    label: 'Logistyka / Transport',
+    keywords: { pracuj: 'logistyka spedycja', linkedin: 'logistyk junior', goldenline: 'logistyka' },
+    pracujCat: 'logistyka-dystrybucja-zakupy;cc,5009',
+    nofluff: 'logistics',
+    justjoin: '',
+    salaryRange: '4 500–9 000 zł',
   },
-];
+  handel: {
+    label: 'Handel / Sprzedaż',
+    keywords: { pracuj: 'sprzedaż handlowiec', linkedin: 'sales representative junior', goldenline: 'sprzedaż' },
+    pracujCat: 'sprzedaz;cc,5015',
+    nofluff: 'sales',
+    justjoin: '',
+    salaryRange: '4 500–10 000 zł',
+  },
+  prawo: {
+    label: 'Prawo / HR / Administracja',
+    keywords: { pracuj: 'prawo hr administracja', linkedin: 'junior HR specialist', goldenline: 'hr' },
+    pracujCat: 'prawo;cc,5013',
+    nofluff: 'hr',
+    justjoin: 'hr',
+    salaryRange: '4 000–9 000 zł',
+  },
+  inne: {
+    label: 'Inne branże',
+    keywords: { pracuj: '', linkedin: 'junior', goldenline: '' },
+    pracujCat: '',
+    nofluff: '',
+    justjoin: '',
+    salaryRange: '4 000–10 000 zł',
+  },
+};
+
+// Generuje dynamiczną listę kart na podstawie filtrów
+function buildJobSources(level, mode, cat) {
+  const cfg = INDUSTRY_CONFIG[cat] || INDUSTRY_CONFIG['inne'];
+  const isStudent = level === 'student';
+  const isRemote = mode === 'remote';
+  const isHybrid = mode === 'hybrid';
+  const city = profileCity || '';
+
+  // Buduje URL do Pracuj.pl
+  function pracujURL() {
+    const kw = encodeURIComponent(cfg.keywords.pracuj || '');
+    const catPath = cfg.pracujCat ? `/${cfg.pracujCat}` : '';
+    const loc = city ? `;wp,${encodeURIComponent(city)}` : '';
+    const type = isStudent ? '/staz;tt,7' : '';
+    return `https://www.pracuj.pl/praca/${kw}${catPath}${loc}${type}?utm_source=adultly`;
+  }
+
+  // Buduje URL do LinkedIn
+  function linkedinURL() {
+    const kw = encodeURIComponent(cfg.keywords.linkedin || 'junior');
+    const rem = isRemote ? '&f_WT=2' : isHybrid ? '&f_WT=3' : '';
+    return `https://www.linkedin.com/jobs/search/?keywords=${kw}&location=Polska${rem}&utm_source=adultly`;
+  }
+
+  // Buduje URL do NoFluffJobs
+  function nofluffURL() {
+    const path = cfg.nofluff ? cfg.nofluff : '';
+    const lvl = isStudent ? 'trainee' : level === 'mid' ? '' : 'junior';
+    const rem = isRemote ? '?criteria=remote' : '';
+    return path
+      ? `https://nofluffjobs.com/pl/${path}${lvl ? '-' + lvl : ''}${rem}?utm_source=adultly`
+      : `https://nofluffjobs.com/pl/${lvl}${rem}?utm_source=adultly`;
+  }
+
+  // Buduje URL do JustJoinIT
+  function justjoinURL() {
+    const spec = cfg.justjoin || '';
+    const rem = isRemote ? '&remote=yes' : '';
+    return spec
+      ? `https://justjoin.it/${spec}?orderBy=newest${rem}&utm_source=adultly`
+      : `https://justjoin.it/?orderBy=newest${rem}&utm_source=adultly`;
+  }
+
+  // Buduje URL do Goldenline
+  function goldenlineURL() {
+    const kw = cfg.keywords.goldenline || '';
+    const loc = city ? `${encodeURIComponent(city)}/` : '';
+    return `https://www.goldenline.pl/praca/${kw ? encodeURIComponent(kw) + '/' : ''}${loc}?utm_source=adultly`;
+  }
+
+  const sources = [];
+
+  // Pracuj.pl — zawsze jako pierwsza (największa baza)
+  sources.push({
+    logo: '🔎', title: `${cfg.label} — ${isStudent ? 'staże i praca' : level === 'mid' ? 'oferty mid-level' : 'oferty dla juniorów'}${city ? ' w ' + city : ' w Polsce'}`,
+    company: 'Pracuj.pl',
+    salary: cfg.salaryRange,
+    desc: 'Największa polska baza ofert pracy. Filtry po mieście, formie zatrudnienia i branży.',
+    url: pracujURL(),
+    source: 'Pracuj.pl · brak afiliacji',
+    tag_remote: false,
+  });
+
+  // LinkedIn
+  sources.push({
+    logo: '💼', title: `${cfg.label} — LinkedIn${isRemote ? ' · Zdalne' : ''}`,
+    company: 'LinkedIn Jobs',
+    salary: cfg.salaryRange,
+    desc: 'Rekruterzy aktywnie szukają kandydatów na LinkedIn. Warto mieć profil przed aplikowaniem.',
+    url: linkedinURL(),
+    source: 'LinkedIn · brak afiliacji',
+    tag_remote: isRemote,
+  });
+
+  // NoFluffJobs — IT i pokrewne
+  if (['it', 'marketing', 'finanse', 'prawo', 'alle'].includes(cat) || cat === 'all') {
+    sources.push({
+      logo: '🎯', title: `${cfg.label} — tylko oferty z widełkami`,
+      company: 'No Fluff Jobs',
+      salary: cfg.salaryRange,
+      desc: 'Zero ofert bez podanego wynagrodzenia. Jeśli twoja branża tu jest — zacznij od tego.',
+      url: nofluffURL(),
+      source: 'No Fluff Jobs · partner',
+      tag_remote: isRemote,
+    });
+  }
+
+  // JustJoinIT — IT, marketing, finanse, HR
+  if (['it', 'marketing', 'finanse', 'prawo', 'all'].includes(cat) && cfg.justjoin) {
+    sources.push({
+      logo: '💻', title: `${cfg.label} — Just Join IT`,
+      company: 'Just Join IT',
+      salary: cfg.salaryRange,
+      desc: 'Duży agregator rekrutacji białych kołnierzyków. Silny szczególnie w IT i marketingu.',
+      url: justjoinURL(),
+      source: 'Just Join IT · brak afiliacji',
+      tag_remote: isRemote,
+    });
+  }
+
+  // Goldenline — wszystkie branże, szczególnie nie-IT
+  sources.push({
+    logo: '📋', title: `${cfg.label} — Goldenline`,
+    company: 'Goldenline',
+    salary: cfg.salaryRange,
+    desc: `Dobra alternatywa szczególnie dla branż mniej reprezentowanych na platformach IT.`,
+    url: goldenlineURL(),
+    source: 'Goldenline · brak afiliacji',
+    tag_remote: false,
+  });
+
+  // Bulldogjob — jeśli IT lub student
+  if (cat === 'it' || cat === 'all' || isStudent) {
+    sources.push({
+      logo: '🐂', title: `Oferty juniorów — Bulldogjob`,
+      company: 'Bulldogjob',
+      salary: '5 000–12 000 zł',
+      desc: 'Specjalizuje się w juniorach i studentach. Czytelna baza z widocznymi stawkami.',
+      url: `https://bulldogjob.pl/companies/jobs?seniority=${isStudent ? 'trainee' : 'junior'}&utm_source=adultly`,
+      source: 'Bulldogjob · brak afiliacji',
+      tag_remote: false,
+    });
+  }
+
+  return sources;
+}
+
+const JOB_SOURCES = [];
 
 function setJobFilter(key, val, btn) {
   jobFilters[key] = val;
@@ -1056,19 +1207,15 @@ function setJobFilter(key, val, btn) {
 
 function renderJobs() {
   const { level, mode, cat } = jobFilters;
-  const filtered = JOB_SOURCES.filter(j =>
-    j.level.includes(level) &&
-    (j.mode.includes(mode) || mode === 'all') &&
-    (j.cat.includes(cat) || cat === 'all')
-  );
+  const sources = buildJobSources(level, mode, cat);
 
   const list = document.getElementById('jobs-list');
-  if (filtered.length === 0) {
+  if (sources.length === 0) {
     list.innerHTML = `<div class="no-jobs">Brak ofert dla wybranych filtrów — spróbuj zmienić kryteria.</div>`;
     return;
   }
 
-  list.innerHTML = filtered.map(j => `
+  list.innerHTML = sources.map(j => `
     <a class="job-card" href="${j.url}" target="_blank" rel="noopener">
       <div class="job-logo">${j.logo}</div>
       <div class="job-body">
@@ -1087,6 +1234,54 @@ function renderJobs() {
     </a>`).join('');
 }
 
+// Auto-select branży z profilu użytkownika
+function applyProfileIndustry() {
+  const industry = profile.industry || '';
+  if (!industry || industry === 'inne') return;
+
+  const btn = document.querySelector(`.toggle-btn[onclick*="setJobFilter('cat', '${industry}'"]`);
+  if (btn) {
+    btn.closest('.job-filter-row').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    jobFilters.cat = industry;
+
+    // Pokaż banner
+    const cfg = INDUSTRY_CONFIG[industry];
+    const banner = document.getElementById('industry-banner');
+    if (banner && cfg) {
+      document.getElementById('industry-banner-text').textContent = `🎯 Oferty dopasowane do twojej branży: ${cfg.label}`;
+      banner.style.display = 'flex';
+    }
+  }
+}
+
+function resetIndustryFilter() {
+  jobFilters.cat = 'all';
+  document.getElementById('industry-banner').style.display = 'none';
+  const row = document.querySelector('.toggle-btn[onclick*="setJobFilter(\'cat\'"]').closest('.job-filter-row');
+  row.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  row.querySelector('.toggle-btn').classList.add('active'); // "Wszystkie"
+  renderJobs();
+}
+
+// Auto-select poziomu z profilu (status)
+function applyProfileLevel() {
+  const status = profile.status || '';
+  const employment = profile.employment || '';
+  let level = 'junior';
+  if (status === 'student' || employment === 'staz') level = 'student';
+  else if (status === 'pracuje') level = 'mid';
+
+  const btn = document.querySelector(`.toggle-btn[onclick*="setJobFilter('level', '${level}'"]`);
+  if (btn) {
+    btn.closest('.job-filter-row').querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    jobFilters.level = level;
+  }
+}
+
+applyProfileIndustry();
+applyProfileLevel();
 renderJobs();
 
 // ═══════════════════════════════════════
@@ -1188,20 +1383,4 @@ function renderInterview() {
             const done = interviewChecked.has(item.id);
             return `
               <div class="phase-item ${done ? 'done' : ''}" onclick="toggleInterviewItem('${item.id}')">
-                <div class="phase-chk">${done ? '✓' : ''}</div>
-                <div class="phase-item-body">
-                  <div class="phase-item-title">${item.title}</div>
-                  <div class="phase-item-desc">${item.desc}</div>
-                </div>
-              </div>`;
-          }).join('')}
-        </div>
-      </div>`;
-  }).join('');
-}
-
-renderInterview();
-</script>
-
-</body>
-</html>
+                <div class="phase-chk">${done ? '✓' : 
