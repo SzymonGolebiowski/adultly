@@ -1,0 +1,1207 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Praca i Kariera</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --red: #d93025;
+  --red-light: #fde8e6;
+  --yellow: #b45309;
+  --yellow-light: #fef3c7;
+  --blue: #1d4ed8;
+  --blue-light: #eff6ff;
+  --purple: #7c3aed;
+  --purple-light: #f5f3ff;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+
+html, body { height: 100%; }
+body { font-family: var(--sans); background: var(--gray-1); color: var(--black); -webkit-font-smoothing: antialiased; }
+
+/* ═══ LAYOUT ═══ */
+.layout { display: flex; min-height: 100vh; }
+.sidebar {
+  width: 260px; background: var(--white); border-right: 1px solid var(--gray-2);
+  padding: 32px 20px; position: sticky; top: 0; height: 100vh;
+  overflow-y: auto; flex-shrink: 0;
+}
+.logo { font-family: var(--serif); font-size: 24px; color: var(--black); text-decoration: none; display: block; margin-bottom: 40px; }
+.nav-section { font-size: 10px; font-weight: 700; color: var(--gray-3); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 8px; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--gray-4);
+  cursor: pointer; transition: all 0.15s; margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); }
+.sidebar-user {
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 12px; background: var(--gray-1);
+}
+.user-avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--accent); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.user-name { font-size: 13px; font-weight: 500; }
+.user-status { font-size: 11px; color: var(--gray-3); }
+
+.main { flex: 1; padding: 40px; overflow-y: auto; }
+
+/* ═══ PAGE HEADER ═══ */
+.page-header { margin-bottom: 32px; }
+.page-eyebrow { font-size: 13px; color: var(--gray-3); margin-bottom: 6px; }
+.page-title { font-family: var(--serif); font-size: 32px; line-height: 1.2; }
+.page-title em { font-style: italic; color: var(--accent); }
+
+/* ═══ MODULE TABS ═══ */
+.mod-nav {
+  display: flex; gap: 6px; margin-bottom: 28px;
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 14px; padding: 6px; flex-wrap: wrap;
+}
+.mod-btn {
+  flex: 1; min-width: 100px; padding: 10px 8px; border-radius: 10px;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  color: var(--gray-4); cursor: pointer; border: none;
+  background: transparent; transition: all 0.15s;
+  display: flex; align-items: center; justify-content: center;
+  gap: 6px; text-align: center; line-height: 1.3;
+}
+.mod-btn:hover { background: var(--gray-1); color: var(--black); }
+.mod-btn.active { background: var(--black); color: white; box-shadow: 0 2px 8px rgba(0,0,0,0.15); }
+
+.mod-panel { display: none; animation: fadeUp 0.25s ease both; }
+.mod-panel.active { display: block; }
+@keyframes fadeUp { from { opacity:0; transform:translateY(6px); } to { opacity:1; transform:translateY(0); } }
+
+/* ═══ CARDS ═══ */
+.card { background: var(--white); border: 1px solid var(--gray-2); border-radius: 20px; padding: 28px; }
+.card + .card { margin-top: 16px; }
+.card-dark { background: var(--black); border-radius: 20px; padding: 28px; color: white; position: relative; overflow: hidden; }
+.card-dark::after { content:''; position:absolute; bottom:-40px; right:-40px; width:160px; height:160px; background:rgba(45,154,104,0.1); border-radius:50%; }
+.card-label { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 16px; }
+.card-label-w { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 16px; }
+.two-col { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.three-col { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+
+/* ═══ FORM ═══ */
+.field { margin-bottom: 14px; }
+.field label { display: block; font-size: 12px; font-weight: 500; color: var(--gray-4); margin-bottom: 6px; }
+.field input, .field select, .field textarea {
+  width: 100%; font-family: var(--sans); font-size: 14px;
+  padding: 10px 14px; border: 1px solid var(--gray-2);
+  border-radius: 11px; background: var(--gray-1); color: var(--black);
+  transition: border-color 0.15s; appearance: none;
+}
+.field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--accent); background: var(--white); }
+.toggle-group { display: flex; gap: 6px; flex-wrap: wrap; }
+.toggle-btn {
+  padding: 7px 14px; border-radius: 99px; font-family: var(--sans);
+  font-size: 13px; font-weight: 500; cursor: pointer;
+  border: 1px solid var(--gray-2); background: var(--gray-1); color: var(--gray-4);
+  transition: all 0.15s;
+}
+.toggle-btn:hover { border-color: var(--accent-mid); color: var(--black); }
+.toggle-btn.active { background: var(--accent); border-color: var(--accent); color: white; }
+.btn-primary {
+  width: 100%; padding: 13px; border-radius: 12px; background: var(--black); color: white;
+  font-family: var(--sans); font-size: 14px; font-weight: 600;
+  border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; margin-top: 4px;
+}
+.btn-primary:hover { background: var(--accent); transform: translateY(-1px); }
+
+/* ═══ PANEL 1 — CV ═══ */
+.cv-entry-card {
+  background: var(--white); border: 1px solid var(--gray-2); border-radius: 16px;
+  padding: 20px 24px; display: flex; align-items: center; gap: 16px;
+  text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.cv-entry-card:hover { border-color: var(--accent-mid); box-shadow: 0 4px 20px rgba(45,154,104,0.1); transform: translateY(-1px); }
+.cv-entry-icon { font-size: 32px; flex-shrink: 0; width: 56px; height: 56px; background: var(--gray-1); border-radius: 14px; display: flex; align-items: center; justify-content: center; border: 1px solid var(--gray-2); }
+.cv-entry-body { flex: 1; }
+.cv-entry-title { font-size: 16px; font-weight: 700; margin-bottom: 4px; }
+.cv-entry-desc { font-size: 13px; color: var(--gray-4); line-height: 1.5; }
+.cv-entry-arrow { font-size: 20px; color: var(--gray-3); flex-shrink: 0; }
+
+.cv-tips { display: flex; flex-direction: column; gap: 10px; margin-top: 4px; }
+.cv-tip {
+  display: flex; gap: 12px; align-items: flex-start;
+  padding: 12px 14px; background: var(--gray-1); border-radius: 12px;
+  border: 1px solid var(--gray-2);
+}
+.cv-tip-icon { font-size: 18px; flex-shrink: 0; }
+.cv-tip-body {}
+.cv-tip-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.cv-tip-desc { font-size: 12px; color: var(--gray-4); line-height: 1.4; }
+
+/* ═══ PANEL 2 — TRACKER ═══ */
+.tracker-add {
+  display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap;
+}
+.tracker-add input, .tracker-add select {
+  font-family: var(--sans); font-size: 13px; padding: 9px 13px;
+  border: 1px solid var(--gray-2); border-radius: 10px;
+  background: var(--gray-1); color: var(--black); flex: 1; min-width: 120px;
+}
+.tracker-add input:focus, .tracker-add select:focus { outline: none; border-color: var(--accent); }
+.tracker-add-btn {
+  padding: 9px 18px; background: var(--black); color: white;
+  font-family: var(--sans); font-size: 13px; font-weight: 600;
+  border: none; border-radius: 10px; cursor: pointer; white-space: nowrap;
+  transition: background 0.15s;
+}
+.tracker-add-btn:hover { background: var(--accent); }
+
+.tracker-filters { display: flex; gap: 6px; margin-bottom: 16px; flex-wrap: wrap; }
+.filter-btn {
+  padding: 5px 12px; border-radius: 99px; font-size: 12px; font-weight: 500;
+  cursor: pointer; border: 1px solid var(--gray-2); background: var(--gray-1);
+  color: var(--gray-4); transition: all 0.15s;
+}
+.filter-btn.active { background: var(--black); color: white; border-color: var(--black); }
+
+.tracker-list { display: flex; flex-direction: column; gap: 8px; }
+.tracker-item {
+  background: var(--white); border: 1px solid var(--gray-2); border-radius: 14px;
+  padding: 14px 18px; display: flex; align-items: center; gap: 14px;
+  transition: border-color 0.15s; animation: fadeUp 0.2s ease both;
+}
+.tracker-item:hover { border-color: var(--gray-3); }
+.tracker-item-left { flex: 1; min-width: 0; }
+.tracker-company { font-size: 14px; font-weight: 700; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tracker-role { font-size: 12px; color: var(--gray-4); margin-bottom: 6px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.tracker-meta { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.tracker-date { font-size: 11px; color: var(--gray-3); }
+.status-badge {
+  font-size: 11px; font-weight: 700; padding: 3px 9px; border-radius: 99px;
+}
+.status-badge.wyslane { background: var(--blue-light); color: var(--blue); }
+.status-badge.rozmowa { background: var(--yellow-light); color: var(--yellow); }
+.status-badge.oferta { background: var(--accent-light); color: var(--accent); }
+.status-badge.odrzucone { background: var(--red-light); color: var(--red); }
+.status-badge.brak-odpowiedzi { background: var(--gray-1); color: var(--gray-4); border: 1px solid var(--gray-2); }
+
+.tracker-item-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+.status-select {
+  font-family: var(--sans); font-size: 12px; padding: 5px 10px;
+  border: 1px solid var(--gray-2); border-radius: 8px;
+  background: var(--gray-1); color: var(--black); cursor: pointer;
+  appearance: none;
+}
+.tracker-delete {
+  width: 28px; height: 28px; border-radius: 8px; border: none;
+  background: var(--gray-1); color: var(--gray-4); cursor: pointer;
+  font-size: 14px; display: flex; align-items: center; justify-content: center;
+  transition: all 0.15s;
+}
+.tracker-delete:hover { background: var(--red-light); color: var(--red); }
+
+.tracker-empty {
+  text-align: center; padding: 40px 24px; color: var(--gray-3);
+  font-size: 14px;
+}
+.tracker-empty-icon { font-size: 32px; margin-bottom: 10px; }
+
+.tracker-stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-box { background: var(--white); border: 1px solid var(--gray-2); border-radius: 12px; padding: 14px; text-align: center; }
+.stat-box-val { font-family: var(--serif); font-size: 24px; margin-bottom: 4px; }
+.stat-box-lbl { font-size: 11px; color: var(--gray-3); }
+
+/* ═══ PANEL 3 — KALKULATOR STAWKI ═══ */
+.salary-result { margin-top: 20px; animation: fadeUp 0.3s ease both; }
+.result-big { font-family: var(--serif); font-size: 52px; line-height: 1; color: white; margin-bottom: 4px; }
+.result-sub { font-size: 13px; color: rgba(255,255,255,0.5); margin-bottom: 20px; }
+.result-breakdown { display: flex; flex-direction: column; gap: 0; }
+.rb-row { display: flex; justify-content: space-between; padding: 9px 0; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 13px; }
+.rb-row:last-child { border: none; }
+.rb-row.total { border-top: 1px solid rgba(255,255,255,0.15); border-bottom: none; padding-top: 12px; margin-top: 4px; }
+.rb-label { color: rgba(255,255,255,0.5); }
+.rb-value { font-weight: 600; color: white; }
+.rb-value.plus { color: #6ee7b7; }
+
+.negocjacja-tips { margin-top: 16px; display: flex; flex-direction: column; gap: 8px; }
+.neg-tip { display: flex; gap: 10px; align-items: flex-start; padding: 12px 14px; background: var(--gray-1); border-radius: 11px; border: 1px solid var(--gray-2); }
+.neg-tip-icon { font-size: 18px; flex-shrink: 0; }
+.neg-tip-text { font-size: 13px; line-height: 1.5; color: var(--black); }
+.neg-tip-text strong { color: var(--accent); }
+
+/* ═══ PANEL 4 — OFERTY ═══ */
+.job-filters { margin-bottom: 20px; }
+.job-filter-row { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+.job-filter-label { font-size: 12px; color: var(--gray-4); font-weight: 500; margin-bottom: 6px; }
+
+.job-card {
+  background: var(--white); border: 1px solid var(--gray-2); border-radius: 16px;
+  padding: 20px; margin-bottom: 10px; display: flex; align-items: flex-start;
+  gap: 16px; text-decoration: none; color: inherit;
+  transition: border-color 0.15s, box-shadow 0.15s, transform 0.15s;
+}
+.job-card:hover { border-color: var(--accent-mid); box-shadow: 0 4px 16px rgba(45,154,104,0.1); transform: translateY(-1px); }
+.job-logo { width: 48px; height: 48px; border-radius: 12px; background: var(--gray-1); border: 1px solid var(--gray-2); display: flex; align-items: center; justify-content: center; font-size: 22px; flex-shrink: 0; }
+.job-body { flex: 1; }
+.job-title { font-size: 15px; font-weight: 700; margin-bottom: 3px; }
+.job-company { font-size: 13px; color: var(--gray-4); margin-bottom: 8px; }
+.job-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+.job-tag { font-size: 11px; padding: 3px 9px; border-radius: 99px; background: var(--gray-1); border: 1px solid var(--gray-2); color: var(--gray-4); }
+.job-tag.salary { background: var(--accent-light); color: var(--accent); border-color: rgba(45,154,104,0.2); font-weight: 600; }
+.job-tag.remote { background: var(--blue-light); color: var(--blue); border-color: rgba(29,78,216,0.15); }
+.job-cta { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.job-cta-btn { background: var(--black); color: white; font-size: 12px; font-weight: 600; padding: 7px 14px; border-radius: 99px; white-space: nowrap; }
+.job-source { font-size: 10px; color: var(--gray-3); }
+
+.no-jobs { text-align: center; padding: 40px; color: var(--gray-3); font-size: 14px; }
+
+/* ═══ PANEL 5 — CHECKLIST ═══ */
+.interview-phases { display: flex; flex-direction: column; gap: 16px; }
+.phase { background: var(--white); border: 1px solid var(--gray-2); border-radius: 16px; overflow: hidden; }
+.phase-header {
+  display: flex; align-items: center; gap: 12px; padding: 16px 20px;
+  cursor: pointer; user-select: none; transition: background 0.15s;
+}
+.phase-header:hover { background: var(--gray-1); }
+.phase-icon { font-size: 22px; }
+.phase-title { font-size: 15px; font-weight: 700; flex: 1; }
+.phase-progress { font-size: 12px; color: var(--gray-3); }
+.phase-progress.done { color: var(--accent); font-weight: 600; }
+.phase-chevron { font-size: 14px; color: var(--gray-3); transition: transform 0.2s; }
+.phase.collapsed .phase-chevron { transform: rotate(-90deg); }
+.phase.collapsed .phase-items { display: none; }
+
+.phase-items { border-top: 1px solid var(--gray-2); }
+.phase-item {
+  display: flex; align-items: flex-start; gap: 12px; padding: 13px 20px;
+  border-bottom: 1px solid var(--gray-2); cursor: pointer; transition: background 0.1s;
+}
+.phase-item:last-child { border-bottom: none; }
+.phase-item:hover { background: var(--gray-1); }
+.phase-item.done { background: var(--accent-light); }
+.phase-chk {
+  width: 20px; height: 20px; border-radius: 5px; border: 2px solid var(--gray-2);
+  flex-shrink: 0; display: flex; align-items: center; justify-content: center;
+  font-size: 11px; margin-top: 1px; transition: all 0.15s; background: var(--white);
+}
+.phase-item.done .phase-chk { background: var(--accent); border-color: var(--accent); color: white; }
+.phase-item-body { flex: 1; }
+.phase-item-title { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+.phase-item.done .phase-item-title { text-decoration: line-through; color: var(--gray-4); }
+.phase-item-desc { font-size: 12px; color: var(--gray-4); line-height: 1.4; }
+.phase-item.done .phase-item-desc { display: none; }
+
+.interview-reset {
+  font-size: 12px; color: var(--gray-3); text-decoration: underline;
+  cursor: pointer; margin-top: 12px; display: inline-block;
+}
+.interview-reset:hover { color: var(--red); }
+
+/* ═══ REKOMENDACJE ═══ */
+.rec-group { margin-top: 16px; animation: fadeUp 0.3s ease both; }
+.rec-group-label { font-size: 10px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 8px; }
+.rec-card {
+  display: flex; align-items: flex-start; gap: 14px;
+  background: linear-gradient(135deg, var(--accent-light) 0%, rgba(232,245,238,0.4) 100%);
+  border: 1px solid rgba(45,154,104,0.2); border-radius: 14px;
+  padding: 16px 18px; margin-bottom: 8px; text-decoration: none; color: inherit;
+  transition: border-color 0.15s, transform 0.15s;
+}
+.rec-card:hover { border-color: var(--accent-mid); transform: translateY(-1px); }
+.rec-icon { width: 40px; height: 40px; background: white; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 20px; flex-shrink: 0; border: 1px solid rgba(45,154,104,0.12); }
+.rec-body { flex: 1; }
+.rec-trigger { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); margin-bottom: 3px; }
+.rec-title { font-size: 13px; font-weight: 600; color: var(--black); margin-bottom: 3px; }
+.rec-desc { font-size: 12px; color: var(--gray-4); line-height: 1.4; }
+.rec-partner { font-size: 10px; color: var(--gray-3); margin-top: 3px; }
+.rec-badge { flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 4px; }
+.rec-pill { background: var(--accent); color: white; font-size: 11px; font-weight: 700; padding: 4px 10px; border-radius: 99px; white-space: nowrap; }
+.rec-arrow { font-size: 14px; color: var(--accent-mid); }
+
+/* ═══ MOBILE ═══ */
+.mobile-nav { display: none; position: fixed; bottom: 0; left: 0; right: 0; background: var(--white); border-top: 1px solid var(--gray-2); padding: 8px 16px 20px; z-index: 100; justify-content: space-around; }
+.mobile-nav-item { display: flex; flex-direction: column; align-items: center; gap: 3px; font-size: 10px; color: var(--gray-4); cursor: pointer; padding: 6px 12px; border-radius: 10px; }
+.mobile-nav-item.active { color: var(--accent); }
+.mobile-nav-icon { font-size: 20px; }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .main { padding: 24px 16px 90px; }
+  .two-col { grid-template-columns: 1fr; }
+  .three-col { grid-template-columns: 1fr; }
+  .tracker-stats { grid-template-columns: repeat(2, 1fr); }
+}
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <a href="adultly-dashboard.html" class="logo">adultly.</a>
+  <div class="nav-section">Główne</div>
+  <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+  <div class="nav-section">Narzędzia</div>
+  <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
+  <a href="adultly-praca.html" class="nav-item active">💼 Praca i CV</a>
+  <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+  <a href="adultly-dashboard.html" class="nav-item">📋 Dokumenty</a>
+  <a href="adultly-formalnosci.html" class="nav-item">✅ Formalności</a>
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebar-avatar">?</div>
+    <div>
+      <div class="user-name" id="sidebar-name">Ładowanie...</div>
+      <div class="user-status" id="sidebar-status">—</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+
+  <div class="page-header">
+    <div class="page-eyebrow">Kariera</div>
+    <div class="page-title">Praca i <em>CV</em></div>
+  </div>
+
+  <!-- MODULE TABS -->
+  <div class="mod-nav">
+    <button class="mod-btn active" onclick="switchMod('cv', this)">📄 CV</button>
+    <button class="mod-btn" onclick="switchMod('tracker', this)">📊 Tracker aplikacji</button>
+    <button class="mod-btn" onclick="switchMod('stawka', this)">💵 Kalkulator stawki</button>
+    <button class="mod-btn" onclick="switchMod('oferty', this)">🎯 Oferty pracy</button>
+    <button class="mod-btn" onclick="switchMod('checklist', this)">✅ Przed rozmową</button>
+  </div>
+
+  <!-- ══════════════════════════════════
+       PANEL 1 — CV
+  ══════════════════════════════════ -->
+  <div class="mod-panel active" id="panel-cv">
+
+    <!-- Wejście do generatora -->
+    <a href="adultly-cv-generator.html" class="cv-entry-card" style="margin-bottom:16px; display:flex;">
+      <div class="cv-entry-icon">📄</div>
+      <div class="cv-entry-body">
+        <div class="cv-entry-title">Generator CV z AI</div>
+        <div class="cv-entry-desc">Wypełnij formularz, live-podgląd CV, pobierz jako PDF. Sugestie AI do opisu doświadczenia i umiejętności — wkrótce w pełni aktywne.</div>
+      </div>
+      <div class="cv-entry-arrow">›</div>
+    </a>
+
+    <!-- Porady CV -->
+    <div class="card">
+      <div class="card-label">JAK ZROBIĆ CV KTÓRE DZIAŁA — 7 ZASAD</div>
+      <div class="cv-tips">
+        <div class="cv-tip">
+          <div class="cv-tip-icon">🎯</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">Jedna strona — zawsze</div>
+            <div class="cv-tip-desc">Rekruter patrzy na CV średnio 7 sekund. Dwie strony to dwa razy mniejsza szansa że przeczyta cokolwiek ważnego. Skróć bezlitośnie.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">📊</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">Liczby zamiast słów</div>
+            <div class="cv-tip-desc">"Zwiększyłem sprzedaż" → "Zwiększyłem sprzedaż o 23% w Q3 2024". "Zarządzałem zespołem" → "Zarządzałem 4-osobowym zespołem". Liczby przykuwają wzrok i budują wiarygodność.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">🤖</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">ATS — systemy które czytają CV zamiast rekrutera</div>
+            <div class="cv-tip-desc">Większość dużych firm filtruje CV automatycznie. Używaj słów kluczowych z ogłoszenia, unikaj tabel i grafik. Prosty format = wyższy wynik ATS.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">✉️</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">Adres e-mail jak dorosły</div>
+            <div class="cv-tip-desc">kiciapysia@wp.pl to żart. imie.nazwisko@gmail.com lub skrót inicjałów — to standard. Rekruterzy naprawdę to zauważają.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">🔗</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">LinkedIn spójny z CV</div>
+            <div class="cv-tip-desc">60% rekruterów sprawdza LinkedIn przed zaproszeniem. Daty, stanowiska i opis muszą się zgadzać. Rozbieżności budzą wątpliwości.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">📝</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">Dopasuj CV do każdej oferty</div>
+            <div class="cv-tip-desc">Jedno CV "do wszystkich" działa gorzej niż CV dostosowane do konkretnej oferty. Zmień 2-3 punkty w podsumowaniu i kolejność umiejętności — wystarczy.</div>
+          </div>
+        </div>
+        <div class="cv-tip">
+          <div class="cv-tip-icon">🚫</div>
+          <div class="cv-tip-body">
+            <div class="cv-tip-title">Czego NIE pisać</div>
+            <div class="cv-tip-desc">Wiek i PESEL (nie wymagane), zdjęcie (opcjonalne, może powodować bias), "hobby: muzyka i podróże" (ogólniki), referencje "dostępne na życzenie" (oczywiste).</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Rec: oferty pracy -->
+    <div class="rec-group">
+      <div class="rec-group-label">Adultly poleca — po CV czas na aplikowanie</div>
+      <a class="rec-card" href="https://nofluffjobs.com/pl/junior?utm_source=adultly" target="_blank" rel="noopener sponsored">
+        <div class="rec-icon">🎯</div>
+        <div class="rec-body">
+          <div class="rec-trigger" id="cv-rec-trigger">Oferty dla juniorów i absolwentów</div>
+          <div class="rec-title">No Fluff Jobs — widełki płacowe w każdej ofercie</div>
+          <div class="rec-desc">Filtruj po poziomie (junior, mid), formie (UoP, B2B) i lokalizacji. Zero ofert bez podanego wynagrodzenia.</div>
+          <div class="rec-partner">Partner: No Fluff Jobs · Oferta partnerska</div>
+        </div>
+        <div class="rec-badge"><span class="rec-pill">Przeglądaj →</span><span class="rec-arrow">›</span></div>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PANEL 2 — TRACKER APLIKACJI
+  ══════════════════════════════════ -->
+  <div class="mod-panel" id="panel-tracker">
+
+    <!-- Statystyki -->
+    <div class="tracker-stats" id="tracker-stats">
+      <div class="stat-box"><div class="stat-box-val" id="stat-total">0</div><div class="stat-box-lbl">Aplikacji</div></div>
+      <div class="stat-box"><div class="stat-box-val" id="stat-rozmowa">0</div><div class="stat-box-lbl">Rozmów</div></div>
+      <div class="stat-box"><div class="stat-box-val" id="stat-oferta">0</div><div class="stat-box-lbl">Ofert</div></div>
+      <div class="stat-box"><div class="stat-box-val" id="stat-conv">—</div><div class="stat-box-lbl">Konwersja</div></div>
+    </div>
+
+    <!-- Formularz dodawania -->
+    <div class="card" style="margin-bottom:16px;">
+      <div class="card-label">DODAJ APLIKACJĘ</div>
+      <div class="tracker-add">
+        <input type="text" id="tr-company" placeholder="Firma (np. Google)">
+        <input type="text" id="tr-role" placeholder="Stanowisko (np. Junior Developer)">
+        <input type="date" id="tr-date">
+        <select id="tr-status">
+          <option value="wyslane">📤 Wysłane</option>
+          <option value="rozmowa">🗣️ Rozmowa</option>
+          <option value="oferta">🎉 Oferta!</option>
+          <option value="odrzucone">❌ Odrzucone</option>
+          <option value="brak-odpowiedzi">⏳ Brak odpowiedzi</option>
+        </select>
+        <button class="tracker-add-btn" onclick="addApplication()">+ Dodaj</button>
+      </div>
+    </div>
+
+    <!-- Filtry -->
+    <div class="tracker-filters">
+      <button class="filter-btn active" onclick="filterApps('all', this)">Wszystkie</button>
+      <button class="filter-btn" onclick="filterApps('wyslane', this)">📤 Wysłane</button>
+      <button class="filter-btn" onclick="filterApps('rozmowa', this)">🗣️ Rozmowy</button>
+      <button class="filter-btn" onclick="filterApps('oferta', this)">🎉 Oferty</button>
+      <button class="filter-btn" onclick="filterApps('odrzucone', this)">❌ Odrzucone</button>
+      <button class="filter-btn" onclick="filterApps('brak-odpowiedzi', this)">⏳ Bez odpowiedzi</button>
+    </div>
+
+    <!-- Lista -->
+    <div class="tracker-list" id="tracker-list"></div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PANEL 3 — KALKULATOR STAWKI
+  ══════════════════════════════════ -->
+  <div class="mod-panel" id="panel-stawka">
+    <div class="two-col">
+
+      <!-- INPUT -->
+      <div class="card">
+        <div class="card-label">TWOJA SYTUACJA</div>
+
+        <div class="field">
+          <label>Forma zatrudnienia</label>
+          <div class="toggle-group" id="sal-forma-group">
+            <button class="toggle-btn active" onclick="setSalForma('uop', this)">UoP</button>
+            <button class="toggle-btn" onclick="setSalForma('b2b', this)">B2B</button>
+            <button class="toggle-btn" onclick="setSalForma('zlecenie', this)">Zlecenie</button>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px;">
+          <label>Aktualne wynagrodzenie brutto (zł/mc) lub oczekiwane</label>
+          <input type="number" id="sal-current" placeholder="np. 7000" oninput="calcSalary()">
+        </div>
+
+        <div class="field">
+          <label>Branża / stanowisko</label>
+          <select id="sal-industry" onchange="calcSalary()">
+            <option value="">Wybierz branżę</option>
+            <option value="it_junior">IT — Junior (0–2 lata)</option>
+            <option value="it_mid">IT — Mid (2–5 lat)</option>
+            <option value="it_senior">IT — Senior (5+ lat)</option>
+            <option value="marketing">Marketing / Social Media</option>
+            <option value="finanse">Finanse / Rachunkowość</option>
+            <option value="sprzedaz">Sprzedaż / Account Manager</option>
+            <option value="hr">HR / Rekrutacja</option>
+            <option value="prawo">Prawo / Compliance</option>
+            <option value="inzynieria">Inżynieria / Produkcja</option>
+            <option value="inne">Inne</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Lata doświadczenia</label>
+          <div class="toggle-group" id="sal-exp-group">
+            <button class="toggle-btn active" onclick="setSalState('exp', 0, this)">0–1</button>
+            <button class="toggle-btn" onclick="setSalState('exp', 2, this)">2–3</button>
+            <button class="toggle-btn" onclick="setSalState('exp', 4, this)">4–6</button>
+            <button class="toggle-btn" onclick="setSalState('exp', 7, this)">7+</button>
+          </div>
+        </div>
+
+        <div class="field" style="margin-top:14px;">
+          <label>Miasto</label>
+          <div class="toggle-group" id="sal-city-group">
+            <button class="toggle-btn active" onclick="setSalState('city', 'warszawa', this)">Warszawa</button>
+            <button class="toggle-btn" onclick="setSalState('city', 'krakow', this)">Kraków</button>
+            <button class="toggle-btn" onclick="setSalState('city', 'trojmiasto', this)">Trójmiasto</button>
+            <button class="toggle-btn" onclick="setSalState('city', 'inne', this)">Inne</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- WYNIK -->
+      <div>
+        <div class="card-dark" id="salary-result-card" style="margin-bottom:16px;">
+          <div class="card-label-w">ANALIZA WYNAGRODZENIA</div>
+          <div class="result-big" id="sal-netto">—</div>
+          <div class="result-sub" id="sal-netto-sub">Uzupełnij dane po lewej</div>
+          <div class="result-breakdown" id="sal-breakdown"></div>
+        </div>
+
+        <!-- Widełki rynkowe -->
+        <div class="card" id="sal-market-card" style="display:none;">
+          <div class="card-label">WIDEŁKI RYNKOWE — TWOJA BRANŻA</div>
+          <div id="sal-market-content"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Porady negocjacyjne -->
+    <div class="card" style="margin-top:16px;">
+      <div class="card-label">JAK NEGOCJOWAĆ WYNAGRODZENIE</div>
+      <div class="negocjacja-tips">
+        <div class="neg-tip">
+          <div class="neg-tip-icon">🎯</div>
+          <div class="neg-tip-text"><strong>Zacznij od górnej granicy widełek, nie środka.</strong> Jeśli chcesz 8 000 zł — powiedz 9 000–9 500 zł. Negocjacje idą w dół, rzadko w górę. Daj sobie przestrzeń do ustępstw.</div>
+        </div>
+        <div class="neg-tip">
+          <div class="neg-tip-icon">📊</div>
+          <div class="neg-tip-text"><strong>Miej dane zanim zasiądziesz do rozmowy.</strong> No Fluff Jobs, Bulldogjob, LinkedIn Salary — sprawdź widełki dla swojego stanowiska w swoim mieście. "Rynek płaci X" to silniejszy argument niż "chciałbym X".</div>
+        </div>
+        <div class="neg-tip">
+          <div class="neg-tip-icon">⏸️</div>
+          <div class="neg-tip-text"><strong>Cisza to narzędzie.</strong> Po podaniu swojej liczby — zamknij się. Pierwszy kto mówi, ustępuje. Daj rekruterowi czas na reakcję bez ratowania go z ciszy.</div>
+        </div>
+        <div class="neg-tip">
+          <div class="neg-tip-icon">📦</div>
+          <div class="neg-tip-text"><strong>Negocjuj cały pakiet, nie tylko podstawę.</strong> Premia, home office, budżet szkoleniowy, laptop, telefon, prywatna opieka medyczna, akcje/opcje — to wszystko ma wartość pieniężną.</div>
+        </div>
+        <div class="neg-tip">
+          <div class="neg-tip-icon">💼</div>
+          <div class="neg-tip-text"><strong>Na B2B pytaj o stawkę godzinową lub dzienną, nie miesięczną.</strong> Łatwiej porównać i negocjować. Pamiętaj: twoja stawka B2B musi pokryć ZUS, urlop, chorobowe i "przestoje" między projektami.</div>
+        </div>
+        <div class="neg-tip">
+          <div class="neg-tip-icon">🚫</div>
+          <div class="neg-tip-text"><strong>Nigdy nie podawaj aktualnego wynagrodzenia jako punktu startowego.</strong> To nie twój obowiązek. Jeśli musisz — podaj oczekiwania, nie historię: "Szukam ofert w przedziale X–Y".</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PANEL 4 — OFERTY PRACY
+  ══════════════════════════════════ -->
+  <div class="mod-panel" id="panel-oferty">
+
+    <div class="card job-filters">
+      <div class="card-label">DOPASUJ OFERTY DO SIEBIE</div>
+      <div class="field">
+        <label>Poziom doświadczenia</label>
+        <div class="job-filter-row">
+          <button class="toggle-btn active" onclick="setJobFilter('level', 'junior', this)">Junior / Absolwent</button>
+          <button class="toggle-btn" onclick="setJobFilter('level', 'mid', this)">Mid</button>
+          <button class="toggle-btn" onclick="setJobFilter('level', 'student', this)">Student / Staż</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Forma pracy</label>
+        <div class="job-filter-row">
+          <button class="toggle-btn active" onclick="setJobFilter('mode', 'all', this)">Wszystkie</button>
+          <button class="toggle-btn" onclick="setJobFilter('mode', 'remote', this)">Zdalnie</button>
+          <button class="toggle-btn" onclick="setJobFilter('mode', 'hybrid', this)">Hybrydowo</button>
+          <button class="toggle-btn" onclick="setJobFilter('mode', 'office', this)">Stacjonarnie</button>
+        </div>
+      </div>
+      <div class="field">
+        <label>Branża</label>
+        <div class="job-filter-row" style="flex-wrap:wrap;">
+          <button class="toggle-btn active" onclick="setJobFilter('cat', 'all', this)">Wszystkie</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'it', this)">IT / Tech</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'marketing', this)">Marketing</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'finanse', this)">Finanse</button>
+          <button class="toggle-btn" onclick="setJobFilter('cat', 'inne', this)">Inne</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="jobs-list"></div>
+
+  </div>
+
+  <!-- ══════════════════════════════════
+       PANEL 5 — CHECKLIST PRZED ROZMOWĄ
+  ══════════════════════════════════ -->
+  <div class="mod-panel" id="panel-checklist">
+
+    <div style="margin-bottom:20px;">
+      <div style="font-size:13px; color:var(--gray-4); line-height:1.6;">
+        Zaznacz co już zrobiłeś/aś przed rozmową rekrutacyjną. Postęp jest zapisywany — możesz reset zrobić dla każdej nowej rekrutacji.
+      </div>
+    </div>
+
+    <div class="interview-phases" id="interview-phases"></div>
+    <span class="interview-reset" onclick="resetInterview()">↺ Zacznij od nowa (nowa rekrutacja)</span>
+
+  </div>
+
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'"><div class="mobile-nav-icon">⊞</div>Dashboard</div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'"><div class="mobile-nav-icon">💰</div>Finanse</div>
+  <div class="mobile-nav-item active"><div class="mobile-nav-icon">💼</div>Praca</div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-formalnosci.html'"><div class="mobile-nav-icon">✅</div>Formalności</div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'"><div class="mobile-nav-icon">📋</div>Dokumenty</div>
+</div>
+
+<script>
+'use strict';
+
+// ═══════════════════════════════════════
+// PROFIL
+// ═══════════════════════════════════════
+let profile = {};
+try { profile = JSON.parse(localStorage.getItem('adultly_profile') || '{}'); } catch(e) {}
+
+const profileName   = profile.name || 'Użytkownik';
+const profileStatus = profile.status || '';
+const profileCity   = (profile.city || '').toLowerCase();
+const profileEmp    = profile.employment || '';
+const profileIncome = parseInt(profile.income) || 0;
+
+document.getElementById('sidebar-avatar').textContent = profileName.charAt(0).toUpperCase();
+document.getElementById('sidebar-name').textContent = profileName;
+document.getElementById('sidebar-status').textContent =
+  ({student:'Student', absolwent:'Świeży absolwent', pracuje:'Pracownik'})[profileStatus] || 'Użytkownik';
+
+// Prefill CV rec trigger z miastem
+if (profileCity) {
+  const t = document.getElementById('cv-rec-trigger');
+  if (t) t.textContent = `Oferty dla juniorów — ${profileCity.charAt(0).toUpperCase()+profileCity.slice(1)} i zdalnie`;
+}
+
+// ═══════════════════════════════════════
+// NAWIGACJA
+// ═══════════════════════════════════════
+function switchMod(id, btn) {
+  document.querySelectorAll('.mod-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.mod-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// PANEL 2 — TRACKER APLIKACJI
+// ═══════════════════════════════════════
+let applications = [];
+let appFilter = 'all';
+
+try { applications = JSON.parse(localStorage.getItem('adultly_tracker') || '[]'); } catch(e) {}
+
+function saveApps() { localStorage.setItem('adultly_tracker', JSON.stringify(applications)); }
+
+function addApplication() {
+  const company = document.getElementById('tr-company').value.trim();
+  const role    = document.getElementById('tr-role').value.trim();
+  const date    = document.getElementById('tr-date').value || new Date().toISOString().slice(0,10);
+  const status  = document.getElementById('tr-status').value;
+  if (!company) { document.getElementById('tr-company').focus(); return; }
+
+  applications.unshift({ id: Date.now(), company, role, date, status });
+  saveApps();
+  document.getElementById('tr-company').value = '';
+  document.getElementById('tr-role').value = '';
+  renderTracker();
+}
+
+function updateStatus(id, newStatus) {
+  const app = applications.find(a => a.id === id);
+  if (app) { app.status = newStatus; saveApps(); renderTracker(); }
+}
+
+function deleteApp(id) {
+  applications = applications.filter(a => a.id !== id);
+  saveApps();
+  renderTracker();
+}
+
+function filterApps(filter, btn) {
+  appFilter = filter;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderTracker();
+}
+
+const STATUS_LABELS = {
+  wyslane: '📤 Wysłane', rozmowa: '🗣️ Rozmowa',
+  oferta: '🎉 Oferta!', odrzucone: '❌ Odrzucone', 'brak-odpowiedzi': '⏳ Brak odpowiedzi'
+};
+
+function renderTracker() {
+  // Statsy
+  const total    = applications.length;
+  const rozmowy  = applications.filter(a => a.status === 'rozmowa').length;
+  const oferty   = applications.filter(a => a.status === 'oferta').length;
+  const conv     = total > 0 ? Math.round((rozmowy / total) * 100) + '%' : '—';
+
+  document.getElementById('stat-total').textContent   = total;
+  document.getElementById('stat-rozmowa').textContent = rozmowy;
+  document.getElementById('stat-oferta').textContent  = oferty;
+  document.getElementById('stat-conv').textContent    = conv;
+
+  // Filtrowanie
+  const visible = appFilter === 'all' ? applications : applications.filter(a => a.status === appFilter);
+
+  const list = document.getElementById('tracker-list');
+  if (visible.length === 0) {
+    list.innerHTML = `<div class="tracker-empty"><div class="tracker-empty-icon">📭</div>${total === 0 ? 'Dodaj pierwszą aplikację powyżej' : 'Brak aplikacji w tej kategorii'}</div>`;
+    return;
+  }
+
+  list.innerHTML = visible.map(a => {
+    const dateStr = a.date ? new Date(a.date).toLocaleDateString('pl-PL', { day:'numeric', month:'short' }) : '';
+    return `
+    <div class="tracker-item" id="app-${a.id}">
+      <div class="tracker-item-left">
+        <div class="tracker-company">${a.company}</div>
+        <div class="tracker-role">${a.role || '—'}</div>
+        <div class="tracker-meta">
+          <span class="tracker-date">${dateStr}</span>
+          <span class="status-badge ${a.status}">${STATUS_LABELS[a.status]}</span>
+        </div>
+      </div>
+      <div class="tracker-item-right">
+        <select class="status-select" onchange="updateStatus(${a.id}, this.value)">
+          ${Object.entries(STATUS_LABELS).map(([val, lbl]) =>
+            `<option value="${val}" ${a.status === val ? 'selected' : ''}>${lbl}</option>`
+          ).join('')}
+        </select>
+        <button class="tracker-delete" onclick="deleteApp(${a.id})" title="Usuń">✕</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// Ustaw dzisiejszą datę domyślnie
+document.getElementById('tr-date').value = new Date().toISOString().slice(0, 10);
+renderTracker();
+
+// ═══════════════════════════════════════
+// PANEL 3 — KALKULATOR STAWKI
+// ═══════════════════════════════════════
+const salState = { forma: 'uop', exp: 0, city: 'warszawa' };
+
+// Widełki rynkowe brutto (zł/mc) — dane orientacyjne 2025
+const MARKET_RANGES = {
+  it_junior:   { min: 5000,  mid: 7500,  max: 11000, label: 'Junior Developer / IT' },
+  it_mid:      { min: 10000, mid: 14000, max: 20000, label: 'Mid Developer / IT' },
+  it_senior:   { min: 18000, mid: 24000, max: 35000, label: 'Senior Developer / IT' },
+  marketing:   { min: 4500,  mid: 6500,  max: 10000, label: 'Marketing / Social Media' },
+  finanse:     { min: 5000,  mid: 7500,  max: 12000, label: 'Finanse / Rachunkowość' },
+  sprzedaz:    { min: 4500,  mid: 7000,  max: 12000, label: 'Sprzedaż (+ premie)' },
+  hr:          { min: 4500,  mid: 6500,  max: 9000,  label: 'HR / Rekrutacja' },
+  prawo:       { min: 5500,  mid: 8000,  max: 14000, label: 'Prawo / Compliance' },
+  inzynieria:  { min: 5500,  mid: 8000,  max: 13000, label: 'Inżynieria / Produkcja' },
+  inne:        { min: 4500,  mid: 6500,  max: 10000, label: 'Różne branże' },
+};
+
+// Korekta lokalizacyjna (Warszawa = 1.0 = baza)
+const CITY_MULT = { warszawa: 1.0, krakow: 0.92, trojmiasto: 0.90, inne: 0.85 };
+
+function setSalForma(forma, btn) {
+  salState.forma = forma;
+  document.querySelectorAll('#sal-forma-group .toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  calcSalary();
+}
+
+function setSalState(key, val, btn) {
+  salState[key] = val;
+  const group = btn.closest('.toggle-group');
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  calcSalary();
+}
+
+function calcSalary() {
+  const brutto = parseInt(document.getElementById('sal-current').value) || 0;
+  const industry = document.getElementById('sal-industry').value;
+
+  if (!brutto) {
+    document.getElementById('sal-netto').textContent = '—';
+    document.getElementById('sal-netto-sub').textContent = 'Wpisz wynagrodzenie brutto';
+    document.getElementById('sal-breakdown').innerHTML = '';
+    document.getElementById('sal-market-card').style.display = 'none';
+    return;
+  }
+
+  let netto = 0;
+  let rows = [];
+  const fmt = n => Math.round(n).toLocaleString('pl-PL') + ' zł';
+
+  if (salState.forma === 'uop') {
+    const e=brutto*0.0976, r=brutto*0.015, c=brutto*0.0245;
+    const z=(brutto-e-r-c)*0.09;
+    const pit=Math.max(0,(brutto-e-r-c-250)*0.12-300);
+    netto = Math.round(brutto-e-r-c-z-pit);
+    rows = [
+      { l:'Brutto', v: fmt(brutto) },
+      { l:'ZUS pracowniczy', v:'− '+fmt(e+r+c) },
+      { l:'Składka zdrowotna', v:'− '+fmt(z) },
+      { l:'Zaliczka PIT', v:'− '+fmt(pit) },
+      { l:'Netto na rękę', v: fmt(netto), big: true },
+      { l:'Stawka godzinowa', v: (netto/168).toFixed(2).replace('.',',')+' zł/h' },
+    ];
+  } else if (salState.forma === 'b2b') {
+    const zus=1773, zdrow=brutto*0.049, pit=(brutto-zus)*0.19;
+    netto = Math.round(brutto-zus-zdrow-pit);
+    const b2bHourly = (netto/168).toFixed(2).replace('.',',');
+    rows = [
+      { l:'Przychód brutto', v: fmt(brutto) },
+      { l:'ZUS pełny', v:'− '+fmt(zus) },
+      { l:'Składka zdrowotna (4.9%)', v:'− '+fmt(zdrow) },
+      { l:'Podatek liniowy 19%', v:'− '+fmt(pit) },
+      { l:'Netto na rękę', v: fmt(netto), big: true },
+      { l:'Stawka godzinowa', v: b2bHourly+' zł/h' },
+    ];
+  } else {
+    const kup=brutto*0.2, pit=Math.max(0,(brutto-kup)*0.12-300);
+    netto = Math.round(brutto-pit);
+    rows = [
+      { l:'Kwota brutto', v: fmt(brutto) },
+      { l:'ZUS — student/0 ZUS', v:'0 zł' },
+      { l:'PIT 12% (KUP 20%)', v:'− '+fmt(pit) },
+      { l:'Netto na rękę', v: fmt(netto), big: true },
+      { l:'Stawka godzinowa', v: (netto/168).toFixed(2).replace('.',',')+' zł/h' },
+    ];
+  }
+
+  document.getElementById('sal-netto').textContent = netto.toLocaleString('pl-PL') + ' zł';
+  document.getElementById('sal-netto-sub').textContent = `netto/mc · ${({uop:'Umowa o pracę', b2b:'B2B liniowy', zlecenie:'Umowa zlecenie'})[salState.forma]}`;
+  document.getElementById('sal-breakdown').innerHTML = rows.map(r =>
+    `<div class="rb-row ${r.big ? 'total' : ''}">
+      <span class="rb-label">${r.l}</span>
+      <span class="rb-value ${r.big ? 'plus' : ''}">${r.v}</span>
+    </div>`).join('');
+
+  // Widełki rynkowe
+  if (industry) {
+    const range = MARKET_RANGES[industry];
+    const mult  = CITY_MULT[salState.city] || 0.88;
+    const rMin  = Math.round(range.min * mult);
+    const rMid  = Math.round(range.mid * mult);
+    const rMax  = Math.round(range.max * mult);
+
+    let positionComment = '';
+    if (brutto < rMin) positionComment = `<span style="color:var(--red); font-weight:600;">⚠️ Poniżej dolnej granicy rynku — warto negocjować.</span>`;
+    else if (brutto <= rMid) positionComment = `<span style="color:var(--yellow); font-weight:600;">🟡 Poniżej mediany rynkowej — jest przestrzeń do wzrostu.</span>`;
+    else if (brutto <= rMax) positionComment = `<span style="color:var(--accent); font-weight:600;">✅ W górnej połowie widełek — dobra pozycja.</span>`;
+    else positionComment = `<span style="color:var(--blue); font-weight:600;">🚀 Powyżej typowych widełek — bardzo silna pozycja.</span>`;
+
+    const cityLabel = {warszawa:'Warszawa', krakow:'Kraków', trojmiasto:'Trójmiasto', inne:'inne miasta'}[salState.city];
+
+    document.getElementById('sal-market-card').style.display = 'block';
+    document.getElementById('sal-market-content').innerHTML = `
+      <div style="font-size:12px; color:var(--gray-4); margin-bottom:12px;">${range.label} · ${cityLabel} · dane orientacyjne 2025</div>
+      <div style="display:flex; gap:10px; margin-bottom:12px;">
+        <div style="flex:1; text-align:center; background:var(--gray-1); border-radius:10px; padding:12px; border:1px solid var(--gray-2);">
+          <div style="font-size:10px; color:var(--gray-3); margin-bottom:4px;">DOLNE WIDEŁKI</div>
+          <div style="font-family:var(--serif); font-size:18px;">${rMin.toLocaleString('pl-PL')} zł</div>
+        </div>
+        <div style="flex:1; text-align:center; background:var(--accent-light); border-radius:10px; padding:12px; border:1px solid rgba(45,154,104,0.2);">
+          <div style="font-size:10px; color:var(--accent); margin-bottom:4px;">MEDIANA</div>
+          <div style="font-family:var(--serif); font-size:18px; color:var(--accent);">${rMid.toLocaleString('pl-PL')} zł</div>
+        </div>
+        <div style="flex:1; text-align:center; background:var(--gray-1); border-radius:10px; padding:12px; border:1px solid var(--gray-2);">
+          <div style="font-size:10px; color:var(--gray-3); margin-bottom:4px;">GÓRNE WIDEŁKI</div>
+          <div style="font-family:var(--serif); font-size:18px;">${rMax.toLocaleString('pl-PL')} zł</div>
+        </div>
+      </div>
+      <div style="font-size:13px; line-height:1.5;">${positionComment}</div>
+      <div style="font-size:11px; color:var(--gray-3); margin-top:8px;">* Dane orientacyjne na podstawie No Fluff Jobs, Bulldogjob i LinkedIn Salary 2025. Mogą się różnić od rzeczywistości.</div>`;
+  }
+}
+
+// Prefill z profilu
+if (profileIncome > 0) {
+  document.getElementById('sal-current').value = profileIncome;
+  calcSalary();
+}
+if (profileCity.includes('warszaw')) setSalState('city', 'warszawa', document.querySelector('#sal-city-group .toggle-btn'));
+else if (profileCity.includes('krak')) setSalState('city', 'krakow', document.querySelectorAll('#sal-city-group .toggle-btn')[1]);
+if (profileEmp === 'b2b') setSalForma('b2b', document.querySelectorAll('#sal-forma-group .toggle-btn')[1]);
+
+// ═══════════════════════════════════════
+// PANEL 4 — OFERTY PRACY
+// ═══════════════════════════════════════
+const jobFilters = { level: 'junior', mode: 'all', cat: 'all' };
+
+// Baza ofert — linki do platform z filtrami (deep links)
+const JOB_SOURCES = [
+  {
+    level: ['junior', 'student'],
+    mode: ['all', 'remote', 'hybrid'],
+    cat: ['all', 'it'],
+    logo: '🎯', title: 'Junior / Mid Developer — zdalne i hybrydowe',
+    company: 'No Fluff Jobs', salary: '7 000–18 000 zł', tag_remote: true,
+    desc: 'Oferty wyłącznie z podanymi widełkami. Filtruj po technologii, mieście i formie zatrudnienia.',
+    url: 'https://nofluffjobs.com/pl/junior?utm_source=adultly',
+    source: 'No Fluff Jobs · partner'
+  },
+  {
+    level: ['junior', 'student'],
+    mode: ['all', 'remote', 'hybrid', 'office'],
+    cat: ['all', 'it', 'marketing', 'finanse', 'inne'],
+    logo: '🐂', title: 'Oferty dla juniorów — wszystkie branże',
+    company: 'Bulldogjob', salary: '5 000–12 000 zł',
+    desc: 'Specjalizuje się w ofertach IT, ale ma też inne branże. Widoczne stawki, bez zbędnego marketingu.',
+    url: 'https://bulldogjob.pl/companies/jobs?seniority=junior&utm_source=adultly',
+    source: 'Bulldogjob · brak afiliacji'
+  },
+  {
+    level: ['student'],
+    mode: ['all', 'hybrid', 'office'],
+    cat: ['all', 'it', 'marketing', 'finanse', 'inne'],
+    logo: '🎓', title: 'Staże i praca dla studentów',
+    company: 'Pracuj.pl — staże', salary: '0–3 500 zł',
+    desc: 'Największa baza staży w Polsce. Filtruj po mieście, branży i czasie trwania stażu.',
+    url: 'https://www.pracuj.pl/praca/staz;tt,7?utm_source=adultly',
+    source: 'Pracuj.pl · brak afiliacji'
+  },
+  {
+    level: ['junior', 'mid'],
+    mode: ['all', 'remote'],
+    cat: ['all', 'it'],
+    logo: '💻', title: 'Remote-first IT — wszystkie poziomy',
+    company: 'Just Join IT', salary: '8 000–30 000 zł',
+    desc: 'Duży agregator ofert IT. Popularne wśród rekruterów — tu trafia dużo ofert zdalnych.',
+    url: 'https://justjoin.it/?orderBy=newest&utm_source=adultly',
+    source: 'Just Join IT · brak afiliacji'
+  },
+  {
+    level: ['junior', 'mid', 'student'],
+    mode: ['all', 'remote', 'hybrid', 'office'],
+    cat: ['all', 'marketing'],
+    logo: '📣', title: 'Marketing / Social Media / Content',
+    company: 'LinkedIn — marketing PL', salary: '4 500–10 000 zł',
+    desc: 'LinkedIn ma najlepszą bazę ofert marketingowych w Polsce. Załóż profil przed aplikowaniem.',
+    url: 'https://www.linkedin.com/jobs/search/?keywords=marketing%20junior&location=Polska&utm_source=adultly',
+    source: 'LinkedIn · brak afiliacji'
+  },
+  {
+    level: ['junior', 'mid'],
+    mode: ['all', 'hybrid', 'office'],
+    cat: ['all', 'finanse'],
+    logo: '📊', title: 'Finanse / Controlling / Rachunkowość',
+    company: 'Goldenline — finanse', salary: '5 000–12 000 zł',
+    desc: 'Branża finansowa jest słabiej reprezentowana na platformach IT — tu najłatwiej znaleźć oferty.',
+    url: 'https://www.goldenline.pl/praca/finanse/?utm_source=adultly',
+    source: 'Goldenline · brak afiliacji'
+  },
+];
+
+function setJobFilter(key, val, btn) {
+  jobFilters[key] = val;
+  const group = btn.closest('.job-filter-row');
+  group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderJobs();
+}
+
+function renderJobs() {
+  const { level, mode, cat } = jobFilters;
+  const filtered = JOB_SOURCES.filter(j =>
+    j.level.includes(level) &&
+    (j.mode.includes(mode) || mode === 'all') &&
+    (j.cat.includes(cat) || cat === 'all')
+  );
+
+  const list = document.getElementById('jobs-list');
+  if (filtered.length === 0) {
+    list.innerHTML = `<div class="no-jobs">Brak ofert dla wybranych filtrów — spróbuj zmienić kryteria.</div>`;
+    return;
+  }
+
+  list.innerHTML = filtered.map(j => `
+    <a class="job-card" href="${j.url}" target="_blank" rel="noopener">
+      <div class="job-logo">${j.logo}</div>
+      <div class="job-body">
+        <div class="job-title">${j.title}</div>
+        <div class="job-company">${j.company}</div>
+        <div class="job-tags">
+          <span class="job-tag salary">💰 ${j.salary} brutto</span>
+          ${j.tag_remote ? '<span class="job-tag remote">🌍 Zdalnie</span>' : ''}
+          <span class="job-tag">${j.desc}</span>
+        </div>
+      </div>
+      <div class="job-cta">
+        <span class="job-cta-btn">Przeglądaj →</span>
+        <span class="job-source">${j.source}</span>
+      </div>
+    </a>`).join('');
+}
+
+renderJobs();
+
+// ═══════════════════════════════════════
+// PANEL 5 — CHECKLIST PRZED ROZMOWĄ
+// ═══════════════════════════════════════
+const INTERVIEW_PHASES = [
+  {
+    id: 'przygotowanie',
+    icon: '🔍',
+    title: 'Przygotowanie (1-2 dni wcześniej)',
+    items: [
+      { id: 'firma_research', title: 'Sprawdź firmę — produkty, misja, ostatnie newsy', desc: 'Wejdź na stronę, LinkedIn, Glassdoor. Wiedza o firmie to jeden z pierwszych sygnałów zaangażowania dla rekrutera.' },
+      { id: 'osoba_research', title: 'Sprawdź rekrutera / prowadzącego na LinkedIn', desc: 'Poznaj jego rolę, ścieżkę kariery. Może was łączyć coś wspólnego — warto wspomnieć.' },
+      { id: 'oferta_analiza', title: 'Przeczytaj ogłoszenie jeszcze raz i wypisz pytania', desc: 'Co jest niejasne? Jakie technologie/narzędzia? Czy masz wszystkie wymagane kompetencje? Przygotuj się na pytania o luki.' },
+      { id: 'cv_swoje', title: 'Przejrzyj własne CV — bądź gotowy na każdy punkt', desc: 'Rekruter może zapytać o cokolwiek co tam napisałeś/aś. Miej gotowe przykłady i liczby.' },
+      { id: 'pytania_do_nich', title: 'Przygotuj 3-5 pytań do firmy', desc: '"Jak wygląda typowy dzień na tym stanowisku?" / "Jak mierzycie sukces?" / "Jakie są możliwości rozwoju?" — brak pytań to sygnał braku zainteresowania.' },
+    ]
+  },
+  {
+    id: 'logistyka',
+    icon: '📋',
+    title: 'Logistyka (dzień wcześniej)',
+    items: [
+      { id: 'potwierdzenie', title: 'Potwierdź termin i format rozmowy (online/offline)', desc: 'Sprawdź maila jeszcze raz — link do Zooma, adres biura, piętro. Unikaj niespodzianek.' },
+      { id: 'technika_test', title: 'Przetestuj sprzęt jeśli rozmowa online', desc: 'Kamera, mikrofon, tło — min. 30 min przed rozmową. Zamknij niepotrzebne aplikacje. Sprawdź sieć.' },
+      { id: 'dojazd', title: 'Zaplanuj dojazd z 15-minutowym buforem', desc: 'Spóźnienie na rekrutację prawie zawsze dyskwalifikuje. Sprawdź utrudnienia na trasie dzień wcześniej.' },
+      { id: 'wyglad', title: 'Przygotuj strój — dopasowany do kultury firmy', desc: 'Startup ≠ kancelaria prawna. Sprawdź zdjęcia z ich eventów na LinkedIn. W razie wątpliwości — bardziej formalnie.' },
+    ]
+  },
+  {
+    id: 'dzien_rozmowy',
+    icon: '🎤',
+    title: 'Dzień rozmowy',
+    items: [
+      { id: 'wynagrodzenie_kwota', title: 'Miej gotową konkretną kwotę (lub widełki)', desc: 'Nie mów "cokolwiek zaproponujecie". Powiedz "Oczekuję X–Y zł brutto". Sprawdź kalkulator stawek w Adultly.' },
+      { id: 'star_metoda', title: 'Pamiętaj o metodzie STAR przy pytaniach o doświadczenie', desc: 'Sytuacja → Zadanie → Akcja → Rezultat. Konkretna historia jest zawsze lepsza niż ogólna odpowiedź.' },
+      { id: 'slow_down', title: 'Mów wolniej niż myślisz że powinieneś/nnaś', desc: 'Stres przyspiesza mowę. Zrób pauzę przed odpowiedzią — to oznaka przemyślenia, nie niezdecydowania.' },
+      { id: 'notatki', title: 'Zrób notatki podczas rozmowy', desc: 'Zapisz imiona, kluczowe informacje o roli, co powiedzieli o kulturze pracy. Przyda się do follow-up maila.' },
+    ]
+  },
+  {
+    id: 'po_rozmowie',
+    icon: '📩',
+    title: 'Po rozmowie (do 24h)',
+    items: [
+      { id: 'followup_mail', title: 'Wyślij mail z podziękowaniem (w ciągu 24h)', desc: '"Dziękuję za rozmowę. Szczególnie zainteresowało mnie X. Czekam na dalszy kontakt." Wyróżnia cię — 90% kandydatów tego nie robi.' },
+      { id: 'tracker_update', title: 'Zaktualizuj status w Trackerze aplikacji', desc: 'Zmień status na "Rozmowa" i dodaj notatkę co poszło dobrze, co poprawić. Przyda się przy kolejnych rekrutacjach.' },
+      { id: 'refleksja', title: 'Zapisz co poszło dobrze i co poprawić następnym razem', desc: 'Rozmowy rekrutacyjne to skill który się trenuje. Każda rozmowa to dane — nie marnuj ich.' },
+    ]
+  }
+];
+
+let interviewChecked = new Set();
+try {
+  const saved = JSON.parse(localStorage.getItem('adultly_interview') || '[]');
+  interviewChecked = new Set(saved);
+} catch(e) {}
+
+function saveInterview() { localStorage.setItem('adultly_interview', JSON.stringify([...interviewChecked])); }
+
+function toggleInterviewItem(itemId) {
+  if (interviewChecked.has(itemId)) interviewChecked.delete(itemId);
+  else interviewChecked.add(itemId);
+  saveInterview();
+  renderInterview();
+}
+
+function togglePhase(phaseId) {
+  const el = document.getElementById('phase-' + phaseId);
+  el.classList.toggle('collapsed');
+}
+
+function resetInterview() {
+  if (confirm('Zresetować checklistę? (dla nowej rekrutacji)')) {
+    interviewChecked.clear();
+    saveInterview();
+    renderInterview();
+  }
+}
+
+function renderInterview() {
+  const allItems = INTERVIEW_PHASES.flatMap(p => p.items);
+  const doneCount = allItems.filter(i => interviewChecked.has(i.id)).length;
+
+  document.getElementById('interview-phases').innerHTML = INTERVIEW_PHASES.map(phase => {
+    const phaseDone  = phase.items.filter(i => interviewChecked.has(i.id)).length;
+    const phaseTotal = phase.items.length;
+    const allDone    = phaseDone === phaseTotal;
+    return `
+      <div class="phase" id="phase-${phase.id}">
+        <div class="phase-header" onclick="togglePhase('${phase.id}')">
+          <div class="phase-icon">${phase.icon}</div>
+          <div class="phase-title">${phase.title}</div>
+          <div class="phase-progress ${allDone ? 'done' : ''}">${phaseDone}/${phaseTotal}</div>
+          <div class="phase-chevron">›</div>
+        </div>
+        <div class="phase-items">
+          ${phase.items.map(item => {
+            const done = interviewChecked.has(item.id);
+            return `
+              <div class="phase-item ${done ? 'done' : ''}" onclick="toggleInterviewItem('${item.id}')">
+                <div class="phase-chk">${done ? '✓' : ''}</div>
+                <div class="phase-item-body">
+                  <div class="phase-item-title">${item.title}</div>
+                  <div class="phase-item-desc">${item.desc}</div>
+                </div>
+              </div>`;
+          }).join('')}
+        </div>
+      </div>`;
+  }).join('');
+}
+
+renderInterview();
+</script>
+
+</body>
+</html>
