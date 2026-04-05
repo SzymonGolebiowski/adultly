@@ -107,6 +107,32 @@ body {
 .field textarea { min-height: 80px; resize: none; }
 .row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 
+/* MOMENT LIFE CARDS — duże karty na krok 1 */
+.moment-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 28px;
+}
+.moment-card {
+  border: 1.5px solid var(--gray-2);
+  border-radius: 16px;
+  padding: 18px 20px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+.moment-card:hover { border-color: var(--gray-3); background: var(--gray-1); }
+.moment-card.selected { border-color: var(--accent); background: var(--accent-light); }
+.moment-card.selected .moment-label { color: var(--accent); font-weight: 500; }
+.moment-card.selected .moment-desc { color: var(--accent); opacity: 0.7; }
+.moment-icon { font-size: 28px; flex-shrink: 0; width: 44px; text-align: center; }
+.moment-text {}
+.moment-label { font-size: 15px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+.moment-desc { font-size: 13px; color: var(--gray-3); }
+
 /* OPTION CARDS */
 .options-grid {
   display: grid; grid-template-columns: 1fr 1fr;
@@ -133,13 +159,6 @@ body {
 }
 .pill:hover { border-color: var(--gray-3); color: var(--black); }
 .pill.selected { background: var(--accent); border-color: var(--accent); color: var(--white); }
-
-/* RANGE */
-.range-field { margin-bottom: 20px; }
-.range-header { display: flex; justify-content: space-between; margin-bottom: 8px; }
-.range-label { font-size: 13px; color: var(--gray-4); }
-.range-value { font-size: 14px; font-weight: 500; color: var(--black); }
-input[type=range] { width: 100%; }
 
 /* SKIP */
 .skip-link {
@@ -243,11 +262,59 @@ input[type=range] { width: 100%; }
     <div class="progress-step" id="ps-3"></div>
     <div class="progress-step" id="ps-4"></div>
     <div class="progress-step" id="ps-5"></div>
+    <div class="progress-step" id="ps-6"></div>
   </div>
 
-  <!-- KROK 1: Kim jesteś -->
+  <!-- KROK 1: Moment życiowy (NOWY) -->
   <div class="step active" id="step-1">
-    <div class="step-label">Krok 1 z 5</div>
+    <div class="step-label">Krok 1 z 6</div>
+    <div class="step-title">Co się u ciebie <em>teraz dzieje?</em></div>
+    <div class="step-desc">Adultly dopasuje się do twojego momentu. Wybierz co najbardziej pasuje.</div>
+
+    <div class="moment-grid">
+      <div class="moment-card" onclick="selectMoment(this)" data-val="studia-koniec">
+        <div class="moment-icon">🎓</div>
+        <div class="moment-text">
+          <div class="moment-label">Właśnie skończyłem studia</div>
+          <div class="moment-desc">Szukam pierwszej pracy, ogarniam dorosłość</div>
+        </div>
+      </div>
+      <div class="moment-card" onclick="selectMoment(this)" data-val="pierwsza-praca">
+        <div class="moment-icon">💼</div>
+        <div class="moment-text">
+          <div class="moment-label">Zaczynam pierwszą pracę</div>
+          <div class="moment-desc">UoP, B2B, podatki — wszystko nowe</div>
+        </div>
+      </div>
+      <div class="moment-card" onclick="selectMoment(this)" data-val="wyprowadzka">
+        <div class="moment-icon">🏠</div>
+        <div class="moment-text">
+          <div class="moment-label">Wyprowadzam się z domu</div>
+          <div class="moment-desc">Szukam mieszkania, ogarniam koszty życia</div>
+        </div>
+      </div>
+      <div class="moment-card" onclick="selectMoment(this)" data-val="zmiana-pracy">
+        <div class="moment-icon">🔄</div>
+        <div class="moment-text">
+          <div class="moment-label">Zmieniam pracę / branżę</div>
+          <div class="moment-desc">Negocjuję, porównuję oferty, chcę więcej</div>
+        </div>
+      </div>
+      <div class="moment-card" onclick="selectMoment(this)" data-val="porzadki">
+        <div class="moment-icon">📍</div>
+        <div class="moment-text">
+          <div class="moment-label">Ogarniam zaległe sprawy</div>
+          <div class="moment-desc">Formalności, dokumenty, finanse — czas to poukładać</div>
+        </div>
+      </div>
+    </div>
+
+    <button class="btn-next" onclick="nextStep(1)">Dalej →</button>
+  </div>
+
+  <!-- KROK 2: Kim jesteś -->
+  <div class="step" id="step-2">
+    <div class="step-label">Krok 2 z 6</div>
     <div class="step-title">Cześć, kim <em>jesteś?</em></div>
     <div class="step-desc">Adultly dopasuje się do twojej sytuacji. Zacznijmy od podstaw.</div>
 
@@ -297,12 +364,12 @@ input[type=range] { width: 100%; }
       </select>
     </div>
 
-    <button class="btn-next" onclick="nextStep(1)">Dalej →</button>
+    <button class="btn-next" onclick="nextStep(2)">Dalej →</button>
   </div>
 
-  <!-- KROK 2: Sytuacja finansowa -->
-  <div class="step" id="step-2">
-    <div class="step-label">Krok 2 z 5</div>
+  <!-- KROK 3: Sytuacja finansowa -->
+  <div class="step" id="step-3">
+    <div class="step-label">Krok 3 z 6</div>
     <div class="step-title">Twoje <em>finanse</em></div>
     <div class="step-desc">Im więcej podasz, tym lepiej Adultly może ci pomóc. Wszystko zostaje u ciebie.</div>
 
@@ -336,13 +403,13 @@ input[type=range] { width: 100%; }
       </select>
     </div>
 
-    <button class="btn-next" onclick="nextStep(2)">Dalej →</button>
-    <span class="skip-link" onclick="nextStep(2)">Pomiń ten krok</span>
+    <button class="btn-next" onclick="nextStep(3)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(3)">Pomiń ten krok</span>
   </div>
 
-  <!-- KROK 3: Mieszkanie -->
-  <div class="step" id="step-3">
-    <div class="step-label">Krok 3 z 5</div>
+  <!-- KROK 4: Mieszkanie -->
+  <div class="step" id="step-4">
+    <div class="step-label">Krok 4 z 6</div>
     <div class="step-title">Twoje <em>mieszkanie</em></div>
     <div class="step-desc">Gdzie i jak mieszkasz – to jeden z największych wydatków.</div>
 
@@ -370,13 +437,13 @@ input[type=range] { width: 100%; }
       <input type="number" id="f-rent" placeholder="np. 1800">
     </div>
 
-    <button class="btn-next" onclick="nextStep(3)">Dalej →</button>
-    <span class="skip-link" onclick="nextStep(3)">Pomiń ten krok</span>
+    <button class="btn-next" onclick="nextStep(4)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(4)">Pomiń ten krok</span>
   </div>
 
-  <!-- KROK 4: Auto i dokumenty -->
-  <div class="step" id="step-4">
-    <div class="step-label">Krok 4 z 5</div>
+  <!-- KROK 5: Auto i dokumenty -->
+  <div class="step" id="step-5">
+    <div class="step-label">Krok 5 z 6</div>
     <div class="step-title">Auto i <em>dokumenty</em></div>
     <div class="step-desc">Adultly będzie pilnować ważnych terminów za ciebie.</div>
 
@@ -409,13 +476,13 @@ input[type=range] { width: 100%; }
       <input type="month" id="f-id">
     </div>
 
-    <button class="btn-next" onclick="nextStep(4)">Dalej →</button>
-    <span class="skip-link" onclick="nextStep(4)">Pomiń ten krok</span>
+    <button class="btn-next" onclick="nextStep(5)">Dalej →</button>
+    <span class="skip-link" onclick="nextStep(5)">Pomiń ten krok</span>
   </div>
 
-  <!-- KROK 5: Cele -->
-  <div class="step" id="step-5">
-    <div class="step-label">Krok 5 z 5</div>
+  <!-- KROK 6: Cele -->
+  <div class="step" id="step-6">
+    <div class="step-label">Krok 6 z 6</div>
     <div class="step-title">Co chcesz <em>ogarnąć?</em></div>
     <div class="step-desc">Wybierz co jest dla ciebie teraz najważniejsze. Możesz zaznaczyć kilka.</div>
 
@@ -460,12 +527,20 @@ input[type=range] { width: 100%; }
 <script>
 const API_URL = "https://adultly-ai.szymon-golebiowski1.workers.dev";
 let currentStep = 1;
+const TOTAL_STEPS = 6;
 const profile = {};
+
+// Moment życiowy — osobna funkcja bo to nowy typ
+function selectMoment(el) {
+  document.querySelectorAll('.moment-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+  profile.moment = el.dataset.val;
+}
 
 function nextStep(from) {
   collectData(from);
   const next = from + 1;
-  if (next > 5) { finishOnboarding(); return; }
+  if (next > TOTAL_STEPS) { finishOnboarding(); return; }
 
   document.getElementById('step-' + from).classList.remove('active');
   document.getElementById('step-' + next).classList.add('active');
@@ -479,6 +554,9 @@ function nextStep(from) {
 
 function collectData(step) {
   if (step === 1) {
+    // moment już zapisany przez selectMoment()
+  }
+  if (step === 2) {
     profile.name = document.getElementById('f-name').value || 'Ty';
     profile.age = document.getElementById('f-age').value;
     profile.city = document.getElementById('f-city').value;
@@ -486,21 +564,21 @@ function collectData(step) {
     profile.major = document.getElementById('f-major').value;
     profile.industry = document.getElementById('f-industry').value;
   }
-  if (step === 2) {
+  if (step === 3) {
     profile.income = document.getElementById('f-income').value;
     profile.employment = document.getElementById('f-employment').value;
     profile.expenses = document.getElementById('f-expenses').value;
     profile.savings = document.getElementById('f-savings').value;
   }
-  if (step === 3) {
+  if (step === 4) {
     profile.rent = document.getElementById('f-rent').value;
   }
-  if (step === 4) {
+  if (step === 5) {
     profile.oc = document.getElementById('f-oc').value;
     profile.lease = document.getElementById('f-lease').value;
     profile.id_doc = document.getElementById('f-id').value;
   }
-  if (step === 5) {
+  if (step === 6) {
     profile.goals = Array.from(document.querySelectorAll('.pill.selected')).map(p => p.textContent);
   }
 }
@@ -524,9 +602,9 @@ function togglePill(el) {
 }
 
 function finishOnboarding() {
-  collectData(5);
+  collectData(6);
 
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= TOTAL_STEPS; i++) {
     document.getElementById('step-' + i).classList.remove('active');
     document.getElementById('ps-' + i).className = 'progress-step done';
   }
@@ -537,6 +615,15 @@ function finishOnboarding() {
   generateAhaInsights();
 }
 
+// Tłumaczenie momentu na czytelny tekst
+const momentLabels = {
+  'studia-koniec': 'świeżo po studiach',
+  'pierwsza-praca': 'zaczyna pierwszą pracę',
+  'wyprowadzka': 'wyprowadza się z domu',
+  'zmiana-pracy': 'zmienia pracę / branżę',
+  'porzadki': 'ogarniam zaległe sprawy'
+};
+
 async function generateAhaInsights() {
   const name = profile.name || 'Ty';
   const income = parseInt(profile.income) || 0;
@@ -545,17 +632,20 @@ async function generateAhaInsights() {
   const employment = profile.employment || 'szukam';
   const city = profile.city || 'swoim mieście';
   const goals = profile.goals || [];
+  const moment = momentLabels[profile.moment] || 'zaczyna nowy etap';
 
   document.getElementById('aha-greeting').textContent = `Hej ${name}, analizuję twój profil...`;
 
-  const prompt = `Jesteś doradcą finansowym i życiowym dla młodych Polaków po studiach. 
+  const prompt = `Jesteś doradcą finansowym i życiowym dla młodych Polaków po studiach.
 Przeanalizuj profil użytkownika i napisz 2-3 zdania spersonalizowanej analizy po polsku.
 
 Profil:
 - Imię: ${name}
+- Moment życiowy: ${moment}
 - Miasto: ${city}
 - Status: ${profile.status || 'absolwent'}
-- Kierunek: ${profile.major || 'nieznany'}
+- Kierunek / zawód: ${profile.major || 'nieznany'}
+- Branża: ${profile.industry || 'nieznana'}
 - Dochód netto: ${income ? income + ' zł/mc' : 'nieznany'}
 - Forma zatrudnienia: ${employment}
 - Stałe wydatki: ${expenses ? expenses + ' zł/mc' : 'nieznane'}
@@ -563,7 +653,7 @@ Profil:
 - Oszczędności: ${profile.savings || 'nieznane'}
 - Cele: ${goals.join(', ') || 'nieznane'}
 
-Napisz bezpośrednio do ${name}, po polsku. Zacznij od konkretnej obserwacji (np. "Przy twoich dochodach..." albo "Jako ${profile.status === 'student' ? 'student' : 'absolwent'}..."). Wspomnij jedną konkretną rzecz którą możesz poprawić. Bądź szczery i konkretny, nie ogólnikowy. Max 3 zdania.`;
+Napisz bezpośrednio do ${name}, po polsku. Uwzględnij jego moment życiowy (${moment}) — to kluczowy kontekst. Zacznij od konkretnej obserwacji. Wspomnij jedną konkretną rzecz którą możesz teraz zrobić. Bądź szczery i konkretny, nie ogólnikowy. Max 3 zdania.`;
 
   try {
     const res = await fetch(API_URL, {
@@ -602,6 +692,34 @@ function showInsights(income, expenses, rent, employment, name) {
   container.style.display = 'flex';
 
   const insights = [];
+  const moment = profile.moment;
+
+  // Insight zależny od momentu życiowego
+  if (moment === 'studia-koniec' || moment === 'pierwsza-praca') {
+    insights.push({
+      icon: '📋',
+      title: 'Zacznij od CV i umowy',
+      desc: 'Na starcie kariery CV i typ umowy (UoP vs B2B) mają największy wpływ na twoje zarobki. Sprawdź generator CV i kalkulator.'
+    });
+  } else if (moment === 'wyprowadzka') {
+    insights.push({
+      icon: '🏠',
+      title: 'Zanim podpiszesz umowę najmu',
+      desc: 'Sprawdź co powinna zawierać umowa, jakie są twoje prawa jako najemca i jak negocjować z wynajmującym.'
+    });
+  } else if (moment === 'zmiana-pracy') {
+    insights.push({
+      icon: '💰',
+      title: 'Porównaj UoP vs B2B',
+      desc: 'Zmiana pracy to dobry moment żeby przemyśleć formę zatrudnienia. B2B może dać ci więcej netto przy tym samym wynagrodzeniu brutto.'
+    });
+  } else if (moment === 'porzadki') {
+    insights.push({
+      icon: '📁',
+      title: 'Zacznij od formalności',
+      desc: 'Sprawdź terminy dokumentów (dowód, OC) i zaległe sprawy urzędowe — Adultly pomoże ci to ogarnąć krok po kroku.'
+    });
+  }
 
   if (income > 0 && employment === 'uop') {
     const b2bGain = Math.round(income * 0.12);
@@ -631,12 +749,6 @@ function showInsights(income, expenses, rent, employment, name) {
         icon: '🏠',
         title: `Wynajem pochłania ${rentPct}% dochodu`,
         desc: `To powyżej zalecanego 30%. Rozważ współlokatora lub tańsze miasto – możesz zaoszczędzić ${Math.round(rent * 0.3).toLocaleString('pl-PL')} zł/mc.`
-      });
-    } else {
-      insights.push({
-        icon: '🏠',
-        title: `Wynajem to ${rentPct}% dochodu`,
-        desc: `Mieścisz się w zdrowym przedziale. To daje ci przestrzeń na oszczędności i nieprzewidziane wydatki.`
       });
     }
   }
@@ -668,7 +780,7 @@ function goToDashboard() {
   localStorage.setItem('adultly_profile', JSON.stringify(profile));
   localStorage.setItem('adultly_onboarding_done', 'true');
   window.location.href = 'adultly-dashboard.html';
-};
+}
 </script>
 </body>
 </html>
