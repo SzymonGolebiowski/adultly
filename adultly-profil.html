@@ -1,0 +1,1006 @@
+
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adultly — Mój profil</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --black: #111110;
+  --white: #fafaf8;
+  --accent: #1a6b47;
+  --accent-light: #e8f5ee;
+  --accent-mid: #2d9a68;
+  --gray-1: #f5f4f1;
+  --gray-2: #e8e7e2;
+  --gray-3: #a8a79f;
+  --gray-4: #6b6a63;
+  --red: #d93025;
+  --red-light: #fde8e6;
+  --yellow: #b45309;
+  --yellow-light: #fef3c7;
+  --serif: 'DM Serif Display', Georgia, serif;
+  --sans: 'DM Sans', sans-serif;
+}
+html, body { height: 100%; }
+body {
+  font-family: var(--sans);
+  background: var(--gray-1);
+  color: var(--black);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* LAYOUT */
+.layout { display: flex; min-height: 100vh; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 260px;
+  background: var(--white);
+  border-right: 1px solid var(--gray-2);
+  padding: 32px 20px;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  flex-shrink: 0;
+}
+.logo {
+  font-family: var(--serif);
+  font-size: 24px;
+  color: var(--black);
+  text-decoration: none;
+  display: block;
+  margin-bottom: 40px;
+}
+.nav-section {
+  font-size: 10px; font-weight: 700;
+  color: var(--gray-3); letter-spacing: 0.1em;
+  text-transform: uppercase; margin: 24px 0 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 12px; border-radius: 10px;
+  font-size: 14px; font-weight: 500; color: var(--gray-4);
+  cursor: pointer; transition: all 0.15s;
+  margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); }
+.sidebar-user {
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 12px; background: var(--gray-1);
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%;
+  background: var(--accent); display: flex; align-items: center;
+  justify-content: center; color: white; font-size: 14px;
+  font-weight: 700; flex-shrink: 0;
+}
+.user-name { font-size: 13px; font-weight: 500; }
+.user-status { font-size: 11px; color: var(--gray-3); }
+
+/* MAIN */
+.main { flex: 1; padding: 40px; overflow-y: auto; max-width: 900px; }
+
+.page-header { margin-bottom: 32px; }
+.page-greeting { font-size: 13px; color: var(--gray-3); margin-bottom: 6px; }
+.page-title { font-family: var(--serif); font-size: 32px; line-height: 1.2; }
+.page-title em { font-style: italic; color: var(--accent); }
+
+/* SECTION TITLE */
+.section-title {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray-3);
+  margin: 32px 0 12px;
+}
+
+/* CARDS */
+.card-light {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 20px; padding: 24px;
+}
+.card-dark {
+  background: var(--black); border-radius: 20px;
+  padding: 24px; color: white; position: relative; overflow: hidden;
+}
+.card-dark::after {
+  content: ''; position: absolute;
+  bottom: -40px; right: -40px;
+  width: 140px; height: 140px;
+  background: rgba(45,154,104,0.12); border-radius: 50%;
+}
+.card-lbl {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: rgba(255,255,255,0.4);
+  margin-bottom: 10px;
+}
+.card-lbl-dark {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; color: var(--gray-3); margin-bottom: 14px;
+}
+
+/* GRID LAYOUTS */
+.grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 8px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+/* STAT TILES */
+.stat-tile {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 16px; padding: 18px;
+}
+.stat-tile-label { font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 6px; }
+.stat-tile-value { font-family: var(--serif); font-size: 26px; color: var(--black); }
+.stat-tile-value.green { color: var(--accent); }
+.stat-tile-value.red { color: var(--red); }
+.stat-tile-sub { font-size: 12px; color: var(--gray-3); margin-top: 4px; }
+
+/* BUDGET CATEGORIES */
+.budget-list { display: flex; flex-direction: column; gap: 14px; }
+.budget-row { display: flex; align-items: center; gap: 12px; }
+.budget-icon { font-size: 20px; width: 32px; text-align: center; flex-shrink: 0; }
+.budget-info { flex: 1; }
+.budget-name { font-size: 13px; font-weight: 500; margin-bottom: 5px; display: flex; justify-content: space-between; align-items: center; }
+.budget-name span { font-size: 12px; font-weight: 400; color: var(--gray-4); }
+.budget-bar-track { height: 6px; background: var(--gray-2); border-radius: 99px; overflow: hidden; }
+.budget-bar-fill { height: 100%; border-radius: 99px; transition: width 0.4s ease; }
+.budget-bar-fill.ok { background: var(--accent-mid); }
+.budget-bar-fill.warn { background: #f59e0b; }
+.budget-bar-fill.over { background: var(--red); }
+.budget-edit { display: flex; align-items: center; gap: 6px; }
+.budget-input {
+  width: 90px; font-family: var(--sans); font-size: 13px;
+  padding: 6px 10px; border: 1px solid var(--gray-2);
+  border-radius: 8px; background: var(--gray-1); color: var(--black);
+  text-align: right;
+}
+.budget-input:focus { outline: none; border-color: var(--accent); }
+
+/* PIE CHART */
+.pie-wrap { display: flex; align-items: center; gap: 28px; }
+.pie-canvas { flex-shrink: 0; }
+.pie-legend { display: flex; flex-direction: column; gap: 8px; flex: 1; }
+.pie-legend-item { display: flex; align-items: center; gap: 8px; font-size: 13px; }
+.pie-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.pie-legend-name { flex: 1; color: var(--gray-4); }
+.pie-legend-pct { font-weight: 500; font-size: 12px; }
+
+/* TRACKER */
+.tracker-form {
+  display: grid; grid-template-columns: 1fr 1fr auto;
+  gap: 10px; align-items: end; margin-bottom: 20px;
+}
+.tracker-form input, .tracker-form select {
+  font-family: var(--sans); font-size: 14px;
+  padding: 10px 14px; border: 1px solid var(--gray-2);
+  border-radius: 10px; background: var(--gray-1); color: var(--black);
+  width: 100%;
+}
+.tracker-form input:focus, .tracker-form select:focus {
+  outline: none; border-color: var(--accent);
+}
+.btn-add {
+  background: var(--black); color: white;
+  font-family: var(--sans); font-size: 14px; font-weight: 500;
+  padding: 10px 18px; border-radius: 10px; border: none;
+  cursor: pointer; white-space: nowrap;
+  transition: background 0.2s;
+}
+.btn-add:hover { background: var(--accent); }
+
+.expense-list { display: flex; flex-direction: column; gap: 8px; }
+.expense-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px; background: var(--gray-1);
+  border-radius: 10px; font-size: 13px;
+}
+.expense-left { display: flex; align-items: center; gap: 10px; }
+.expense-cat-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+.expense-name { color: var(--gray-4); }
+.expense-right { display: flex; align-items: center; gap: 12px; }
+.expense-amount { font-weight: 600; }
+.expense-delete { background: none; border: none; cursor: pointer; color: var(--gray-3); font-size: 16px; line-height: 1; padding: 2px 4px; border-radius: 4px; transition: color 0.15s; }
+.expense-delete:hover { color: var(--red); }
+
+.empty-state { text-align: center; padding: 24px; font-size: 14px; color: var(--gray-3); }
+
+/* SAVINGS */
+.savings-wrap { display: flex; flex-direction: column; gap: 16px; }
+.savings-header { display: flex; justify-content: space-between; align-items: baseline; }
+.savings-amount { font-family: var(--serif); font-size: 36px; }
+.savings-goal { font-size: 13px; color: var(--gray-3); }
+.progress-track { height: 10px; background: var(--gray-2); border-radius: 99px; overflow: hidden; margin: 4px 0; }
+.progress-fill { height: 100%; background: var(--accent-mid); border-radius: 99px; transition: width 0.5s ease; }
+.progress-labels { display: flex; justify-content: space-between; font-size: 12px; color: var(--gray-3); }
+
+/* INPUTS w profilu */
+.profile-field { margin-bottom: 14px; }
+.profile-field label { display: block; font-size: 13px; color: var(--gray-4); margin-bottom: 5px; }
+.profile-field input, .profile-field select {
+  width: 100%; font-family: var(--sans); font-size: 14px;
+  padding: 10px 14px; border: 1px solid var(--gray-2);
+  border-radius: 10px; background: var(--gray-1); color: var(--black);
+}
+.profile-field input:focus, .profile-field select:focus { outline: none; border-color: var(--accent); }
+.btn-save {
+  width: 100%; background: var(--black); color: white;
+  font-family: var(--sans); font-size: 15px; font-weight: 500;
+  padding: 14px; border-radius: 12px; border: none; cursor: pointer;
+  transition: background 0.2s; margin-top: 6px;
+}
+.btn-save:hover { background: var(--accent); }
+
+/* KARTY AFILIACYJNE */
+.aff-card {
+  background: var(--white); border: 1px solid var(--gray-2);
+  border-radius: 16px; padding: 18px 20px;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 16px; transition: border-color 0.15s;
+}
+.aff-card:hover { border-color: var(--gray-3); }
+.aff-left { display: flex; align-items: flex-start; gap: 14px; flex: 1; }
+.aff-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 22px; flex-shrink: 0;
+}
+.aff-name { font-size: 14px; font-weight: 500; margin-bottom: 2px; }
+.aff-type { font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--gray-3); margin-bottom: 4px; }
+.aff-desc { font-size: 13px; color: var(--gray-4); line-height: 1.5; }
+.aff-right {
+  display: flex; flex-direction: column; align-items: flex-end;
+  gap: 6px; flex-shrink: 0;
+}
+.aff-badge {
+  font-size: 13px; font-weight: 700; color: var(--accent);
+  background: var(--accent-light); padding: 4px 10px;
+  border-radius: 99px; white-space: nowrap;
+}
+.aff-btn {
+  background: var(--black); color: white;
+  font-family: var(--sans); font-size: 13px; font-weight: 500;
+  padding: 8px 16px; border-radius: 99px;
+  text-decoration: none; white-space: nowrap;
+  transition: background 0.2s;
+}
+.aff-btn:hover { background: var(--accent); }
+.aff-disclaimer { font-size: 10px; color: var(--gray-3); }
+
+@media (max-width: 600px) {
+  .aff-card { flex-direction: column; align-items: flex-start; }
+  .aff-right { flex-direction: row; align-items: center; width: 100%; justify-content: space-between; }
+}
+
+/* MOBILE */
+.mobile-nav {
+  display: none; position: fixed;
+  bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--gray-2);
+  padding: 8px 16px 20px; z-index: 100;
+  justify-content: space-around;
+}
+.mobile-nav-item {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 3px; font-size: 10px; color: var(--gray-4); cursor: pointer;
+  padding: 6px 12px; border-radius: 10px; transition: color 0.15s;
+}
+.mobile-nav-item.active { color: var(--accent); }
+.mobile-nav-icon { font-size: 20px; }
+
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .main { padding: 24px 16px 90px; }
+  .grid-3 { grid-template-columns: 1fr 1fr; }
+  .grid-2 { grid-template-columns: 1fr; }
+  .tracker-form { grid-template-columns: 1fr 1fr; }
+  .tracker-form .btn-add { grid-column: 1/-1; }
+  .pie-wrap { flex-direction: column; }
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.main { animation: fadeIn 0.3s ease; }
+</style>
+</head>
+<body>
+
+<div class="layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <a href="index.html" class="logo">adultly.</a>
+
+    <div class="nav-section">Główne</div>
+    <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+
+    <div class="nav-section">Narzędzia</div>
+    <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
+    <a href="adultly-praca.html" class="nav-item">💼 Praca i CV</a>
+    <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+    <a href="adultly-formalnosci.html" class="nav-item">✅ Formalności</a>
+
+    <div class="nav-section">Profil</div>
+    <a href="adultly-profil.html" class="nav-item active">👤 Mój profil</a>
+
+    <div class="sidebar-user">
+      <div class="user-avatar" id="sidebar-avatar">?</div>
+      <div>
+        <div class="user-name" id="sidebar-name">Ładowanie...</div>
+        <div class="user-status" id="sidebar-status">—</div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <div class="page-header">
+      <div class="page-greeting">Twoje finanse osobiste</div>
+      <div class="page-title">Mój <em>profil</em></div>
+    </div>
+
+    <!-- PODSUMOWANIE -->
+    <div class="section-title">Podsumowanie miesięczne</div>
+    <div class="grid-3" id="summary-tiles"></div>
+
+    <!-- BUDŻET + WYKRES -->
+    <div class="section-title">Budżet na kategorie</div>
+    <div class="grid-2">
+
+      <!-- LEWA: kategorie -->
+      <div class="card-light">
+        <div class="card-lbl-dark">LIMITY WYDATKÓW</div>
+        <div class="budget-list" id="budget-list"></div>
+        <button class="btn-save" style="margin-top:20px;" onclick="saveBudget()">Zapisz limity</button>
+      </div>
+
+      <!-- PRAWA: wykres kołowy -->
+      <div class="card-light" style="display:flex; flex-direction:column;">
+        <div class="card-lbl-dark">PODZIAŁ BUDŻETU</div>
+        <div class="pie-wrap" style="flex:1; align-items:center; justify-content:center; margin-top:8px;">
+          <canvas id="pie-chart" width="160" height="160" class="pie-canvas"></canvas>
+          <div class="pie-legend" id="pie-legend"></div>
+        </div>
+        <div id="pie-summary" style="margin-top:16px; font-size:13px; color:var(--gray-4); text-align:center;"></div>
+      </div>
+
+    </div>
+
+    <!-- TRACKER WYDATKÓW -->
+    <div class="section-title">Wydatki w tym miesiącu</div>
+    <div class="card-light">
+      <div class="card-lbl-dark">DODAJ WYDATEK</div>
+      <div class="tracker-form">
+        <div>
+          <label style="font-size:12px; color:var(--gray-4); display:block; margin-bottom:5px;">Kwota (zł)</label>
+          <input type="number" id="exp-amount" placeholder="np. 85" min="0">
+        </div>
+        <div>
+          <label style="font-size:12px; color:var(--gray-4); display:block; margin-bottom:5px;">Kategoria</label>
+          <select id="exp-cat"></select>
+        </div>
+        <button class="btn-add" onclick="addExpense()">+ Dodaj</button>
+      </div>
+      <div class="expense-list" id="expense-list"></div>
+    </div>
+
+    <!-- OSZCZĘDNOŚCI -->
+    <div class="section-title">Oszczędności</div>
+    <div class="grid-2">
+      <div class="card-light">
+        <div class="card-lbl-dark">AKTUALNY STAN I CEL</div>
+        <div class="savings-wrap" id="savings-wrap"></div>
+      </div>
+      <div class="card-light">
+        <div class="card-lbl-dark">EDYTUJ OSZCZĘDNOŚCI</div>
+        <div class="profile-field">
+          <label>Aktualne oszczędności (zł)</label>
+          <input type="number" id="savings-current" placeholder="np. 8000">
+        </div>
+        <div class="profile-field">
+          <label>Cel oszczędnościowy (zł)</label>
+          <input type="number" id="savings-goal" placeholder="np. 20000">
+        </div>
+        <div class="profile-field">
+          <label>Miesięcznie odkładam (zł)</label>
+          <input type="number" id="savings-monthly" placeholder="np. 500">
+        </div>
+        <button class="btn-save" onclick="saveSavings()">Zapisz</button>
+      </div>
+    </div>
+
+    <!-- OSZCZĘDZAJ WIĘCEJ -->
+    <div class="section-title">Jak oszczędzać więcej?</div>
+
+    <!-- EDUKACYJNY WSTĘP -->
+    <div class="card-light" style="margin-bottom:16px;">
+      <div style="display:flex; align-items:flex-start; gap:16px;">
+        <div style="font-size:32px; flex-shrink:0;">💡</div>
+        <div>
+          <div style="font-family:var(--serif); font-size:18px; margin-bottom:8px; line-height:1.3;">Im lepiej znasz dostępne opcje, tym więcej twoje pieniądze mogą na ciebie pracować</div>
+          <div style="font-size:14px; color:var(--gray-4); line-height:1.7;">
+            Konto oszczędnościowe to najprostszy start — otwierasz w 5 minut, pieniądze są zawsze dostępne i zarabiają odsetki zamiast leżeć na koncie. Lokata daje wyższe oprocentowanie jeśli możesz zamrozić środki na określony czas. ETF-y to inwestowanie w zdywersyfikowany koszyk spółek — im więcej się o nich dowiesz, tym więcej możesz zyskać w długim terminie.
+          </div>
+          <button onclick="toggleLearnMore()" id="learn-btn" style="margin-top:12px; background:none; border:1px solid var(--gray-2); border-radius:8px; padding:7px 14px; font-family:var(--sans); font-size:13px; color:var(--accent); cursor:pointer; transition:all 0.15s;">
+            Dowiedz się więcej ↓
+          </button>
+        </div>
+      </div>
+
+      <!-- ROZWIJANA SEKCJA EDUKACYJNA -->
+      <div id="learn-more" style="display:none; margin-top:20px; border-top:1px solid var(--gray-2); padding-top:20px;">
+        <div style="display:flex; flex-direction:column; gap:14px;">
+          <div style="display:flex; gap:14px; align-items:flex-start;">
+            <div style="width:36px; height:36px; border-radius:10px; background:var(--accent-light); display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">🏦</div>
+            <div>
+              <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Konto oszczędnościowe</div>
+              <div style="font-size:13px; color:var(--gray-4); line-height:1.6;">Pieniądze dostępne w każdej chwili, oprocentowanie ~4–6% w skali roku. Idealne na poduszkę finansową i pierwsze oszczędności. Zero wiedzy wymagane — zakładasz i zarabiasz od razu.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#fef3c7; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">📅</div>
+            <div>
+              <div style="font-size:14px; font-weight:500; margin-bottom:3px;">Lokata bankowa</div>
+              <div style="font-size:13px; color:var(--gray-4); line-height:1.6;">Wyższe oprocentowanie niż konto oszczędnościowe w zamian za zamrożenie środków na określony czas (np. 3 lub 6 miesięcy). Im dłużej, tym zazwyczaj lepsze warunki. Dobra na środki których nie planujesz ruszać.</div>
+            </div>
+          </div>
+          <div style="display:flex; gap:14px; align-items:flex-start;">
+            <div style="width:36px; height:36px; border-radius:10px; background:#ede9fe; display:flex; align-items:center; justify-content:center; font-size:18px; flex-shrink:0;">📈</div>
+            <div>
+              <div style="font-size:14px; font-weight:500; margin-bottom:3px;">ETF — fundusz indeksowy</div>
+              <div style="font-size:13px; color:var(--gray-4); line-height:1.6;">Kupujesz jednostkę funduszu który śledzi np. 500 największych spółek świata. Zamiast wybierać jedną firmę, inwestujesz w setki naraz. Historycznie giełda rośnie średnio ~7–10% rocznie. Im wcześniej zaczniesz i im więcej się dowiesz o zasadach, tym więcej możesz zyskać.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KARTY AFILIACYJNE -->
+    <div style="display:flex; flex-direction:column; gap:12px; margin-bottom:8px;">
+
+      <!-- KONTO OSZCZĘDNOŚCIOWE 1 -->
+      <!-- AFILIACJA: podmień href="#" na swój link afiliacyjny -->
+      <div class="aff-card">
+        <div class="aff-left">
+          <div class="aff-icon" style="background:#e8f5ee;">🏦</div>
+          <div>
+            <div class="aff-name">mBank — eKonto oszczędnościowe</div>
+            <div class="aff-type">Konto oszczędnościowe</div>
+            <div class="aff-desc">Oprocentowanie do 6% dla nowych środków przez pierwsze miesiące. Brak opłat, otwarcie online w 5 minut.</div>
+          </div>
+        </div>
+        <div class="aff-right">
+          <div class="aff-badge">~6% / rok</div>
+          <a href="#" class="aff-btn" target="_blank" rel="noopener">Sprawdź →</a>
+          <div class="aff-disclaimer">Oferta partnera</div>
+        </div>
+      </div>
+
+      <!-- KONTO OSZCZĘDNOŚCIOWE 2 -->
+      <!-- AFILIACJA: podmień href="#" na swój link afiliacyjny -->
+      <div class="aff-card">
+        <div class="aff-left">
+          <div class="aff-icon" style="background:#fef3c7;">🏛️</div>
+          <div>
+            <div class="aff-name">Santander — Konto Oszczędnościowe</div>
+            <div class="aff-type">Konto oszczędnościowe</div>
+            <div class="aff-desc">Stały dostęp do środków, oprocentowanie naliczane co miesiąc. Dobre jako bufor awaryjny.</div>
+          </div>
+        </div>
+        <div class="aff-right">
+          <div class="aff-badge">~5% / rok</div>
+          <a href="#" class="aff-btn" target="_blank" rel="noopener">Sprawdź →</a>
+          <div class="aff-disclaimer">Oferta partnera</div>
+        </div>
+      </div>
+
+      <!-- ETF / BROKER -->
+      <!-- AFILIACJA: podmień href="#" na swój link afiliacyjny -->
+      <div class="aff-card">
+        <div class="aff-left">
+          <div class="aff-icon" style="background:#ede9fe;">📈</div>
+          <div>
+            <div class="aff-name">XTB — konto inwestycyjne</div>
+            <div class="aff-type">Broker / ETF-y</div>
+            <div class="aff-desc">Zacznij inwestować w ETF-y od 0 zł prowizji. Edukacja dostępna w aplikacji — zanim zaczniesz, możesz wszystkiego się nauczyć w ich kursach.</div>
+          </div>
+        </div>
+        <div class="aff-right">
+          <div class="aff-badge">0 zł start</div>
+          <a href="#" class="aff-btn" target="_blank" rel="noopener">Sprawdź →</a>
+          <div class="aff-disclaimer">Oferta partnera</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DANE PROFILU -->
+    <div class="section-title">Dane podstawowe</div>
+    <div class="card-light">
+      <div class="card-lbl-dark">EDYTUJ PROFIL</div>
+      <div class="grid-2" style="gap:14px;">
+        <div class="profile-field">
+          <label>Imię</label>
+          <input type="text" id="p-name" placeholder="np. Szymon">
+        </div>
+        <div class="profile-field">
+          <label>Miasto</label>
+          <input type="text" id="p-city" placeholder="np. Warszawa">
+        </div>
+        <div class="profile-field">
+          <label>Dochód netto (zł/mc)</label>
+          <input type="number" id="p-income" placeholder="np. 6000">
+        </div>
+        <div class="profile-field">
+          <label>Stałe wydatki (zł/mc)</label>
+          <input type="number" id="p-expenses" placeholder="np. 2500">
+        </div>
+        <div class="profile-field">
+          <label>Forma zatrudnienia</label>
+          <select id="p-employment">
+            <option value="">Wybierz...</option>
+            <option value="uop">Umowa o pracę</option>
+            <option value="b2b">B2B</option>
+            <option value="uod">Umowa zlecenie / dzieło</option>
+            <option value="szukam">Szukam pracy</option>
+            <option value="staz">Staż / praktyki</option>
+          </select>
+        </div>
+        <div class="profile-field">
+          <label>Wynajem (zł/mc)</label>
+          <input type="number" id="p-rent" placeholder="np. 1800">
+        </div>
+      </div>
+      <button class="btn-save" onclick="saveProfile()">Zapisz profil</button>
+    </div>
+
+  </main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">⊞</div>Dashboard
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'">
+    <div class="mobile-nav-icon">💰</div>Finanse
+  </div>
+  <div class="mobile-nav-item active">
+    <div class="mobile-nav-icon">👤</div>Profil
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-formalnosci.html'">
+    <div class="mobile-nav-icon">✅</div>Formalności
+  </div>
+</div>
+
+<script>
+// ============================================================
+// DANE
+// ============================================================
+let profile = {};
+try {
+  const raw = localStorage.getItem('adultly_profile');
+  profile = raw ? JSON.parse(raw) : {};
+} catch(e) { profile = {}; }
+
+let budget = {};
+try {
+  const raw = localStorage.getItem('adultly_budget');
+  budget = raw ? JSON.parse(raw) : {};
+} catch(e) { budget = {}; }
+
+let expenses = [];
+try {
+  const raw = localStorage.getItem('adultly_expenses');
+  // tylko wydatki z bieżącego miesiąca
+  const all = raw ? JSON.parse(raw) : [];
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  expenses = all.filter(e => e.month === ym);
+} catch(e) { expenses = []; }
+
+let savings = {};
+try {
+  const raw = localStorage.getItem('adultly_savings');
+  savings = raw ? JSON.parse(raw) : {};
+} catch(e) { savings = {}; }
+
+// ============================================================
+// KATEGORIE
+// ============================================================
+const CATEGORIES = [
+  { id: 'jedzenie',   name: 'Jedzenie',       icon: '🍕', color: '#f59e0b', defaultPct: 25 },
+  { id: 'transport',  name: 'Transport',      icon: '🚗', color: '#3b82f6', defaultPct: 10 },
+  { id: 'rozrywka',   name: 'Rozrywka',       icon: '🎬', color: '#8b5cf6', defaultPct: 10 },
+  { id: 'ubrania',    name: 'Ubrania',        icon: '👕', color: '#ec4899', defaultPct: 8  },
+  { id: 'zdrowie',    name: 'Zdrowie',        icon: '💊', color: '#10b981', defaultPct: 7  },
+  { id: 'inne',       name: 'Inne',           icon: '📦', color: '#6b7280', defaultPct: 10 },
+];
+
+function getCatById(id) { return CATEGORIES.find(c => c.id === id); }
+
+// ============================================================
+// INIT
+// ============================================================
+document.addEventListener('DOMContentLoaded', () => {
+  renderSidebar();
+  renderSummary();
+  renderBudgetList();
+  renderPie();
+  renderExpenseSelect();
+  renderExpenseList();
+  renderSavings();
+  prefillProfile();
+});
+
+// ============================================================
+// SIDEBAR
+// ============================================================
+function renderSidebar() {
+  const name = profile.name || 'Użytkownik';
+  document.getElementById('sidebar-avatar').textContent = name.charAt(0).toUpperCase();
+  document.getElementById('sidebar-name').textContent = name;
+  const statusMap = { student: 'Student', absolwent: 'Świeży absolwent', pracuje: 'Pracownik' };
+  document.getElementById('sidebar-status').textContent = statusMap[profile.status] || 'Użytkownik';
+}
+
+// ============================================================
+// PODSUMOWANIE
+// ============================================================
+function renderSummary() {
+  const income   = parseInt(profile.income)   || 0;
+  const expenses_fixed = parseInt(profile.expenses) || 0;
+  const rent     = parseInt(profile.rent)     || 0;
+
+  // suma wydatków zmiennych z trackera
+  const varSpent = expenses.reduce((s, e) => s + e.amount, 0);
+
+  // suma limitów budżetowych
+  const budgetTotal = CATEGORIES.reduce((s, c) => s + (parseInt(budget[c.id]) || 0), 0);
+
+  const free = income - expenses_fixed - varSpent;
+  const freeColor = free >= 0 ? 'green' : 'red';
+
+  const savCurrent = parseInt(savings.current) || parseSavingsFromProfile();
+
+  document.getElementById('summary-tiles').innerHTML = `
+    <div class="stat-tile">
+      <div class="stat-tile-label">Dochód netto</div>
+      <div class="stat-tile-value">${formatZl(income)}</div>
+      <div class="stat-tile-sub">miesięcznie</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-tile-label">Wydano w tym mies.</div>
+      <div class="stat-tile-value">${formatZl(expenses_fixed + varSpent)}</div>
+      <div class="stat-tile-sub">stałe + zmienne</div>
+    </div>
+    <div class="stat-tile">
+      <div class="stat-tile-label">Wolne środki</div>
+      <div class="stat-tile-value ${freeColor}">${formatZl(free)}</div>
+      <div class="stat-tile-sub">${free >= 0 ? 'do rozdysponowania' : 'przekroczono budżet'}</div>
+    </div>
+  `;
+}
+
+function parseSavingsFromProfile() {
+  const map = { nie: 0, malo: 2500, srednie: 12500, duzo: 25000 };
+  return map[profile.savings] || 0;
+}
+
+// ============================================================
+// BUDŻET
+// ============================================================
+function getDefaultBudget(catId) {
+  const income = parseInt(profile.income) || 0;
+  const fixed  = parseInt(profile.expenses) || 0;
+  const free   = income - fixed;
+  const cat    = getCatById(catId);
+  if (!cat || free <= 0) return 0;
+  return Math.round(free * cat.defaultPct / 100);
+}
+
+function getBudget(catId) {
+  if (budget[catId] !== undefined) return parseInt(budget[catId]);
+  return getDefaultBudget(catId);
+}
+
+function getSpentForCat(catId) {
+  return expenses.filter(e => e.cat === catId).reduce((s, e) => s + e.amount, 0);
+}
+
+function renderBudgetList() {
+  document.getElementById('budget-list').innerHTML = CATEGORIES.map(cat => {
+    const limit = getBudget(cat.id);
+    const spent = getSpentForCat(cat.id);
+    const pct   = limit > 0 ? Math.min(100, Math.round(spent / limit * 100)) : 0;
+    const cls   = pct >= 100 ? 'over' : pct >= 80 ? 'warn' : 'ok';
+    return `
+      <div class="budget-row">
+        <div class="budget-icon">${cat.icon}</div>
+        <div class="budget-info">
+          <div class="budget-name">
+            ${cat.name}
+            <span>${formatZl(spent)} / <input class="budget-input" type="number" id="budget-${cat.id}" value="${limit}" min="0" oninput="onBudgetChange()"> zł</span>
+          </div>
+          <div class="budget-bar-track">
+            <div class="budget-bar-fill ${cls}" style="width:${pct}%; background:${cat.color};"></div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
+
+function onBudgetChange() {
+  renderPie();
+}
+
+function saveBudget() {
+  CATEGORIES.forEach(cat => {
+    const el = document.getElementById('budget-' + cat.id);
+    if (el) budget[cat.id] = parseInt(el.value) || 0;
+  });
+  localStorage.setItem('adultly_budget', JSON.stringify(budget));
+  renderBudgetList();
+  renderPie();
+  renderSummary();
+  showToast('Limity zapisane ✓');
+}
+
+// ============================================================
+// WYKRES KOŁOWY
+// ============================================================
+function renderPie() {
+  const canvas = document.getElementById('pie-chart');
+  const ctx = canvas.getContext('2d');
+  const size = 160;
+  canvas.width = size;
+  canvas.height = size;
+
+  const data = CATEGORIES.map(cat => ({
+    label: cat.name,
+    color: cat.color,
+    value: parseInt(document.getElementById('budget-' + cat.id)?.value) || getBudget(cat.id),
+    spent: getSpentForCat(cat.id)
+  })).filter(d => d.value > 0);
+
+  const total = data.reduce((s, d) => s + d.value, 0);
+  if (total === 0) {
+    ctx.clearRect(0, 0, size, size);
+    return;
+  }
+
+  const cx = size / 2, cy = size / 2, r = size / 2 - 8;
+  let angle = -Math.PI / 2;
+  ctx.clearRect(0, 0, size, size);
+
+  data.forEach(d => {
+    const slice = (d.value / total) * 2 * Math.PI;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.arc(cx, cy, r, angle, angle + slice);
+    ctx.closePath();
+    ctx.fillStyle = d.color;
+    ctx.fill();
+    angle += slice;
+  });
+
+  // środek — wolne środki
+  const income = parseInt(profile.income) || 0;
+  const fixed  = parseInt(profile.expenses) || 0;
+  const budgetUsed = total;
+  const free = income - fixed - budgetUsed;
+  ctx.beginPath();
+  ctx.arc(cx, cy, r * 0.55, 0, 2 * Math.PI);
+  ctx.fillStyle = '#fafaf8';
+  ctx.fill();
+
+  ctx.font = 'bold 13px DM Sans, sans-serif';
+  ctx.fillStyle = '#111110';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(formatZl(budgetUsed), cx, cy - 7);
+  ctx.font = '11px DM Sans, sans-serif';
+  ctx.fillStyle = '#a8a79f';
+  ctx.fillText('budżet', cx, cy + 9);
+
+  // legenda
+  document.getElementById('pie-legend').innerHTML = data.map(d => {
+    const pct = Math.round(d.value / total * 100);
+    return `<div class="pie-legend-item">
+      <div class="pie-dot" style="background:${d.color}"></div>
+      <div class="pie-legend-name">${d.label}</div>
+      <div class="pie-legend-pct">${pct}%</div>
+    </div>`;
+  }).join('');
+
+  // podsumowanie
+  const income2 = parseInt(profile.income) || 0;
+  const fixed2  = parseInt(profile.expenses) || 0;
+  const remaining = income2 - fixed2 - total;
+  document.getElementById('pie-summary').textContent = remaining >= 0
+    ? `Zostaje ${formatZl(remaining)} po stałych i budżecie`
+    : `Budżet przekracza wolne środki o ${formatZl(Math.abs(remaining))}`;
+}
+
+// ============================================================
+// TRACKER WYDATKÓW
+// ============================================================
+function renderExpenseSelect() {
+  document.getElementById('exp-cat').innerHTML = CATEGORIES.map(c =>
+    `<option value="${c.id}">${c.icon} ${c.name}</option>`
+  ).join('');
+}
+
+function addExpense() {
+  const amount = parseFloat(document.getElementById('exp-amount').value);
+  const cat    = document.getElementById('exp-cat').value;
+  if (!amount || amount <= 0) return;
+
+  const now = new Date();
+  const ym  = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+
+  const entry = { id: Date.now(), amount, cat, month: ym };
+  expenses.push(entry);
+  saveExpenses();
+
+  document.getElementById('exp-amount').value = '';
+  renderExpenseList();
+  renderBudgetList();
+  renderSummary();
+  renderPie();
+}
+
+function deleteExpense(id) {
+  expenses = expenses.filter(e => e.id !== id);
+  saveExpenses();
+  renderExpenseList();
+  renderBudgetList();
+  renderSummary();
+  renderPie();
+}
+
+function saveExpenses() {
+  // Zachowaj stare miesiące + zaktualizuj bieżący
+  let all = [];
+  try {
+    const raw = localStorage.getItem('adultly_expenses');
+    all = raw ? JSON.parse(raw) : [];
+  } catch(e) {}
+  const now = new Date();
+  const ym = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}`;
+  all = all.filter(e => e.month !== ym);
+  all = all.concat(expenses);
+  localStorage.setItem('adultly_expenses', JSON.stringify(all));
+}
+
+function renderExpenseList() {
+  const el = document.getElementById('expense-list');
+  if (expenses.length === 0) {
+    el.innerHTML = `<div class="empty-state">Brak wydatków w tym miesiącu</div>`;
+    return;
+  }
+  // sortuj od najnowszych
+  const sorted = [...expenses].sort((a, b) => b.id - a.id);
+  el.innerHTML = sorted.map(e => {
+    const cat = getCatById(e.cat);
+    return `<div class="expense-item">
+      <div class="expense-left">
+        <div class="expense-cat-dot" style="background:${cat?.color || '#ccc'}"></div>
+        <span class="expense-name">${cat?.icon || ''} ${cat?.name || e.cat}</span>
+      </div>
+      <div class="expense-right">
+        <span class="expense-amount">${formatZl(e.amount)}</span>
+        <button class="expense-delete" onclick="deleteExpense(${e.id})">×</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ============================================================
+// OSZCZĘDNOŚCI
+// ============================================================
+function renderSavings() {
+  const current  = parseInt(savings.current)  || parseSavingsFromProfile();
+  const goal     = parseInt(savings.goal)     || 0;
+  const monthly  = parseInt(savings.monthly)  || 0;
+  const pct      = goal > 0 ? Math.min(100, Math.round(current / goal * 100)) : 0;
+  const monthsLeft = monthly > 0 && goal > current ? Math.ceil((goal - current) / monthly) : null;
+
+  document.getElementById('savings-wrap').innerHTML = `
+    <div class="savings-header">
+      <div class="savings-amount">${formatZl(current)}</div>
+      ${goal > 0 ? `<div class="savings-goal">cel: ${formatZl(goal)}</div>` : ''}
+    </div>
+    ${goal > 0 ? `
+      <div>
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+        <div class="progress-labels">
+          <span>${pct}% celu</span>
+          ${monthsLeft ? `<span>~${monthsLeft} mies.</span>` : ''}
+        </div>
+      </div>
+    ` : '<div style="font-size:13px; color:var(--gray-3);">Ustaw cel żeby śledzić postęp →</div>'}
+    ${monthly > 0 ? `<div style="font-size:13px; color:var(--gray-4);">Odkładasz <strong>${formatZl(monthly)}</strong> miesięcznie</div>` : ''}
+  `;
+
+  // prefill formularza
+  if (savings.current) document.getElementById('savings-current').value = savings.current;
+  if (savings.goal)    document.getElementById('savings-goal').value    = savings.goal;
+  if (savings.monthly) document.getElementById('savings-monthly').value = savings.monthly;
+}
+
+function saveSavings() {
+  savings.current  = parseInt(document.getElementById('savings-current').value)  || 0;
+  savings.goal     = parseInt(document.getElementById('savings-goal').value)     || 0;
+  savings.monthly  = parseInt(document.getElementById('savings-monthly').value)  || 0;
+  localStorage.setItem('adultly_savings', JSON.stringify(savings));
+  renderSavings();
+  renderSummary();
+  showToast('Oszczędności zapisane ✓');
+}
+
+// ============================================================
+// PROFIL
+// ============================================================
+function prefillProfile() {
+  if (profile.name)       document.getElementById('p-name').value       = profile.name;
+  if (profile.city)       document.getElementById('p-city').value       = profile.city;
+  if (profile.income)     document.getElementById('p-income').value     = profile.income;
+  if (profile.expenses)   document.getElementById('p-expenses').value   = profile.expenses;
+  if (profile.employment) document.getElementById('p-employment').value = profile.employment;
+  if (profile.rent)       document.getElementById('p-rent').value       = profile.rent;
+}
+
+function saveProfile() {
+  profile.name       = document.getElementById('p-name').value;
+  profile.city       = document.getElementById('p-city').value;
+  profile.income     = document.getElementById('p-income').value;
+  profile.expenses   = document.getElementById('p-expenses').value;
+  profile.employment = document.getElementById('p-employment').value;
+  profile.rent       = document.getElementById('p-rent').value;
+  localStorage.setItem('adultly_profile', JSON.stringify(profile));
+  renderSidebar();
+  renderSummary();
+  renderBudgetList();
+  renderPie();
+  showToast('Profil zapisany ✓');
+}
+
+function toggleLearnMore() {
+  const el = document.getElementById('learn-more');
+  const btn = document.getElementById('learn-btn');
+  const open = el.style.display === 'none';
+  el.style.display = open ? 'block' : 'none';
+  btn.textContent = open ? 'Zwiń ↑' : 'Dowiedz się więcej ↓';
+}
+
+// ============================================================
+// HELPERS
+// ============================================================
+function formatZl(n) {
+  if (!n && n !== 0) return '—';
+  return n.toLocaleString('pl-PL') + ' zł';
+}
+
+function showToast(msg) {
+  let toast = document.getElementById('toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'toast';
+    toast.style.cssText = `position:fixed; bottom:32px; left:50%; transform:translateX(-50%); background:var(--black); color:white; padding:12px 24px; border-radius:99px; font-size:14px; font-weight:500; z-index:999; transition:opacity 0.3s;`;
+    document.body.appendChild(toast);
+  }
+  toast.textContent = msg;
+  toast.style.opacity = '1';
+  setTimeout(() => { toast.style.opacity = '0'; }, 2000);
+}
+</script>
+</body>
+</html>
