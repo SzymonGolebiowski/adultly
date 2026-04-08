@@ -515,7 +515,7 @@ body {
         </div>
 
         <div class="field">
-          <label>Wynagrodzenie brutto (zł / miesiąc)</label>
+          <label>Wynagrodzenie brutto (zł / miesiąc przy pełnym etacie — 168 h)</label>
           <div class="range-row">
             <span>Przesuń lub wpisz:</span>
             <strong id="brutto-display">6 000 zł</strong>
@@ -525,6 +525,25 @@ body {
           <input type="number" id="brutto-input" value="6000" min="1000" max="99999"
             style="margin-top:8px;"
             oninput="syncBrutto('input')">
+          <div class="range-row" style="margin-top:8px;">
+            <span style="font-size:12px;color:var(--gray-4);">Przy wybranym wymiarze czasu:</span>
+            <strong id="brutto-scaled-display" style="font-size:13px;">—</strong>
+          </div>
+        </div>
+
+        <div class="field">
+          <label>Wymiar czasu pracy (godziny w miesiącu)</label>
+          <div class="toggle-group" id="hours-preset-group">
+            <button type="button" class="toggle-btn active" onclick="setHoursPreset('full', this)">Pełny (168 h)</button>
+            <button type="button" class="toggle-btn" onclick="setHoursPreset('3_4', this)">3/4 (126 h)</button>
+            <button type="button" class="toggle-btn" onclick="setHoursPreset('1_2', this)">1/2 (84 h)</button>
+            <button type="button" class="toggle-btn" onclick="setHoursPreset('custom', this)">Własne</button>
+          </div>
+          <div id="work-hours-custom-wrap" style="display:none; margin-top:10px;">
+            <label style="margin-bottom:6px;">Liczba przepracowanych godzin</label>
+            <input type="number" id="work-hours-input" min="1" max="336" value="168"
+              oninput="syncWorkHoursFromInput()">
+          </div>
         </div>
 
         <!-- Opcje kontekstowe -->
@@ -623,9 +642,7 @@ body {
             <div style="font-family:var(--serif); font-size:32px;" id="hourly-rate">—</div>
             <div style="font-size:14px; color:var(--gray-4);">zł / godz.</div>
           </div>
-          <div style="font-size:12px; color:var(--gray-4); line-height:1.5;" id="hourly-note">
-            Zakładając 168 godzin pracy miesięcznie (21 dni × 8h)
-          </div>
+          <div style="font-size:12px; color:var(--gray-4); line-height:1.5;" id="hourly-note"></div>
         </div>
 
         <!-- Rec netto -->
@@ -867,6 +884,7 @@ const state = {
   // netto
   forma: 'uop',
   brutto: 6000,
+  hoursPreset: 'full',
   ulga26: true,
   kup50: false,
   isStudent: true,
@@ -882,6 +900,39 @@ const state = {
 // ═══════════════════════════════════════
 const fmt = n => Math.round(n).toLocaleString('pl-PL') + ' zł';
 const fmtNoZl = n => Math.round(n).toLocaleString('pl-PL');
+
+/** Odniesienie: pełny etat ~168 h (21 × 8 h) — brutto z formularza jest liczone „jak przy pełnym miesiącu”. */
+const FULL_REF_HOURS = 168;
+
+function getWorkHours() {
+  if (state.hoursPreset === 'custom') {
+    const v = parseInt(document.getElementById('work-hours-input').value, 10);
+    return Math.min(336, Math.max(1, Number.isFinite(v) && v > 0 ? v : FULL_REF_HOURS));
+  }
+  if (state.hoursPreset === '3_4') return Math.round(FULL_REF_HOURS * 0.75);
+  if (state.hoursPreset === '1_2') return Math.round(FULL_REF_HOURS * 0.5);
+  return FULL_REF_HOURS;
+}
+
+function setHoursPreset(preset, btn) {
+  if (preset === 'custom' && state.hoursPreset !== 'custom') {
+    document.getElementById('work-hours-input').value = getWorkHours();
+  }
+  state.hoursPreset = preset;
+  const group = document.getElementById('hours-preset-group');
+  if (group) {
+    group.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  }
+  const wrap = document.getElementById('work-hours-custom-wrap');
+  if (wrap) wrap.style.display = preset === 'custom' ? 'block' : 'none';
+  calcNetto();
+}
+
+function syncWorkHoursFromInput() {
+  if (state.hoursPreset !== 'custom') return;
+  calcNetto();
+}
 
 // ═══════════════════════════════════════
 // NAWIGACJA MIĘDZY KALKULATORAMI
@@ -932,10 +983,16 @@ function syncBrutto(source) {
 }
 
 function calcNetto() {
-  const brutto = state.brutto;
-  if (!brutto) return;
-  document.getElementById('brutto-display').textContent = fmt(brutto);
-  document.getElementById('brutto-range').value = Math.min(30000, brutto);
+  const bruttoRef = state.brutto;
+  const hours = getWorkHours();
+  const brutto = bruttoRef * (hours / FULL_REF_HOURS);
+
+  const scaledEl = document.getElementById('brutto-scaled-display');
+  if (scaledEl) scaledEl.textContent = bruttoRef ? fmt(Math.round(brutto)) : '—';
+
+  if (!bruttoRef) return;
+  document.getElementById('brutto-display').textContent = fmt(bruttoRef);
+  document.getElementById('brutto-range').value = Math.min(30000, bruttoRef);
 
   let netto = 0;
   let breakdown = [];
@@ -1058,7 +1115,7 @@ function calcNetto() {
   // Render wyniku
   document.getElementById('netto-value').textContent = fmtNoZl(netto);
   document.getElementById('netto-sublabel').textContent =
-    `Przy ${fmt(brutto)} brutto · ${({uop:'UoP', zlecenie:'Zlecenie', dzielo:'Dzieło', b2b_lin:'B2B liniowy', b2b_ryczalt:'B2B ryczałt'})[state.forma]}`;
+    `${hours} h/mc · ${fmt(Math.round(brutto))} brutto · ${({uop:'UoP', zlecenie:'Zlecenie', dzielo:'Dzieło', b2b_lin:'B2B liniowy', b2b_ryczalt:'B2B ryczałt'})[state.forma]}`;
 
   document.getElementById('netto-breakdown').innerHTML = breakdown.map(r => `
     <div class="breakdown-row ${r.isTotal ? 'total' : ''}">
@@ -1067,8 +1124,10 @@ function calcNetto() {
     </div>`).join('');
 
   // Stawka godzinowa
-  const hourly = netto / 168;
+  const hourly = hours > 0 ? netto / hours : 0;
   document.getElementById('hourly-rate').textContent = hourly.toFixed(2).replace('.', ',');
+  document.getElementById('hourly-note').textContent =
+    `Netto na godzinę przy ${hours} h w miesiącu (brutto z pola powyżej odniesione do pełnego etatu ${FULL_REF_HOURS} h).`;
 
   // Porównanie form
   renderNettoCompare(brutto, netto);
