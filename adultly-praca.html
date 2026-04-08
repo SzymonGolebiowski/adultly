@@ -42,6 +42,8 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
   width: 260px; background: var(--white); border-right: 1px solid var(--gray-2);
   padding: 32px 20px; position: sticky; top: 0; height: 100vh;
   overflow-y: auto; flex-shrink: 0;
+  display: flex; flex-direction: column;
+  isolation: isolate;
 }
 .logo { font-family: var(--serif); font-size: 24px; color: var(--black); text-decoration: none; display: block; margin-bottom: 40px; }
 .nav-section { font-size: 10px; font-weight: 700; color: var(--gray-3); letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 8px; }
@@ -53,7 +55,7 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
 .nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
 .nav-item.active { background: var(--accent-light); color: var(--accent); }
 .sidebar-user {
-  margin-top: auto;
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
   display: flex; align-items: center; gap: 10px;
   padding: 12px; border-radius: 12px; background: var(--gray-1);
 }
@@ -340,7 +342,7 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .mobile-nav { display: flex; }
-  .main { padding: 24px 16px 90px; }
+  .main { padding: 24px 16px calc(90px + env(safe-area-inset-bottom)); }
   .two-col { grid-template-columns: 1fr; }
   .three-col { grid-template-columns: 1fr; }
   .tracker-stats { grid-template-columns: repeat(2, 1fr); }
@@ -353,9 +355,11 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
-  <a href="adultly-dashboard.html" class="logo">adultly.</a>
+  <a href="index.html" class="logo">adultly.</a>
+
   <div class="nav-section">Główne</div>
   <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+
   <div class="nav-section">Narzędzia</div>
   <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
   <a href="adultly-praca.html" class="nav-item active">💼 Praca i CV</a>
@@ -711,11 +715,11 @@ body { font-family: var(--sans); background: var(--gray-1); color: var(--black);
   <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'"><div class="mobile-nav-icon">⊞</div>Dashboard</div>
   <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'"><div class="mobile-nav-icon">💰</div>Finanse</div>
   <div class="mobile-nav-item active"><div class="mobile-nav-icon">💼</div>Praca</div>
-  <div class="mobile-nav-item" onclick="location.href='adultly-formalnosci.html'"><div class="mobile-nav-icon">✅</div>Formalności</div>
   <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'"><div class="mobile-nav-icon">📋</div>Dokumenty</div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-profil.html'"><div class="mobile-nav-icon">👤</div>Profil</div>
 </div>
 
-<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+<script>
 'use strict';
 
 // ═══════════════════════════════════════

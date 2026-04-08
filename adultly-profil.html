@@ -48,6 +48,9 @@ body {
   height: 100vh;
   overflow-y: auto;
   flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
 }
 .logo {
   font-family: var(--serif);
@@ -254,7 +257,7 @@ body {
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .mobile-nav { display: flex; }
-  .main { padding: 24px 16px 90px; }
+  .main { padding: 24px 16px calc(90px + env(safe-area-inset-bottom)); }
   .grid-3 { grid-template-columns: 1fr 1fr; }
   .grid-2 { grid-template-columns: 1fr; }
   .tracker-form { grid-template-columns: 1fr 1fr; }
@@ -281,6 +284,7 @@ body {
     <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
     <a href="adultly-praca.html" class="nav-item">💼 Praca i CV</a>
     <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+    <a href="adultly-dashboard.html" class="nav-item">📋 Dokumenty</a>
     <a href="adultly-formalnosci.html" class="nav-item">✅ Formalności</a>
 
     <div class="nav-section">Profil</div>
@@ -424,11 +428,14 @@ body {
   <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'">
     <div class="mobile-nav-icon">💰</div>Finanse
   </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-praca.html'">
+    <div class="mobile-nav-icon">💼</div>Praca
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">📋</div>Dokumenty
+  </div>
   <div class="mobile-nav-item active">
     <div class="mobile-nav-icon">👤</div>Profil
-  </div>
-  <div class="mobile-nav-item" onclick="location.href='adultly-formalnosci.html'">
-    <div class="mobile-nav-icon">✅</div>Formalności
   </div>
 </div>
 

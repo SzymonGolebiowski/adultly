@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Adultly — Witaj</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500;700&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
@@ -22,17 +22,49 @@
   --serif: 'DM Serif Display', Georgia, serif;
   --sans: 'DM Sans', sans-serif;
 }
-html, body { height: 100%; }
+html, body { min-height: 100%; }
 body {
   font-family: var(--sans);
-  background: var(--white);
+  background: var(--gray-1);
   color: var(--black);
   -webkit-font-smoothing: antialiased;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  min-height: 100vh;
-  padding: 24px;
+  margin: 0;
+}
+
+.layout { display: flex; min-height: 100vh; width: 100%; }
+
+.sidebar {
+  width: 260px; background: var(--white); border-right: 1px solid var(--gray-2);
+  padding: 32px 20px; position: sticky; top: 0; height: 100vh; overflow-y: auto;
+  flex-shrink: 0; display: flex; flex-direction: column; isolation: isolate;
+}
+.nav-section {
+  font-size: 10px; font-weight: 700; color: var(--gray-3);
+  letter-spacing: 0.1em; text-transform: uppercase; margin: 24px 0 8px;
+}
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 12px;
+  border-radius: 10px; font-size: 14px; font-weight: 500; color: var(--gray-4);
+  cursor: pointer; transition: all 0.15s; margin-bottom: 2px; text-decoration: none;
+}
+.nav-item:hover:not(.active) { background: var(--gray-1); color: var(--black); }
+.nav-item.active { background: var(--accent-light); color: var(--accent); }
+.sidebar-user {
+  position: absolute; bottom: 24px; left: 20px; right: 20px;
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px; border-radius: 12px; background: var(--gray-1);
+}
+.user-avatar {
+  width: 34px; height: 34px; border-radius: 50%; background: var(--accent);
+  display: flex; align-items: center; justify-content: center; color: white;
+  font-size: 14px; font-weight: 700; flex-shrink: 0;
+}
+.user-name { font-size: 13px; font-weight: 500; }
+.user-status { font-size: 11px; color: var(--gray-3); }
+
+.main.onboarding-main {
+  flex: 1; display: flex; align-items: center; justify-content: center;
+  padding: 40px 24px; overflow-y: auto; min-width: 0;
 }
 
 .container {
@@ -40,14 +72,32 @@ body {
   max-width: 480px;
 }
 
-/* LOGO */
-.logo {
+.mobile-nav {
+  display: none; position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--white); border-top: 1px solid var(--gray-2);
+  padding: 8px 16px 20px; z-index: 100; justify-content: space-around;
+}
+.mobile-nav-item {
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 10px; color: var(--gray-4); cursor: pointer;
+  padding: 6px 12px; border-radius: 10px; transition: color 0.15s;
+}
+.mobile-nav-item.active { color: var(--accent); }
+.mobile-nav-icon { font-size: 20px; }
+
+/* WIZARD LOGO (środek) */
+.wizard-logo {
   font-family: var(--serif);
   font-size: 22px;
   text-align: center;
   margin-bottom: 40px;
 }
-.logo span { color: var(--accent); }
+.wizard-logo span { color: var(--accent); }
+
+.sidebar .logo {
+  font-family: var(--serif); font-size: 24px; color: var(--black);
+  text-decoration: none; display: block; margin-bottom: 40px;
+}
 
 /* PROGRESS */
 .progress {
@@ -244,6 +294,15 @@ body {
   50% { opacity: 1; transform: scale(1); }
 }
 
+@media (max-width: 768px) {
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; }
+  .main.onboarding-main {
+    padding: 24px 16px calc(90px + env(safe-area-inset-bottom));
+    align-items: flex-start;
+  }
+}
+
 @media (max-width: 480px) {
   .options-grid { grid-template-columns: 1fr 1fr; }
   .row2 { grid-template-columns: 1fr; }
@@ -252,9 +311,37 @@ body {
 </head>
 <body>
 
+<div class="layout">
+
+<aside class="sidebar">
+  <a href="index.html" class="logo">adultly.</a>
+
+  <div class="nav-section">Główne</div>
+  <a href="adultly-dashboard.html" class="nav-item">⊞ Dashboard</a>
+
+  <div class="nav-section">Narzędzia</div>
+  <a href="adultly-finanse.html" class="nav-item">💰 Finanse</a>
+  <a href="adultly-praca.html" class="nav-item">💼 Praca i CV</a>
+  <a href="adultly-mieszkanie.html" class="nav-item">🏠 Mieszkanie</a>
+  <a href="adultly-dashboard.html" class="nav-item">📋 Dokumenty</a>
+  <a href="adultly-formalnosci.html" class="nav-item">✅ Formalności</a>
+
+  <div class="nav-section">Profil</div>
+  <a href="adultly-profil.html" class="nav-item">👤 Mój profil</a>
+
+  <div class="sidebar-user">
+    <div class="user-avatar" id="sidebar-avatar">?</div>
+    <div>
+      <div class="user-name" id="sidebar-name">Ładowanie...</div>
+      <div class="user-status" id="sidebar-status">—</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main onboarding-main">
 <div class="container">
 
-  <div class="logo">Adult<span>ly</span></div>
+  <div class="wizard-logo">Adult<span>ly</span></div>
 
   <div class="progress">
     <div class="progress-step active" id="ps-1"></div>
@@ -523,8 +610,42 @@ body {
   </div>
 
 </div>
+</main>
+</div>
+
+<!-- MOBILE NAV -->
+<div class="mobile-nav">
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">⊞</div>Dashboard
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-finanse.html'">
+    <div class="mobile-nav-icon">💰</div>Finanse
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-praca.html'">
+    <div class="mobile-nav-icon">💼</div>Praca
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-dashboard.html'">
+    <div class="mobile-nav-icon">📋</div>Dokumenty
+  </div>
+  <div class="mobile-nav-item" onclick="location.href='adultly-profil.html'">
+    <div class="mobile-nav-icon">👤</div>Profil
+  </div>
+</div>
 
 <script>
+(function () {
+  let p = {};
+  try { p = JSON.parse(localStorage.getItem('adultly_profile') || '{}'); } catch (e) {}
+  const n = p.name || 'Użytkownik';
+  const av = document.getElementById('sidebar-avatar');
+  const nm = document.getElementById('sidebar-name');
+  const st = document.getElementById('sidebar-status');
+  if (av) av.textContent = n.charAt(0).toUpperCase();
+  if (nm) nm.textContent = n;
+  const statusMap = { student: 'Student', absolwent: 'Świeży absolwent', pracuje: 'Pracownik' };
+  if (st) st.textContent = statusMap[p.status] || 'Użytkownik';
+})();
+
 const API_URL = "https://adultly-ai.szymon-golebiowski1.workers.dev";
 let currentStep = 1;
 const TOTAL_STEPS = 6;
