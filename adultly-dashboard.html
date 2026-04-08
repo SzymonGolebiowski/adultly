@@ -272,6 +272,23 @@ body {
 .insight-body { flex: 1; }
 .insight-title { font-size: 14px; font-weight: 600; margin-bottom: 4px; }
 .insight-desc { font-size: 13px; color: var(--gray-4); line-height: 1.5; }
+.insight-affiliate-btn{
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 10px;
+  padding: 6px 10px;
+  border: 1px solid rgba(45,154,104,0.25);
+  border-radius: 999px;
+  background: var(--accent-light);
+  color: var(--accent);
+  font-size: 12px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.insight-affiliate-btn:hover{
+  border-color: var(--accent-mid);
+}
 .insight-cta {
   font-size: 12px;
   font-weight: 600;
@@ -420,6 +437,15 @@ label { display: block; font-size: 12px; color: var(--gray-4); margin-bottom: 5p
 .affiliate-card:hover {
   border-color: var(--accent-mid);
   box-shadow: 0 4px 16px rgba(45,154,104,0.1);
+}
+.affiliate-highlight{
+  animation: affiliatePulse 2s ease-in-out both;
+}
+@keyframes affiliatePulse {
+  0%   { box-shadow: 0 0 0 0 rgba(45,154,104,0.0); }
+  20%  { box-shadow: 0 0 0 4px rgba(45,154,104,0.22), 0 10px 26px rgba(45,154,104,0.18); }
+  55%  { box-shadow: 0 0 0 2px rgba(45,154,104,0.18), 0 10px 26px rgba(45,154,104,0.12); }
+  100% { box-shadow: 0 0 0 0 rgba(45,154,104,0.0); }
 }
 .affiliate-card::before {
   content: '';
@@ -615,7 +641,7 @@ label { display: block; font-size: 12px; color: var(--gray-4); margin-bottom: 5p
 @media (max-width: 768px) {
   .sidebar { display: none; }
   .mobile-nav { display: flex; }
-  .main { padding: 24px 16px 90px; }
+  .main { padding: 24px 16px calc(90px + env(safe-area-inset-bottom)); }
   .score-grid { grid-template-columns: 1fr; }
   .cards-row { grid-template-columns: 1fr; }
   .finance-grid { grid-template-columns: 1fr; }
@@ -697,7 +723,7 @@ label { display: block; font-size: 12px; color: var(--gray-4); margin-bottom: 5p
       </div>
 
       <!-- OFERTY PARTNERSKIE -->
-      <div class="affiliate-section" id="affiliate-section" style="display:none;">
+      <div class="affiliate-section" id="affiliate-section">
         <div class="affiliate-header">
           <div>
             <div class="affiliate-label">Dopasowane do twojego profilu</div>
@@ -820,14 +846,11 @@ label { display: block; font-size: 12px; color: var(--gray-4); margin-bottom: 5p
   <div class="mobile-nav-item" onclick="location.href='adultly-praca.html'">
     <div class="mobile-nav-icon">💼</div>Praca
   </div>
-  <div class="mobile-nav-item" onclick="showTab('mieszkanie', this)">
-    <div class="mobile-nav-icon">🏠</div>Mieszkanie
-  </div>
   <div class="mobile-nav-item" onclick="showTab('dokumenty', this)">
     <div class="mobile-nav-icon">📋</div>Dokumenty
   </div>
-  <div class="mobile-nav-item" onclick="location.href='adultly-formalnosci.html'">
-    <div class="mobile-nav-icon">✅</div>Formalności
+  <div class="mobile-nav-item" onclick="location.href='adultly-profil.html'">
+    <div class="mobile-nav-icon">👤</div>Profil
   </div>
 </div>
 
@@ -1025,6 +1048,7 @@ function renderInsights() {
       emoji: '💡',
       title: `B2B mogłoby dać ci +${formatZl(gain)}/mc`,
       desc: `Przy twoich dochodach przejście na B2B z podatkiem liniowym 19% zazwyczaj się opłaca. Sprawdź kalkulator.`,
+      affiliateKey: 'b2b',
       cta: 'Kalkulator →',
       tab: 'finanse'
     });
@@ -1038,6 +1062,7 @@ function renderInsights() {
         emoji: '📈',
         title: `Możesz odkładać ${formatZl(free)}/mc`,
         desc: `To ${savePct}% dochodu. ${savePct >= 20 ? 'Dobry wynik — rozważ ETF lub konto oszczędnościowe.' : 'Sprawdź czy możesz obciąć stałe wydatki o 10-15%.'}`,
+        affiliateKey: savePct >= 20 ? 'savings' : undefined,
         cta: 'Budżet →',
         tab: 'finanse'
       });
@@ -1059,6 +1084,7 @@ function renderInsights() {
         emoji: '🏠',
         title: `Wynajem to ${rentPct}% twojego dochodu`,
         desc: `Powyżej zalecanego 30%. Współlokator lub mniejsze mieszkanie mogą zaoszczędzić ${formatZl(Math.round(rent * 0.25))}/mc.`,
+        affiliateKey: 'rent',
         cta: 'Kalkulator →',
         tab: 'mieszkanie'
       });
@@ -1091,6 +1117,7 @@ function renderInsights() {
       <div class="insight-body">
         <div class="insight-title">${i.title}</div>
         <div class="insight-desc">${i.desc}</div>
+        ${i.affiliateKey ? `<button class="insight-affiliate-btn" onclick="event.stopPropagation(); scrollToAffiliate('${i.affiliateKey}')">Zobacz ofertę →</button>` : ''}
       </div>
       <div class="insight-cta">${i.cta}</div>
     </div>`).join('');
@@ -1099,6 +1126,23 @@ function renderInsights() {
 // ============================================================
 // KARTY AFILIACYJNE
 // ============================================================
+function scrollToAffiliate(key) {
+  const section = document.getElementById('affiliate-section');
+  if (!section) return;
+
+  section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+
+  const cards = Array.from(section.querySelectorAll('.affiliate-card'));
+  const target = cards.find(el => el.dataset && el.dataset.affiliateKey === key);
+  if (!target) return;
+
+  target.classList.remove('affiliate-highlight');
+  // wymuś reflow, aby animacja odpaliła ponownie przy kolejnym kliknięciu
+  void target.offsetWidth;
+  target.classList.add('affiliate-highlight');
+  setTimeout(() => target.classList.remove('affiliate-highlight'), 2000);
+}
+
 function renderAffiliates() {
   const free = income - expenses;
   const goals = profile.goals || [];
@@ -1112,6 +1156,7 @@ function renderAffiliates() {
     if (days <= 45) {
       cards.push({
         priority: 10,
+        key: 'oc',
         logo: '🚗',
         context: `OC kończy się za ${days} dni`,
         title: 'Porównaj ubezpieczenia OC',
@@ -1128,6 +1173,7 @@ function renderAffiliates() {
     const gain = Math.round(income * 0.10);
     cards.push({
       priority: 9,
+      key: 'b2b',
       logo: '💼',
       context: `Możesz zarabiać +${formatZl(gain)}/mc więcej`,
       title: 'Otwórz konto firmowe i przejdź na B2B',
@@ -1143,6 +1189,7 @@ function renderAffiliates() {
     const roczne = Math.round(free * 12 * 0.07);
     cards.push({
       priority: 8,
+      key: 'savings',
       logo: '🏦',
       context: `Masz ${formatZl(free)}/mc wolnych środków`,
       title: 'Konto oszczędnościowe 7% w VeloBank',
@@ -1157,6 +1204,7 @@ function renderAffiliates() {
   if (profile.savings === 'nie' || employment === 'szukam' || employment === 'staz') {
     cards.push({
       priority: 7,
+      key: 'savings',
       logo: '🏧',
       context: 'Zacznij budować poduszkę finansową',
       title: '550 zł premii za konto w Pekao',
@@ -1171,6 +1219,7 @@ function renderAffiliates() {
   if (goals.includes('Zbudować historię kredytową')) {
     cards.push({
       priority: 8,
+      key: 'credit',
       logo: '💳',
       context: 'Twój cel: historia kredytowa (BIK)',
       title: 'Karta kredytowa z cashbackiem — Santander',
@@ -1185,6 +1234,7 @@ function renderAffiliates() {
   if (goals.includes('Znaleźć pracę') || employment === 'szukam' || status === 'absolwent') {
     cards.push({
       priority: 6,
+      key: 'jobs',
       logo: '🎯',
       context: 'Szukasz pracy lub pierwszego etatu',
       title: 'Oferty pracy dla juniorów — No Fluff Jobs',
@@ -1199,6 +1249,7 @@ function renderAffiliates() {
   if (rent > 0 && income > 0 && (rent / income) > 0.30) {
     cards.push({
       priority: 7,
+      key: 'rent',
       logo: '🏠',
       context: `Wynajem to ${Math.round(rent/income*100)}% twojego dochodu`,
       title: 'Znajdź tańsze mieszkanie — Otodom',
@@ -1213,6 +1264,7 @@ function renderAffiliates() {
   if (profile.car === 'tak' && goals.includes('Ubezpieczenia')) {
     cards.push({
       priority: 6,
+      key: 'oc',
       logo: '🛡️',
       context: 'Twój cel: ubezpieczenia',
       title: 'OC + AC w Beesafe — do 30% taniej',
@@ -1227,6 +1279,7 @@ function renderAffiliates() {
   if (free >= 1000 && profile.savings !== 'nie') {
     cards.push({
       priority: 5,
+      key: 'savings',
       logo: '📈',
       context: `${formatZl(free)}/mc możesz inwestować`,
       title: 'Zacznij inwestować w ETF — XTB',
@@ -1246,7 +1299,7 @@ function renderAffiliates() {
 
   document.getElementById('affiliate-section').style.display = 'block';
   document.getElementById('affiliate-list').innerHTML = sorted.map(c => `
-    <a class="affiliate-card" href="${c.url}" target="_blank" rel="noopener sponsored">
+    <a class="affiliate-card" href="${c.url}" target="_blank" rel="noopener sponsored" data-affiliate-key="${c.key}">
       <div class="affiliate-logo">${c.logo}</div>
       <div class="affiliate-body">
         <div class="affiliate-context">${c.context}</div>
